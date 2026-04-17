@@ -6,13 +6,13 @@ Este proyecto consiste en el desarrollo de una plataforma web integral diseñada
   
 Muchas pequeñas y medianas empresas aún dependen de procesos manuales o planillas de cálculo propensas a errores para controlar sus activos. Esto deriva en diversos problemas como:
 
-    ## - Falta de visibilidad, es decir, no saber con certeza cuánta mercadería hay disponible.
+    - Falta de visibilidad, es decir, no saber con certeza cuánta mercadería hay disponible.
 
-    ## - Pérdida de ventas, debido a la ausencia de alertas tempranas en las bajas de stock.
+    - Pérdida de ventas, debido a la ausencia de alertas tempranas en las bajas de stock.
 
-    ## - Desperdicio de capital por exceso de productos estacionales o de baja rotación acumulados en depósito.
+    - Desperdicio de capital por exceso de productos estacionales o de baja rotación acumulados en depósito.
 
-    ## - Desorganización y dificultad para rastrear entradas y salidas de distintas sucursales o depósitos.
+    - Desorganización y dificultad para rastrear entradas y salidas de distintas sucursales o depósitos.
 
 Nuestra solución se diferencia por las siguientes características:
 
@@ -24,9 +24,6 @@ c_ Accesibilidad total: al ser una aplicación web, los dueños de negocio puede
 
 d_ Interfaz intuitiva: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
-  """
-  Redactar una descripción clara del proyecto elegido, detallando el problema que resuelve y su propuesta de valor, el cual deberá agregarse al readme.md del repositorio.
-  """
 
 # Instrucciones de instalación
 
