@@ -24,6 +24,10 @@ c_ Accesibilidad total: al ser una aplicación web, los dueños de negocio puede
 
 d_ Interfaz intuitiva: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
+  """
+  Redactar una descripción clara del proyecto elegido, detallando el problema que resuelve y su propuesta de valor, el cual deberá agregarse al readme.md del repositorio.
+  """
+
 # Instrucciones de instalación
 
 # Uso básico
