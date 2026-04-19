@@ -25,12 +25,26 @@ Nuestra solución se diferencia por las siguientes características:
 - **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
 
-## Instrucciones de instalación
+## 2. Instrucciones de instalación
 
-1. Clonar el repositorio: `git clone ...`
-2. Instalar dependencias de frontend: (...)
-3. Instalar dependencias de backend: (...)
+### Prerrequisitos
+- Python 3.x
+- MySQL
+- Git
 
+1. Desde tu terminal, clonar el repositorio: `git clone ...`
+2. Instala dependencias de frontend: (...)
+3. Instala dependencias de backend:
+
+```
+1. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.
+2. En terminal: pip install -r requirements.txt
+3. Crea la base de datos en MySQL: nombre_db
+4. Crea archivo .env y copia el contenido de .env_modelo a este archivo.
+5. Completalo con tus datos para conectarte con tu servidor MySQL.
+6. En terminal: python manage.py migrate
+7. En terminal: python manage.py runserver
+```
 
 ## Uso básico
 
@@ -47,6 +61,6 @@ Nuestra solución se diferencia por las siguientes características:
 ## Tecnologías utilizadas
 
 * **Frontend:** Angular 
-* **Backend:** Django Rest Framework
+* **Backend:** Python & Django Rest Framework
 * **Base de Datos:** MySQL
 * **Estilos:** CSS3 & Bootstrap
