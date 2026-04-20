@@ -27,13 +27,10 @@ Nuestra solución se diferencia por las siguientes características:
 
 * **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
+
+
 ## 2. Instrucciones de instalación
 
-### Prerrequisitos
-
-* Python 3.x
-* MySQL
-* Git
 
 ### Prerrequisitos
 
