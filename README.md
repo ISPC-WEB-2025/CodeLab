@@ -1,5 +1,8 @@
 # CodeLab_Stock: sistema de gestión de stock
 
+![Static Badge](https://img.shields.io/github/last-commit/ISPC-WEB-2025/CodeLab?label=Último%20cambio&color=blue)
+
+
 ## 1. Descripción del proyecto
 
 Este proyecto consiste en el desarrollo de una **plataforma web integral** diseñada para la administración y control de inventarios en tiempo real. La idea es que el sistema permita a las empresas gestionar sus productos, proveedores y movimientos de mercadería de manera ágil y centralizada.
@@ -26,6 +29,12 @@ Nuestra solución se diferencia por las siguientes características:
 
 
 ## 2. Instrucciones de instalación
+
+### Prerrequisitos
+
+* Python 3.x
+* MySQL
+* Git
 
 1. Clonar el repositorio de GitHub: `git clone ...`
 
@@ -57,11 +66,26 @@ Nuestra solución se diferencia por las siguientes características:
 
 ## 4. Lista de requerimientos
 
-  ### Requerimientos Funcionales (RF)
-   Definir 5 Requerimientos Funcionales (RF) que describan las acciones específicas que el usuario podrá realizar en el sistema.
+  
+   * **Requerimientos Funcionales (RF)**
 
-  ### Requerimientos No Funcionales (RNF)
-   Definir 3 Requerimientos No Funcionales (RNF) que establezcan las propiedades del sistema.
+  **RF1 - Registro de Productos:** El sistema permitirá dar de alta productos ingresando obligatoriamente nombre, descripción, precio y stock inicial.
+
+  **RF2 - Gestión Centralizada:** El sistema permitirá a las empresas administrar de manera ágil y centralizada sus productos, la información de sus proveedores y el registro de movimientos de mercadería.
+
+  **RF3 - Consulta y Filtrado:** El usuario podrá visualizar el listado completo de productos y proveedores, con la capacidad de filtrar resultados por categoría para agilizar la búsqueda.
+
+  **RF4 - Gestión de Inventario:** El sistema permitirá actualizar el stock de un producto existente, registrando tanto entradas como salidas de mercadería.
+
+  **RF5 - Baja de Productos:** El usuario podrá eliminar productos del sistema, impactando directamente en la base de datos MySQL.
+  
+* **Requerimientos No Funcionales (RNF)**
+
+   **RNF1 - Seguridad:** El sistema no debe exponer información sensible (como usuarios o contraseñas de la DB) en el código fuente, utilizando archivos .env y brindando un .env_modelo para el despliegue seguro.
+
+   **RNF2 - Rendimiento:** Los datos modificados en la base de datos deben ser actualizados y visibles para todos los usuarios que acceden al sistema en un tiempo de respuesta menor a 2 segundos.
+
+   **RNF3 - Diseño Responsivo:** La interfaz del sistema, desarrollada con Angular y Bootstrap, debe ser completamente responsiva, garantizando una visualización y usabilidad óptima en dispositivos móviles, tablets y computadoras de escritorio.
 
 
 ## 5. Tecnologías utilizadas
