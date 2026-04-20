@@ -55,7 +55,7 @@ Nuestra solución se diferencia por las siguientes características:
    Definir 5 Requerimientos Funcionales (RF) que describan las acciones específicas que el usuario podrá realizar en el sistema.
 
   ### Requerimientos No Funcionales (RNF)
-   Definir 3 Requerimientos No Funcionales (RNF) que establezcan las propiedades del sistema.
+   Definir 3 Requerimientos No Funcionales (RNF) que establezcan las propiedades del sistema1.
 
 
 ## Tecnologías utilizadas
