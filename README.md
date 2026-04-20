@@ -1,42 +1,44 @@
 # CodeLab_Stock: sistema de gestión de stock
 
+![Static Badge](https://img.shields.io/github/last-commit/ISPC-WEB-2025/CodeLab?label=Último%20cambio&color=blue)
+
 ## 1. Descripción del proyecto
 
 Este proyecto consiste en el desarrollo de una **plataforma web integral** diseñada para la administración y control de inventarios en tiempo real. La idea es que el sistema permita a las empresas gestionar sus productos, proveedores y movimientos de mercadería de manera ágil y centralizada.
   
 Muchas pequeñas y medianas empresas aún dependen de procesos manuales o planillas de cálculo propensas a errores para controlar sus activos. Esto deriva en diversos problemas como:
 
-  * *Falta de visibilidad*, es decir, no saber con certeza cuánta mercadería hay disponible.
+* *Falta de visibilidad*, es decir, no saber con certeza cuánta mercadería hay disponible.
 
-  * *Pérdida de ventas*, debido a la ausencia de alertas tempranas en las bajas de stock.
+* *Pérdida de ventas*, debido a la ausencia de alertas tempranas en las bajas de stock.
 
-  * *Desperdicio de capital* por exceso de productos estacionales o de baja rotación acumulados en depósito.
+* *Desperdicio de capital* por exceso de productos estacionales o de baja rotación acumulados en depósito.
 
-  * *Desorganización* y dificultad para rastrear entradas y salidas de distintas sucursales o depósitos.
+* *Desorganización* y dificultad para rastrear entradas y salidas de distintas sucursales o depósitos.
 
 Nuestra solución se diferencia por las siguientes características:
 
-- **Modular y adaptable**: su estructura permite configurar categorías y atributos de productos según el rubro de la empresa (desde una ferretería hasta una tienda de ropa).
+* **Modular y adaptable**: su estructura permite configurar categorías y atributos de productos según el rubro de la empresa (desde una ferretería hasta una tienda de ropa).
 
-- **Escalable**: gracias al uso de una API REST sólida, el sistema puede crecer en funciones sin comprometer el rendimiento.
+* **Escalable**: gracias al uso de una API REST sólida, el sistema puede crecer en funciones sin comprometer el rendimiento.
 
-- **Accesibilidad total**: al ser una aplicación web, los dueños de negocio pueden monitorear su stock desde cualquier dispositivo con acceso a internet.
+* **Accesibilidad total**: al ser una aplicación web, los dueños de negocio pueden monitorear su stock desde cualquier dispositivo con acceso a internet.
 
-- **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
-
+* **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
 ## 2. Instrucciones de instalación
 
 ### Prerrequisitos
-- Python 3.x
-- MySQL
-- Git
+
+* Python 3.x
+* MySQL
+* Git
 
 1. Desde tu terminal, clonar el repositorio: `git clone ...`
 2. Instala dependencias de frontend: (...)
 3. Instala dependencias de backend:
 
-```
+``` text
 1. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.
 2. En terminal: pip install -r requirements.txt
 3. Crea la base de datos en MySQL: nombre_db
@@ -48,19 +50,33 @@ Nuestra solución se diferencia por las siguientes características:
 
 ## Uso básico
 
-
 ## Lista de requerimientos
 
-  ### Requerimientos Funcionales (RF)
-   Definir 5 Requerimientos Funcionales (RF) que describan las acciones específicas que el usuario podrá realizar en el sistema.
+* **Requerimientos Funcionales (RF)**
 
-  ### Requerimientos No Funcionales (RNF)
-   Definir 3 Requerimientos No Funcionales (RNF) que establezcan las propiedades del sistema.
+  **RF1 - Registro de Productos:** El sistema permitirá dar de alta productos ingresando obligatoriamente nombre, descripción, precio y stock inicial.
+
+  **RF2 - Gestión Centralizada:** El sistema permitirá a las empresas administrar de manera ágil y centralizada sus productos, la información de sus proveedores y el registro de movimientos de mercadería.
+
+  **RF3 - Consulta y Filtrado:** El usuario podrá visualizar el listado completo de productos y proveedores, con la capacidad de filtrar resultados por categoría para agilizar la búsqueda.
+
+  **RF4 - Gestión de Inventario:** El sistema permitirá actualizar el stock de un producto existente, registrando tanto entradas como salidas de mercadería.
+
+  **RF5 - Baja de Productos:** El usuario podrá eliminar productos del sistema, impactando directamente en la base de datos MySQL.
+  
+* **Requerimientos No Funcionales (RNF)**
+
+   **RNF1 - Seguridad:** El sistema no debe exponer información sensible (como usuarios o contraseñas de la DB) en el código fuente, utilizando archivos .env y brindando un .env_modelo para el despliegue seguro.
+
+   **RNF2 - Rendimiento:** Los datos modificados en la base de datos deben ser actualizados y visibles para todos los usuarios que acceden al sistema en un tiempo de respuesta menor a 2 segundos.
+
+   **RNF3 - Diseño Responsivo:** La interfaz del sistema, desarrollada con Angular y Bootstrap, debe ser completamente responsiva, garantizando una visualización y usabilidad óptima en dispositivos móviles, tablets y computadoras de escritorio.
+
 
 
 ## Tecnologías utilizadas
 
-* **Frontend:** Angular 
+* **Frontend:** Angular
 * **Backend:** Python & Django Rest Framework
 * **Base de Datos:** MySQL
 * **Estilos:** CSS3 & Bootstrap
