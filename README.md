@@ -1,11 +1,5 @@
 # CodeLab_Stock: sistema de gestión de stock
 
-<<<<<<< Updated upstream
-=======
-![Static Badge](https://img.shields.io/github/last-commit/ISPC-WEB-2025/CodeLab?label=Último%20cambio&color=blue)
-
-
->>>>>>> Stashed changes
 ## 1. Descripción del proyecto
 
 Este proyecto consiste en el desarrollo de una **plataforma web integral** diseñada para la administración y control de inventarios en tiempo real. La idea es que el sistema permita a las empresas gestionar sus productos, proveedores y movimientos de mercadería de manera ágil y centralizada.
@@ -30,25 +24,10 @@ Nuestra solución se diferencia por las siguientes características:
 
 - **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
-<<<<<<< Updated upstream
-=======
 
 ## 2. Instrucciones de instalación
->>>>>>> Stashed changes
 
-## Instrucciones de instalación
-
-<<<<<<< Updated upstream
-1. Clonar el repositorio: `git clone ...`
-2. Instalar dependencias de frontend: (...)
-3. Instalar dependencias de backend: (...)
-
-=======
-* Python 3.8
-* MySQL
-* Git
-
-1. Desde tu terminal, clonar el repositorio: `git clone ...`
+1. Clonar el repositorio de GitHub: `git clone ...`
 
 2. Instala dependencias de frontend:
 
@@ -59,19 +38,14 @@ Nuestra solución se diferencia por las siguientes características:
 3. Instala dependencias de backend:
 
   - a. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.
-  - b. En terminal: pip install -r requirements.txt
-  - c. Crea la base de datos en MySQL: nombre_db
-  - d. Crea archivo .env y copia el contenido de .env_modelo a este archivo.
+  - b. En terminal: `pip install -r requirements.txt`
+  - c. Crea la base de datos en MySQL: `nombre_db`
+  - d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
   - e. Completalo con tus datos para conectarte con tu servidor MySQL.
-  - f. En terminal: python manage.py migrate
-  - g. En terminal: python manage.py runserver
->>>>>>> Stashed changes
+  - f. En terminal: `python manage.py migrate`
+  - g. En terminal: `python manage.py runserver`
 
 
-<<<<<<< Updated upstream
-
-## Lista de requerimientos
-=======
 ## 3. Uso básico
 
 * Backend corre en http://127.0.0.1:8000/
@@ -82,7 +56,6 @@ Nuestra solución se diferencia por las siguientes características:
 
 
 ## 4. Lista de requerimientos
->>>>>>> Stashed changes
 
   ### Requerimientos Funcionales (RF)
    Definir 5 Requerimientos Funcionales (RF) que describan las acciones específicas que el usuario podrá realizar en el sistema.
@@ -90,14 +63,10 @@ Nuestra solución se diferencia por las siguientes características:
   ### Requerimientos No Funcionales (RNF)
    Definir 3 Requerimientos No Funcionales (RNF) que establezcan las propiedades del sistema.
 
-## Tecnologías utilizadas
 
-<<<<<<< Updated upstream
+## 5. Tecnologías utilizadas
+
 * **Frontend:** Angular 
-* **Backend:** Django Rest Framework
-=======
-* **Frontend:** Angular
 * **Backend:** Python y Django Rest Framework
->>>>>>> Stashed changes
 * **Base de Datos:** MySQL
 * **Estilos:** CSS3 y Bootstrap
