@@ -28,31 +28,33 @@ Nuestra solución se diferencia por las siguientes características:
 - **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
 
+
 ## 2. Instrucciones de instalación
 
 ### Prerrequisitos
 
-* Python 3.x
-* MySQL
-* Git
+* **Python 3.x**
+* **MySQL**
+* **Git**
 
-1. Clonar el repositorio de GitHub: `git clone ...`
+    1. Clonar el repositorio de GitHub: `git clone ...`
 
-2. Instala dependencias de frontend:
+    2. Instala dependencias de frontend:
 
-  - a. Instalar Angular Cli utilizando el siguiente comando: `npm install -g @angular/cli`
-  - b. Para evaluar que la instalación haya sido exitosa, utilizar el siguiente comando: `ng version`
-  - c. En caso de estar usando Windows, hay que permitir la ejecución de scripts explícitamente. Para eso, introducir lo siguiente: `Set.ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+      - a. Instalar Angular Cli utilizando el siguiente comando: `npm install -g @angular/cli`
+      - b. Para evaluar que la instalación haya sido exitosa, utilizar el siguiente comando: `ng version`
+      - c. En caso de estar usando Windows, hay que permitir la ejecución de scripts explícitamente. Para eso, introducir lo siguiente: `Set.ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
   
-3. Instala dependencias de backend:
+    3. Instala dependencias de backend:
 
-  - a. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.
-  - b. En terminal: `pip install -r requirements.txt`
-  - c. Crea la base de datos en MySQL: `nombre_db`
-  - d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
-  - e. Completalo con tus datos para conectarte con tu servidor MySQL.
-  - f. En terminal: `python manage.py migrate`
-  - g. En terminal: `python manage.py runserver`
+      - a. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.
+      - b. En terminal: `pip install -r requirements.txt`
+      - c. Crea la base de datos en MySQL: `nombre_db`
+      - d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
+      - e. Completalo con tus datos para conectarte con tu servidor MySQL.
+      - f. En terminal: `python manage.py migrate`
+      - g. En terminal: `python manage.py runserver`
+
 
 
 ## 3. Uso básico
@@ -64,28 +66,31 @@ Nuestra solución se diferencia por las siguientes características:
 * Frontend corre en http://localhost:4200/
 
 
+
 ## 4. Lista de requerimientos
 
   
    * **Requerimientos Funcionales (RF)**
 
-  **RF1 - Registro de Productos:** El sistema permitirá dar de alta productos ingresando obligatoriamente nombre, descripción, precio y stock inicial.
+      **RF1 - Registro de Productos:** El sistema permitirá dar de alta productos ingresando obligatoriamente nombre, descripción, precio y stock inicial.
 
-  **RF2 - Gestión Centralizada:** El sistema permitirá a las empresas administrar de manera ágil y centralizada sus productos, la información de sus proveedores y el registro de movimientos de mercadería.
+      **RF2 - Gestión Centralizada:** El sistema permitirá a las empresas administrar de manera ágil y centralizada sus productos, la información de sus proveedores y el registro de movimientos de mercadería.
 
-  **RF3 - Consulta y Filtrado:** El usuario podrá visualizar el listado completo de productos y proveedores, con la capacidad de filtrar resultados por categoría para agilizar la búsqueda.
+      **RF3 - Consulta y Filtrado:** El usuario podrá visualizar el listado completo de productos y proveedores, con la capacidad de filtrar resultados por categoría para agilizar la búsqueda.
 
-  **RF4 - Gestión de Inventario:** El sistema permitirá actualizar el stock de un producto existente, registrando tanto entradas como salidas de mercadería.
+      **RF4 - Gestión de Inventario:** El sistema permitirá actualizar el stock de un producto existente, registrando tanto entradas como salidas de mercadería.
 
-  **RF5 - Baja de Productos:** El usuario podrá eliminar productos del sistema, impactando directamente en la base de datos MySQL.
+      **RF5 - Baja de Productos:** El usuario podrá eliminar productos del sistema, impactando directamente en la base de datos MySQL.
   
+
 * **Requerimientos No Funcionales (RNF)**
 
-   **RNF1 - Seguridad:** El sistema no debe exponer información sensible (como usuarios o contraseñas de la DB) en el código fuente, utilizando archivos .env y brindando un .env_modelo para el despliegue seguro.
+      **RNF1 - Seguridad:** El sistema no debe exponer información sensible (como usuarios o contraseñas de la DB) en el código fuente, utilizando archivos .env y brindando un .env_modelo para el despliegue seguro.
 
-   **RNF2 - Rendimiento:** Los datos modificados en la base de datos deben ser actualizados y visibles para todos los usuarios que acceden al sistema en un tiempo de respuesta menor a 2 segundos.
+      **RNF2 - Rendimiento:** Los datos modificados en la base de datos deben ser actualizados y visibles para todos los usuarios que acceden al sistema en un tiempo de respuesta menor a 2 segundos.
 
-   **RNF3 - Diseño Responsivo:** La interfaz del sistema, desarrollada con Angular y Bootstrap, debe ser completamente responsiva, garantizando una visualización y usabilidad óptima en dispositivos móviles, tablets y computadoras de escritorio.
+      **RNF3 - Diseño Responsivo:** La interfaz del sistema, desarrollada con Angular y Bootstrap, debe ser completamente responsiva, garantizando una visualización y usabilidad óptima en dispositivos móviles, tablets y computadoras de escritorio.
+
 
 
 ## 5. Tecnologías utilizadas
