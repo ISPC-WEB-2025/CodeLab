@@ -45,7 +45,7 @@ Nuestra solución se diferencia por las siguientes características:
    5-
    
   ### Requerimientos No Funcionales (RNF)
-   Definir 3 Requerimientos No Funcionales (RNF) que establezcan las propiedades del sistema.
+   Definir 3 Requerimientos No Funcionales (RNF) que establezcan las propiedades del sistema1.
 
 
 ## Tecnologías utilizadas
