@@ -1,3 +1,8 @@
 from django.db import models
+from django.core.validators import RegexValidator
 
-# Create your models here.
+class Rol(models.Model):
+    pass
+
+class Usuario(models.Model):
+    pass

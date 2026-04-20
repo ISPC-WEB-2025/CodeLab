@@ -21,8 +21,7 @@ from inventario.views import ProductoViewSet
 
 router = DefaultRouter()
 router.register(r'productos',ProductoViewSet)
-urlpatterns =[
-path('admin/',admin.site.urls),
-path('api/',include(router.urls)),
-
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
 ]
