@@ -3,7 +3,7 @@ name: Deploy Angular to GitHub Pages
 on:
   push:
     branches:
-      - main  # Se ejecuta cada vez que subas cambios a main
+      - develop  # Se ejecuta cada vez que subas cambios a develop
 
 jobs:
   build-and-deploy:
