@@ -27,10 +27,7 @@ Nuestra solución se diferencia por las siguientes características:
 
 * **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
-
-
 ## 2. Instrucciones de instalación
-
 
 ### Prerrequisitos
 
@@ -38,49 +35,33 @@ Nuestra solución se diferencia por las siguientes características:
 * **MySQL**
 * **Git**
 
-
 1. Clonar el repositorio de GitHub: `git clone ...`
-
 
 2. Instala dependencias de frontend:
 
    a. Instalar Angular Cli utilizando el siguiente comando: `npm install -g @angular/cli`
-   
    b. Para evaluar que la instalación haya sido exitosa, utilizar el siguiente comando: `ng version`
-   
    c. En caso de estar usando Windows, hay que permitir la ejecución de scripts explícitamente. Para eso, introducir lo siguiente: `Set.ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
-
   
 3. Instala dependencias de backend:
 
-   a. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.
-   
+   a. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.  
    b. En terminal: `pip install -r requirements.txt`
-   
    c. Crea la base de datos en MySQL: `nombre_db`
-   
    d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
-   
-   e. Completalo con tus datos para conectarte con tu servidor MySQL.
-   
+   e. Completalo con tus datos para conectarte con tu servidor MySQL.   
    f. En terminal: `python manage.py migrate`
-   
    g. En terminal: `python manage.py runserver`
-
-
 
 ## 3. Uso básico
 
-* Backend corre en http://127.0.0.1:8000/
+* Backend corre en <http://127.0.0.1:8000/>
+* Api disponible en <http://http://127.0.0.1:8000/api/>
+* Frontend corre en <http://localhost:4200/>
 
-* Api disponible en http://http://127.0.0.1:8000/api/
-
-* Frontend corre en http://localhost:4200/
-
-
+* Vista previa de la página: [CodeLab](https://ispc-web-2025.github.io/CodeLab/)
 
 ## 4. Lista de requerimientos
-
   
 * **Requerimientos Funcionales (RF)**
 
@@ -94,7 +75,6 @@ Nuestra solución se diferencia por las siguientes características:
 
      **RF5 - Baja de productos:** El usuario podrá eliminar productos del sistema, impactando directamente en la base de datos MySQL.
   
-
 * **Requerimientos No Funcionales (RNF)**
 
     **RNF1 - Seguridad:**  El sistema no debe exponer información sensible (como usuarios o contraseñas de la DB) en el código fuente, utilizando archivos .env y brindando un .env_modelo para el despliegue seguro.
@@ -103,11 +83,9 @@ Nuestra solución se diferencia por las siguientes características:
 
     **RNF3 - Diseño responsivo:** La interfaz del sistema, desarrollada con Angular y Bootstrap, debe ser completamente responsiva, garantizando una visualización y usabilidad óptima en dispositivos móviles, tablets y computadoras de escritorio.
 
-
-
 ## 5. Tecnologías utilizadas
 
-* **Frontend:** Angular 
+* **Frontend:** Angular
 * **Backend:** Python y Django Rest Framework
 * **Base de Datos:** MySQL
 * **Estilos:** CSS3 y Bootstrap
