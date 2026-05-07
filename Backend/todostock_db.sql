@@ -8,6 +8,9 @@ CREATE DATABASE IF NOT EXISTS todostock
 
 USE todostock;
 
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS MOVIMIENTO, STOCK_SUCURSAL, PRODUCTO_PROVEEDOR, PRODUCTO, SUCURSAL, PROVEEDOR, CATEGORIA;
+SET FOREIGN_KEY_CHECKS = 1;
 -- ============================================
 --   CATEGORÍA
 -- ============================================
@@ -108,3 +111,36 @@ CREATE TABLE MOVIMIENTO (
     CONSTRAINT fk_mov_proveedor
         FOREIGN KEY (id_prov) REFERENCES PROVEEDOR (id_prov)
 );
+
+-- ============================================
+--   DATOS DE PRUEBA
+-- ===========================================
+
+INSERT INTO CATEGORIA (nombre) VALUES 
+('Perfiles de aluminio'),
+('Cortinas de enrollar'),
+('Portones enrollables'),
+('Accesorios');
+
+INSERT INTO PROVEEDOR (nombre, cuit, telefono, email, direccion) VALUES
+('Aluminios Cba SRL', '30-12345678-9', '351-1234567', 'ventas@aluminioscba.com', 'Av. Fuerza Aérea 1234'),
+('Motores Automatizados SA', '30-98765432-1', '351-7654321', 'contacto@motoresauto.com', 'Bv. Los Granaderos 555');
+
+INSERT INTO SUCURSAL (nombre, direccion) VALUES
+('Fábrica Principal', 'Calle Industrial 100'),
+('Depósito Zona Sur', 'Av. Sabattini 3200');
+
+INSERT INTO PRODUCTO (nombre, descripcion, codigo, precio_venta, id_cat) VALUES
+('Perfil de aluminio 45mm', 'Perfil para guías de cortinas', 'ALU-45', 12500.00, 1),
+('Motor Tubular 50Nm', 'Motor para cortinas de enrollar pesadas', 'MOT-50', 85000.00, 4),
+('Lama de aluminio inyectado', 'Lama para portones rodantes', 'LAM-PORT', 4500.50, 3);
+
+INSERT INTO PRODUCTO_PROVEEDOR (id_art, id_prov, precio_costo) VALUES
+(1, 1, 9000.00),  -- El Perfil se lo compramos a Aluminios Cba
+(2, 2, 60000.00), -- El Motor se lo compramos a Motores Automatizados
+(3, 1, 3200.00);  -- La Lama se la compramos a Aluminios Cba
+
+INSERT INTO STOCK_SUCURSAL (cantidad_stock, stock_min, id_art, id_suc) VALUES
+(150, 50, 1, 1), -- 150 perfiles en Fábrica Principal
+(20, 5, 2, 1),   -- 20 motores en Fábrica Principal
+(500, 100, 3, 2); -- 500 lamas en Depósito Zona Sur
