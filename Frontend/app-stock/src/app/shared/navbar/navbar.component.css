@@ -1,0 +1,19 @@
+/* .cal-sans-regular {
+  font-family: "Cal Sans";
+  font-weight: 400;
+  font-style: normal;
+} */
+
+.texto-navbar {
+  color: #2d5132;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: "Cal Sans"
+}
+
+.texto-navbar1 {
+  color: #303430;
+  font-size: 25px;
+  font-weight: regular;
+  font-family: "Cal Sans"
+}
