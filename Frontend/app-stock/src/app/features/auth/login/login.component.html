@@ -1,32 +1,38 @@
 <div class="container-fluid vh-100 d-flex justify-content-center align-items-center bg-light">
     <div class="col-12 col-md-8 col-lg-5 col-xl-4">
-        <div class="container-md shadow rounded">
-            <div class="row">
-                <img src="assets/deposito.png" alt="Imagen de bienvenida" class="mt-3 img-fluid">
-            </div>
-            <div class="row">
-                <h2 class="text-center mt-4 fw-bold">¡Bienvenido a ToDo Stock!</h2>
-                <!-- Inputs -->
-                <form action="">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label" aria-placeholder="Tu nombre de Usuario"></label>
-                        <input type="text" class="form-control form-control-lg" id="nombre" placeholder="Ingresa tu usuario">
-                    </div>
-                    <div class="mb*3">
-                        <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
-                        <input type="password" class="form-control form-control-lg" id="password" placeholder="********">
-                    </div>
-                    <!-- Boton de submit -->
-                    <div class="d-grid gap-2 mt-4">
-                        <button class="btn btn-primary btn-lg" type="submit">Iniciar Sesión</button>
-                    </div>
-                </form>
-            </div>
-            <!-- Boton para registrarse -->
-            <div class="row">
-                <!-- TODO: CAMBIAR ETIQUETA ANCLA POR ROUTERLINK DE ANGULAR -->
-                <p class="text-center mt-3 text-muted small">¿No tenés cuenta? <a href="#">Registrate</a> </p>
-            </div>
-        </div> 
+        <main class="form-signin">
+            <div class="container-md shadow rounded">
+                <div class="row">
+                    <img [src]="imagenURI" alt="Imagen de bienvenida" class="mt-3 img-fluid">
+                </div>
+                <div class="row">
+                    <h2 class="text-center mt-4 fw-bold">{{mensajeBienvenida}}</h2>
+                    <!-- Inputs -->
+                    <form [formGroup]="loginForm" (ngSubmit)="onEnviar($event)">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label" aria-placeholder="Tu nombre de Usuario"></label>
+                            <input type="text" class="form-control form-control-lg" formControlName="nombre" id="nombre" placeholder="Ingresa tu usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
+                            <input type="password" class="form-control form-control-lg" formControlName="password" id="password" placeholder="********">
+                        </div>
+                        <div class="mb-3 d-flex justify-content-center align-items-center">
+                            <label for="recordar" class="form-check-label me-3">Recordarme</label>
+                            <input type="checkbox" class="form-check-input" name="recordar" formControlName="recordar" id="recordar">
+                        </div>
+                        <!-- Boton de submit -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button class="btn btn-primary btn-lg" type="submit">Iniciar Sesión</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Boton para registrarse -->
+                <div class="row">
+                    <!-- TODO: CAMBIAR ETIQUETA ANCLA POR ROUTERLINK DE ANGULAR -->
+                    <p class="text-center mt-3 text-muted small">¿No tenés cuenta? <a href="#">Registrate</a> </p>
+                </div>
+            </div> 
+        </main>
     </div>
 </div> 
