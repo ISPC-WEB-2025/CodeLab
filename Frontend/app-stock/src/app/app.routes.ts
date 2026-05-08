@@ -13,6 +13,7 @@ import { FormMovimientoComponent } from './features/movimientos/form-movimiento.
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'quienes-somos', component: QuienesSomosComponent },
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent },
@@ -25,5 +26,5 @@ export const routes: Routes = [
   { path: 'stock', component: StockSucursalComponent },
   { path: 'movimientos', component: ListaMovimientosComponent },
   { path: 'movimientos/nuevo', component: FormMovimientoComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: 'home' }
 ];
