@@ -10,12 +10,14 @@ import { FormProveedorComponent } from './features/proveedores/form-proveedor.co
 import { StockSucursalComponent } from './features/stock/stock-sucursal.component';
 import { ListaMovimientosComponent } from './features/movimientos/lista-movimientos.component';
 import { FormMovimientoComponent } from './features/movimientos/form-movimiento.component';
+import { RegisterComponent } from './features/auth/register/register.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
   { path: 'quienes-somos', component: QuienesSomosComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'registro', component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'productos', component: ListaProductosComponent },
   { path: 'productos/nuevo', component: FormProductoComponent },
