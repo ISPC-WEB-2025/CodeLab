@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { UserAuthService } from '../../../core/services/user-auth.service';
 
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  providers: [UserAuthService],
 })
+
 export class LoginComponent {
   // Texto localizable 
   // TODO(TMF): AGREGAR MAS STRINGS QUE SE PUEDAN LOCALIZAR/SEAN TRADUCIBLES
@@ -22,10 +25,21 @@ export class LoginComponent {
       nombre:["", []],
       password:["", []],
       recordar:["", []],
-    })
+    });
   }
 
-  onEnviar(_:Event) {
-    console.log(this.loginForm.value)
+  // Inyeccion de servicio
+  private auth = inject(UserAuthService);
+
+  public onEnviar(_:Event) {
+    const loginData = this.loginForm;
+    const nombre = loginData.value.nombre;
+    const password = loginData.value.password;
+
+    const usuario = this.auth.autenticar(nombre, password);
+
+    if(usuario){
+      alert("Fuiste logeado con exito!");
+    }
   }
 }

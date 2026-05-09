@@ -10,7 +10,7 @@ export class TempUsersService {
     {id : 2, nombre : "Jane Vendedora", role: "Vendedor", password: "987654321"}
   ];
 
-  obtenerTodos() {
+  get obtenerTodos() {
     return this.listaUsuarios;
   }
 }
