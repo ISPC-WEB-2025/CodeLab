@@ -1,1 +1,32 @@
-<p>register works!</p>
+<div class="bg-image container-fluid vh-100 d-flex justify-content-center align-items-center">
+    <div class="container-md col-8 shadow-2-strong rounded-1 vh-50 bg-light">
+        <h1 class="text-center mt-4 mb-4 fw-bold">{{creaTuCuenta}}</h1>
+        <main class="form-signin d-flex justify-content-center align-items-center">
+            <form [formGroup]="registerForm" (ngSubmit)="onEnviar($event)">
+                <div class="d-flex row flex-column px-2 py-2">
+                    <div class="d-flex gap-2 my-2 col">
+                        <label for="nombre" class="form-label" aria-placeholder="Tu nombre como Usuario" ></label>
+                        <input type="text" class="form-control form-control-lg" name="nombre" formControlName="nombre" id="nombre" placeholder="Tu nombre como Usuario" required>
+
+                        <label for="email" class="form-label" aria-placeholder="Tu correo electronico"></label>
+                        <input type="email" class="form-control form-control-lg" name="email" formControlName="email" id="email" placeholder="Tu correo electronico" required>
+                    </div>
+                    <div class="d-flex gap-2 my-2 col">
+                        <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
+                        <input type="password" class="form-control form-control-lg" name="password" formControlName="password" id="password" placeholder="Tu contraseña" required>
+    
+                        <label for="confirm-password" class="form-label" aria-placeholder="Tu contraseña"></label>
+                        <input type="confirm-password" class="form-control form-control-lg" name="confirm-password" formControlName="confirm-password" id="confirm-password" placeholder="Confirma tu contraseña" required>
+                    </div>
+                    <div class="d-grid gap-2 col">
+                        <button class="btn btn-primary btn-lg ms-2 mt-4" type="submit">Crear cuenta</button>
+                    </div>
+                </div>
+            </form>
+        </main>
+        <hr>
+        <p class="text-center mt-3 text-muted small">¿Ya tenés cuenta? <a routerLink="/login">Inicia Sesión</a> </p>
+    </div>
+</div>
+
+
