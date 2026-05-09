@@ -19,11 +19,14 @@ export class RegisterComponent {
 
   constructor(private formBuilder:FormBuilder) {
     this.registerForm = this.formBuilder.group({
-
-    })
+      nombre:["", []],
+      email:["", []],
+      password:["", []],
+      confirm_password:["", []],
+    });
   }
 
   onEnviar(event:Event) {
-
+    console.log(this.registerForm.value);
   }
 }

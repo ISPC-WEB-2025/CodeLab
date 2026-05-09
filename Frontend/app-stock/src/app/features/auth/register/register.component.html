@@ -1,5 +1,5 @@
 <div class="bg-image container-fluid vh-100 d-flex justify-content-center align-items-center">
-    <div class="container-md col-8 shadow-2-strong rounded-1 vh-50 bg-light">
+    <div class="col-6 shadow-2-strong rounded-1 vh-50 bg-light">
         <h1 class="text-center mt-4 mb-4 fw-bold">{{creaTuCuenta}}</h1>
         <main class="form-signin d-flex justify-content-center align-items-center">
             <form [formGroup]="registerForm" (ngSubmit)="onEnviar($event)">
@@ -15,8 +15,8 @@
                         <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
                         <input type="password" class="form-control form-control-lg" name="password" formControlName="password" id="password" placeholder="Tu contraseña" required>
     
-                        <label for="confirm-password" class="form-label" aria-placeholder="Tu contraseña"></label>
-                        <input type="confirm-password" class="form-control form-control-lg" name="confirm-password" formControlName="confirm-password" id="confirm-password" placeholder="Confirma tu contraseña" required>
+                        <label for="confirm_password" class="form-label" aria-placeholder="Tu contraseña"></label>
+                        <input type="confirm_password" class="form-control form-control-lg" name="confirm_password" formControlName="confirm_password" id="confirm_password" placeholder="Confirma tu contraseña" required>
                     </div>
                     <div class="d-grid gap-2 col">
                         <button class="btn btn-primary btn-lg ms-2 mt-4" type="submit">Crear cuenta</button>
