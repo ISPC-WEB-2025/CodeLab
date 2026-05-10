@@ -39,28 +39,6 @@ Antes de comenzar, asegurate de tener instalado:
 
 ---
 
-<<<<<<< Updated upstream
-   a. Instalar Angular Cli utilizando el siguiente comando: `npm install -g @angular/cli`
-   b. Para evaluar que la instalación haya sido exitosa, utilizar el siguiente comando: `ng version`
-   c. En caso de estar usando Windows, hay que permitir la ejecución de scripts explícitamente. Para eso, introducir lo siguiente: `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
-   d. Navegar a la carpeta del proyecto frontend: `cd Frontend/app-stock`
-   e. Instalar las dependencias del proyecto: `npm install`
-   f. Correr el servidor de desarrollo: `ng serve`
-
-   > **Nota de seguridad**
-   >
-   > Al ejecutar `npm install` pueden aparecer advertencias de dependencias deprecadas. Estas corresponden a dependencias internas de Angular v19 y no afectan el funcionamiento de la aplicación. No ejecutar `npm audit fix --force` ya que puede romper la compatibilidad del proyecto.
-  
-3. Instala dependencias de backend:
-
-   a. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.  
-   b. En terminal: `pip install -r requirements.txt`
-   c. Crea la base de datos en MySQL: `nombre_db`
-   d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
-   e. Completalo con tus datos para conectarte con tu servidor MySQL.
-   f. En terminal: `python manage.py migrate`
-   g. En terminal: `python manage.py runserver`
-=======
 ### 1. Clonar el repositorio
 
 ```bash
