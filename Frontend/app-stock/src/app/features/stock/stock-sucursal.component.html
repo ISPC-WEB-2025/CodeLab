@@ -1,34 +1,35 @@
 <div class="stock-container">
-    <h2>Gestión de Stock</h2>
+  <h2>Gestión de Stock</h2>
 
-    <!-- Estado de carga -->
-    <p *ngIf="cargando">Cargando datos...</p>
+  <!-- Estado de carga: se activa cuando se conecta al backend real -->
 
-    <!-- Estado de error -->
-    <p *ngIf="error" class="error">{{ error }}</p>
+  <p *ngIf="cargando">Cargando datos...</p>
 
-    <!-- Tabla de datos -->
-    <table *ngIf="!cargando && !error">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Sucursal</th>
-                <th>Cantidad</th>
-                <th>Stock Mínimo</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of stockLista">
-                <td>{{ item.nombre_producto }}</td>
-                <td>{{ item.nombre_sucursal }}</td>
-                <td>{{ item.cantidad_stock }}</td>
-                <td>{{ item.stock_min }}</td>
-                <td>
-                    <button class="btn-editar">Editar</button>
-                    <button class="btn-eliminar">Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <!-- Estado de error : se activa cuando se conecta al backend real -->
+  <p *ngIf="error" class="error">{{ error }}</p>
+
+  <!-- Tabla de datos -->
+  <table *ngIf="!cargando && !error">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Sucursal</th>
+        <th>Cantidad</th>
+        <th>Stock Mínimo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of stockLista">
+        <td>{{ item.nombre_producto }}</td>
+        <td>{{ item.nombre_sucursal }}</td>
+        <td>{{ item.cantidad_stock }}</td>
+        <td>{{ item.stock_min }}</td>
+        <td>
+          <button class="btn-editar">Editar</button>
+          <button class="btn-eliminar">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
