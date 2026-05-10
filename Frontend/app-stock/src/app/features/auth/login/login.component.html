@@ -13,10 +13,10 @@
                             <div class="form-control form-control-lg error-message text-muted login-error-danger my-2">{{datosIncorrectos}}</div>
                         }
                         <div class="mb-3">
-                            <label for="nombre" class="form-label" aria-placeholder="Tu nombre de Usuario"></label>
-                            <input type="text" class="form-control form-control-lg" formControlName="nombre" id="nombre" placeholder="Ingresa tu usuario">
-                            @if (nombre?.errors && nombre?.touched) {
-                                <div class="text-danger">{{nombreInvalido}}</div>
+                            <label for="email" class="form-label" aria-placeholder="Ingresá tu correo electrónico"></label>
+                            <input type="email" class="form-control form-control-lg" formControlName="email" id="email" placeholder="Ingresá tu correo electrónico">
+                            @if (email?.errors && email?.touched) {
+                                <div class="text-danger">{{emailInvalido}}</div>
                             }
                         </div>
                         <div class="mb-3">

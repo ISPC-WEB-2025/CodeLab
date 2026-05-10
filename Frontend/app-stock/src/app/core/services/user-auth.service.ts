@@ -15,10 +15,10 @@ export class UserAuthService {
     this.listaUsuarios = TempUsersService.obtenerTodos;
   }
 
-  public autenticar(nombre:string, password:string) {
+  public autenticar(email:string, password:string) {
     console.warn("Atención!: Se está utilizando un autenticador inseguro, por lo que deberás cambiarlo antes de llevar a producción este sitio web.");
     for(const user of this.listaUsuarios) {
-      if(nombre === user.nombre && password === user.password) {
+      if(email === user.email && password === user.password) {
         return user;
       }
     }
