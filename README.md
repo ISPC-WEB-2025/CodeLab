@@ -49,7 +49,7 @@ Nuestra solución se diferencia por las siguientes características:
    b. En terminal: `pip install -r requirements.txt`
    c. Crea la base de datos en MySQL: `nombre_db`
    d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
-   e. Completalo con tus datos para conectarte con tu servidor MySQL.   
+   e. Completalo con tus datos para conectarte con tu servidor MySQL.
    f. En terminal: `python manage.py migrate`
    g. En terminal: `python manage.py runserver`
 
