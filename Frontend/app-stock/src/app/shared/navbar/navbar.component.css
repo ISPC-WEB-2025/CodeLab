@@ -17,3 +17,18 @@
   font-weight: regular;
   font-family: "Cal Sans"
 }
+
+.btn-acceso {
+  background-color: #1e3a2f;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.btn-acceso:hover {
+  background-color: #2d5a3d;
+  color: white;
+}
