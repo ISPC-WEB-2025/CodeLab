@@ -27,7 +27,9 @@
         <td>{{ item.stock_min }}</td>
         <td>
           <button class="btn-editar">Editar</button>
-          <button class="btn-eliminar">Eliminar</button>
+          <button class="btn-eliminar" (click)="eliminar(item.id_stock)">
+            Eliminar
+          </button>
         </td>
       </tr>
     </tbody>
