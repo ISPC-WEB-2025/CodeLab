@@ -16,15 +16,21 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'quienes-somos', component: QuienesSomosComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'productos', component: ListaProductosComponent },
-  { path: 'productos/nuevo', component: FormProductoComponent },
-  { path: 'productos/editar/:id', component: FormProductoComponent },
-  { path: 'proveedores', component: ListaProveedoresComponent },
-  { path: 'proveedores/nuevo', component: FormProveedorComponent },
-  { path: 'proveedores/editar/:id', component: FormProveedorComponent },
-  { path: 'stock', component: StockSucursalComponent },
-  { path: 'movimientos', component: ListaMovimientosComponent },
-  { path: 'movimientos/nuevo', component: FormMovimientoComponent },
-  { path: '**', redirectTo: 'home' }
+  { path: 'dashboard', 
+    component: DashboardComponent,
+    children: [  // estas rutas ahora son "HIJAS" del dashboard
+      {path: "", redirectTo: "stock", pathMatch: "full"},      
+      {path: "stock", component:StockSucursalComponent},
+      {path: "productos", component: ListaProductosComponent},
+      {path: "productos/nuevo", component: FormProductoComponent},
+      {path: "productos/editar/:id", component: FormProductoComponent},
+      {path: "proveedores", component: ListaProveedoresComponent},
+      {path: "proveedores/nuevo", component: FormProveedorComponent},
+      {path: "proveedores/editar/:id", component: FormProveedorComponent},
+      {path: "movimientos", component:ListaMovimientosComponent},
+      {path: "movimientos/nuevo", component: FormMovimientoComponent},
+    ]
+   },
+   { path: '**', redirectTo: 'home' }  // captura cualquier ruta no definida
 ];
+  
