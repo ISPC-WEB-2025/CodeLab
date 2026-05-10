@@ -9,6 +9,9 @@
                     <h2 class="text-center mt-4 fw-bold">{{mensajeBienvenida}}</h2>
                     <!-- Inputs -->
                     <form [formGroup]="loginForm" (ngSubmit)="onEnviar($event)">
+                        @if (loginErrored === true) {
+                            <div class="form-control form-control-lg error-message text-muted login-error-danger my-2">{{datosIncorrectos}}</div>
+                        }
                         <div class="mb-3">
                             <label for="nombre" class="form-label" aria-placeholder="Tu nombre de Usuario"></label>
                             <input type="text" class="form-control form-control-lg" formControlName="nombre" id="nombre" placeholder="Ingresa tu usuario">
@@ -31,7 +34,7 @@
                             <label for="recordar" class="form-check-label me-3">Recordarme</label>
                             <input type="checkbox" class="form-check-input" name="recordar" formControlName="recordar" id="recordar">
                         </div>
-                        <!-- Boton de submit -->
+                        <!-- Boton para iniciar sesion -->
                         <div class="d-grid gap-2 mt-4">
                             <button class="btn btn-primary btn-lg" type="submit">Iniciar Sesión</button>
                         </div>

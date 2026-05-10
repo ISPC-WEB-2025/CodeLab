@@ -149,4 +149,8 @@
     border-left: 5px solid #B94442;
     background-color: #b944424d;
 }
+.login-error-danger {
+    border: 1px solid #B94442;
+    background-color: #b944424d;
+}
 /* NO BORRAR ESTOS */

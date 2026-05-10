@@ -18,10 +18,12 @@ export class LoginComponent {
   readonly nombreInvalido:string = "Por favor ingresa tu nombre de usuario";
   readonly passwordNoExiste:string = "Por favor ingresa tu contraseña";
   readonly passwordInvalido:string = "La contraseña tiene que tener 8 o más caracteres";
+  readonly datosIncorrectos:string = "El nombre o contraseña ingresados son incorrectos";
   // URI de imagenes
   readonly imagenURI:string = "assets/deposito.png";
-  // LoginForms, para detectar datos cuando se clickea el boton de iniciar sesion
-  loginForm!:FormGroup;
+  // LoginForms, para detectar datos cuando se clickea el boton de iniciar sesion, y su estado
+  public loginForm! : FormGroup;
+  public loginError : Boolean = false;
 
   constructor(private formBuilder:FormBuilder) {
     this.loginForm = this.formBuilder.group({
@@ -31,6 +33,7 @@ export class LoginComponent {
     });
   }
 
+  // Getters para que el template pueda ver nuestros datos
   get nombre() {
     return this.loginForm.get("nombre");
   }
@@ -39,13 +42,17 @@ export class LoginComponent {
     return this.loginForm.get("password");
   }
 
+  get loginErrored():Boolean {
+    return this.loginError;
+  }
+
   // Inyeccion de servicio
   private auth = inject(UserAuthService);
 
   public onEnviar(event:Event) {
-    event.preventDefault(); // Previene que el navegador haga su trabajo por defecto, ahora lo manejamos desde aqui.
+    event.preventDefault(); // Previene que el navegador haga su trabajo por defecto, ahora lo manejamos desde aca
 
-    // Procedemos si todos los datos del formulario estan llenados y son validos antes de contactar con el backend.
+    // Procedemos si todos los datos del formulario estan llenados y son validos antes de contactar con el backend
     if(this.loginForm.valid) {
       const loginData = this.loginForm;
       const nombre = loginData.value.nombre;
@@ -54,8 +61,12 @@ export class LoginComponent {
       // Función autenticadora
       const usuario = this.auth.autenticar(nombre, password);
 
-      if(usuario){
+      if(usuario) {
+        this.loginError = false;
         alert("Fuiste logeado con exito!");
+      }
+      else {
+        this.loginError = true;
       }
     }
     else {
