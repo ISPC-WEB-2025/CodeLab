@@ -7,6 +7,8 @@ export interface StockSucursal {
   stock_min: number;
   id_art: number;
   id_suc: number;
+  nombre_producto?: string;
+  nombre_sucursal?: string;
   // Opcionales por si el backend los devuelve anidados
   producto?: Producto;
   sucursal?: Sucursal;
