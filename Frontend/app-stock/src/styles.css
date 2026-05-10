@@ -139,3 +139,18 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* NO BORRAR ESTOS */
+.ng-valid:not(form).ng-touched:not([type="checkbox"]) {
+    border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form).ng-touched:not([type="checkbox"]) {
+    border-left: 5px solid #B94442;
+    background-color: #b944424d;
+}
+.login-error-danger {
+    border: 1px solid #B94442;
+    background-color: #b944424d;
+}
+/* NO BORRAR ESTOS */

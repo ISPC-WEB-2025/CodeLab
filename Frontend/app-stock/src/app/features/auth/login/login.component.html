@@ -1,1 +1,50 @@
-<p>login works!</p>
+<div class="container-fluid vh-100 d-flex justify-content-center align-items-center bg-light">
+    <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+        <main class="form-signin">
+            <div class="container-md shadow rounded">
+                <div class="row">
+                    <img [src]="imagenURI" alt="Imagen de bienvenida" class="mt-3 img-fluid">
+                </div>
+                <div class="row">
+                    <h2 class="text-center mt-4 fw-bold">{{mensajeBienvenida}}</h2>
+                    <!-- Inputs -->
+                    <form [formGroup]="loginForm" (ngSubmit)="onEnviar($event)">
+                        @if (loginErrored === true) {
+                            <div class="form-control form-control-lg error-message text-muted login-error-danger my-2">{{datosIncorrectos}}</div>
+                        }
+                        <div class="mb-3">
+                            <label for="email" class="form-label" aria-placeholder="Ingresá tu correo electrónico"></label>
+                            <input type="email" class="form-control form-control-lg" formControlName="email" id="email" placeholder="Ingresá tu correo electrónico">
+                            @if (email?.errors && email?.touched) {
+                                <div class="text-danger">{{emailInvalido}}</div>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
+                            <input type="password" class="form-control form-control-lg" formControlName="password" id="password" placeholder="********">
+                            @if (password?.errors && password?.touched) {
+                                @if (password?.hasError("required")) {
+                                    <div class="text-danger">{{passwordNoExiste}}</div>
+                                }
+                                @else if (password?.hasError("minlength") && !password?.hasError("required")) {}
+                                    <div class="text-danger">{{passwordInvalido}}</div>
+                            }
+                        </div>
+                        <div class="mb-3 d-flex justify-content-center align-items-center">
+                            <label for="recordar" class="form-check-label me-3">Recordarme</label>
+                            <input type="checkbox" class="form-check-input" name="recordar" formControlName="recordar" id="recordar">
+                        </div>
+                        <!-- Boton para iniciar sesion -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button class="btn btn-primary btn-lg" type="submit">Iniciar Sesión</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Boton para registrarse -->
+                <div class="row">
+                    <p class="text-center mt-3 text-muted small">¿No tenés cuenta? <a routerLink="/registro">Registrate</a> </p>
+                </div>
+            </div> 
+        </main>
+    </div>
+</div> 

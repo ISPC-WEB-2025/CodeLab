@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home.component';
 import { QuienesSomosComponent } from './features/quienes-somos/quienes-somos.component';
 import { LoginComponent } from './features/auth/login/login.component';
+import { RegisterComponent } from './features/auth/register/register.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { ListaProductosComponent } from './features/productos/lista-productos.component';
 import { FormProductoComponent } from './features/productos/form-producto.component';
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'quienes-somos', component: QuienesSomosComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'registro', component: RegisterComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
