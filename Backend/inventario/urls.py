@@ -17,7 +17,9 @@ router.register(r"productos", ProductoViewSet)
 router.register(r"categorias", CategoriaViewSet)
 router.register(r"sucursales", SucursalViewSet)
 router.register(r"proveedores", ProveedorViewSet)
-router.register(r"stock-sucursales", StockSucursalViewSet)
+# GET api/stock/              → lista todo el stock con nombre de producto y sucursal
+# GET api/stock/{id}/         → detalle de un registro de stock
+router.register(r"stock", StockSucursalViewSet, basename="stock")
 
 urlpatterns = [
     path("", include(router.urls)),
