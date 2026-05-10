@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StockSucursalService } from '../../core/services/stock-sucursal.service';
 import { StockSucursal } from '../../core/models/stock-sucursal.model';
@@ -17,7 +18,10 @@ export class StockSucursalComponent implements OnInit {
   cargando: boolean = true; // inicialmente cargando
   error: string = ''; // inicialmente sin error
 
-  constructor(private stockService: StockSucursalService) {}
+  constructor(
+    private stockService: StockSucursalService,
+    private router: Router,
+  ) {}
   eliminar(id: number): void {
     if (confirm('¿Estás seguro que querés eliminar este registro?')) {
       this.stockService.delete(id).subscribe({
@@ -32,7 +36,9 @@ export class StockSucursalComponent implements OnInit {
       });
     }
   }
-
+  editar(id: number): void {
+    this.router.navigate(['/dashboard/stock/editar', id]);
+  }
   ngOnInit(): void {
     // Datos hardcodeados temporalmente (reflejan los datos de prueba de la DB)
     // TODO: reemplazar por this.stockService.getAll().subscribe() cuando se resuelva CORS con el backend
