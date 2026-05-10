@@ -31,7 +31,13 @@ class ProveedorViewSet(viewsets.ModelViewSet):
 
 
 class StockSucursalViewSet(viewsets.ModelViewSet):
-    queryset = StockSucursal.objects.select_related(
-        "id_art", "id_suc"
-    ).all()  # Optimización para evitar consultas adicionales
+    queryset = StockSucursal.objects.select_related('id_art', 'id_suc').all()
     serializer_class = StockSucursalSerializer
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        response.status_code = status.HTTP_200_OK
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
