@@ -86,7 +86,7 @@ CREATE TABLE STOCK_SUCURSAL (
     id_art         INT NOT NULL,
     id_suc         INT NOT NULL,
     PRIMARY KEY (id_stock),
-    UNIQUE KEY uq_pp_art_suc (id_art, id_prov),
+    UNIQUE KEY uq_pp_art_suc (id_art, id_suc),
     CONSTRAINT fk_stock_producto
         FOREIGN KEY (id_art) REFERENCES PRODUCTO (id_art),
     CONSTRAINT fk_stock_sucursal

@@ -2,7 +2,6 @@
 
 ![Static Badge](https://img.shields.io/github/last-commit/ISPC-WEB-2025/CodeLab?label=Último%20cambio&color=blue)
 
-
 ## 1. Descripción del proyecto
 
 Este proyecto consiste en el desarrollo de una **plataforma web integral** diseñada para la administración y control de inventarios en tiempo real. La idea es que el sistema permita a las empresas gestionar sus productos, proveedores y movimientos de mercadería de manera ágil y centralizada.
@@ -49,7 +48,7 @@ Nuestra solución se diferencia por las siguientes características:
    b. En terminal: `pip install -r requirements.txt`
    c. Crea la base de datos en MySQL: `nombre_db`
    d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
-   e. Completalo con tus datos para conectarte con tu servidor MySQL.   
+   e. Completalo con tus datos para conectarte con tu servidor MySQL.
    f. En terminal: `python manage.py migrate`
    g. En terminal: `python manage.py runserver`
 
