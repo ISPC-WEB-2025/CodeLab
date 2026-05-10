@@ -32,3 +32,15 @@
   background-color: #2d5a3d;
   color: white;
 }
+
+@media (max-width: 768px) {
+  .texto-navbar,
+  .texto-navbar1 {
+    font-size: 1.2rem;
+  }
+
+  .btn-acceso {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

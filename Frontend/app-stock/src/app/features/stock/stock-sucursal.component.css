@@ -56,3 +56,26 @@ tbody tr:hover {
 .error {
   color: #8b2020;
 }
+
+@media (max-width: 768px) {
+  table {
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .btn-editar,
+  .btn-eliminar {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
