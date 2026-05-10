@@ -52,7 +52,7 @@ CREATE TABLE PRODUCTO (
     nombre      VARCHAR(200)   NOT NULL,
     descripcion TEXT           NULL,
     codigo      VARCHAR(50)    NOT NULL,
-    precio_venta DECIMAL(10,2) NULL,
+    precio_venta DECIMAL(10,2) NOT NULL,
     id_cat      INT            NOT NULL,
     PRIMARY KEY (id_art),
     UNIQUE KEY uq_producto_codigo (codigo),
@@ -67,8 +67,9 @@ CREATE TABLE PRODUCTO_PROVEEDOR (
     id_enlace   INT            NOT NULL AUTO_INCREMENT,
     id_art      INT            NOT NULL,
     id_prov     INT            NOT NULL,
-    precio_costo DECIMAL(10,2) NULL,
+    precio_costo DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (id_enlace),
+    UNIQUE KEY uq_pp_art_prov (id_art, id_prov),
     CONSTRAINT fk_pp_producto
         FOREIGN KEY (id_art)  REFERENCES PRODUCTO  (id_art),
     CONSTRAINT fk_pp_proveedor
@@ -85,6 +86,7 @@ CREATE TABLE STOCK_SUCURSAL (
     id_art         INT NOT NULL,
     id_suc         INT NOT NULL,
     PRIMARY KEY (id_stock),
+    UNIQUE KEY uq_pp_art_suc (id_art, id_prov),
     CONSTRAINT fk_stock_producto
         FOREIGN KEY (id_art) REFERENCES PRODUCTO (id_art),
     CONSTRAINT fk_stock_sucursal
@@ -97,7 +99,7 @@ CREATE TABLE STOCK_SUCURSAL (
 CREATE TABLE MOVIMIENTO (
     id_mov     INT                                     NOT NULL AUTO_INCREMENT,
     tipo       ENUM('Entrada', 'Salida', 'Traslado')   NOT NULL,
-    fecha_hora DATETIME                                NOT NULL,
+    fecha_hora DATETIME                                NOT NULL DEFAULT CURRENT_TIMESTAMP,
     cantidad   INT                                     NOT NULL,
     motivo     VARCHAR(255)                            NULL,
     id_art     INT                                     NOT NULL,
@@ -109,7 +111,8 @@ CREATE TABLE MOVIMIENTO (
     CONSTRAINT fk_mov_sucursal
         FOREIGN KEY (id_suc)  REFERENCES SUCURSAL  (id_suc),
     CONSTRAINT fk_mov_proveedor
-        FOREIGN KEY (id_prov) REFERENCES PROVEEDOR (id_prov)
+        FOREIGN KEY (id_prov) REFERENCES PROVEEDOR (id_prov),
+    CONSTRAINT chk_mov_cantidad CHECK (cantidad > 0)
 );
 
 -- ============================================
