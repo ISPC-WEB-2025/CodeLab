@@ -2,7 +2,6 @@
 
 ![Static Badge](https://img.shields.io/github/last-commit/ISPC-WEB-2025/CodeLab?label=Último%20cambio&color=blue)
 
-
 ## 1. Descripción del proyecto
 
 Este proyecto consiste en el desarrollo de una **plataforma web integral** diseñada para la administración y control de inventarios en tiempo real. La idea es que el sistema permita a las empresas gestionar sus productos, proveedores y movimientos de mercadería de manera ágil y centralizada.
@@ -43,7 +42,14 @@ Antes de comenzar, asegurate de tener instalado:
 <<<<<<< Updated upstream
    a. Instalar Angular Cli utilizando el siguiente comando: `npm install -g @angular/cli`
    b. Para evaluar que la instalación haya sido exitosa, utilizar el siguiente comando: `ng version`
-   c. En caso de estar usando Windows, hay que permitir la ejecución de scripts explícitamente. Para eso, introducir lo siguiente: `Set.ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+   c. En caso de estar usando Windows, hay que permitir la ejecución de scripts explícitamente. Para eso, introducir lo siguiente: `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+   d. Navegar a la carpeta del proyecto frontend: `cd Frontend/app-stock`
+   e. Instalar las dependencias del proyecto: `npm install`
+   f. Correr el servidor de desarrollo: `ng serve`
+
+   > **Nota de seguridad**
+   >
+   > Al ejecutar `npm install` pueden aparecer advertencias de dependencias deprecadas. Estas corresponden a dependencias internas de Angular v19 y no afectan el funcionamiento de la aplicación. No ejecutar `npm audit fix --force` ya que puede romper la compatibilidad del proyecto.
   
 3. Instala dependencias de backend:
 
@@ -51,7 +57,7 @@ Antes de comenzar, asegurate de tener instalado:
    b. En terminal: `pip install -r requirements.txt`
    c. Crea la base de datos en MySQL: `nombre_db`
    d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
-   e. Completalo con tus datos para conectarte con tu servidor MySQL.   
+   e. Completalo con tus datos para conectarte con tu servidor MySQL.
    f. En terminal: `python manage.py migrate`
    g. En terminal: `python manage.py runserver`
 =======
