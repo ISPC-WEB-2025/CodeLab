@@ -12,10 +12,20 @@
                         <div class="mb-3">
                             <label for="nombre" class="form-label" aria-placeholder="Tu nombre de Usuario"></label>
                             <input type="text" class="form-control form-control-lg" formControlName="nombre" id="nombre" placeholder="Ingresa tu usuario">
+                            @if (nombre?.errors && nombre?.touched) {
+                                <div class="text-danger">{{nombreInvalido}}</div>
+                            }
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
                             <input type="password" class="form-control form-control-lg" formControlName="password" id="password" placeholder="********">
+                            @if (password?.errors && password?.touched) {
+                                @if (password?.hasError("required")) {
+                                    <div class="text-danger">{{passwordNoExiste}}</div>
+                                }
+                                @else if (password?.hasError("minlength") && !password?.hasError("required")) {}
+                                    <div class="text-danger">{{passwordInvalido}}</div>
+                            }
                         </div>
                         <div class="mb-3 d-flex justify-content-center align-items-center">
                             <label for="recordar" class="form-check-label me-3">Recordarme</label>
