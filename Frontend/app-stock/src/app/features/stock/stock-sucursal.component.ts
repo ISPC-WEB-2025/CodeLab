@@ -17,7 +17,21 @@ export class StockSucursalComponent implements OnInit {
   cargando: boolean = true; // inicialmente cargando
   error: string = ''; // inicialmente sin error
 
-  constructor(private stockService: StockSucursalService) {} // inyectamos el servicio para usarlo
+  constructor(private stockService: StockSucursalService) {}
+  eliminar(id: number): void {
+    if (confirm('¿Estás seguro que querés eliminar este registro?')) {
+      this.stockService.delete(id).subscribe({
+        next: () => {
+          this.stockLista = this.stockLista.filter(
+            (item) => item.id_stock !== id,
+          );
+        },
+        error: () => {
+          alert('Error al eliminar. Verificá que el backend esté corriendo.');
+        },
+      });
+    }
+  }
 
   ngOnInit(): void {
     // Datos hardcodeados temporalmente (reflejan los datos de prueba de la DB)
