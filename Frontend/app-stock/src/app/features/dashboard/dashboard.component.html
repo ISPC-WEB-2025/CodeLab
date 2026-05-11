@@ -1,0 +1,26 @@
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>ToDo Stock</h2>
+            <span>Panel Admin</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a routerLink="stock" routerLinkActive="active">Stock</a>
+            <a routerLink="productos" routerLinkActive="active">Productos</a>
+            <a routerLink="proveedores" routerLinkActive="active">Proveedores</a>
+            <a routerLink="movimientos" routerLinkActive="active">Movimientos</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a routerLink="/home">Volver al inicio</a>
+        </div>
+    </aside>
+
+    <main class="dashboard-content">
+        <div class="content-header">
+            <h1>Panel de Administración</h1>
+        </div>
+        <router-outlet></router-outlet>
+    </main>
+
+</div>
