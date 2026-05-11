@@ -139,12 +139,11 @@ python manage.py runserver
 ```
 
 ---
->>>>>>> Stashed changes
 
 ## 3. Uso básico
 
 * Backend corre en <http://127.0.0.1:8000/>
-* Api disponible en <http://http://127.0.0.1:8000/api/>
+* Api disponible en <http://127.0.0.1:8000/api/>
 * Frontend corre en <http://localhost:4200/>
 
 * Vista previa de la página: [CodeLab](https://ispc-web-2025.github.io/CodeLab/)
