@@ -10,3 +10,4 @@ class ProductoVendedorView(APIView):
         productos = Producto.objects.all()
         serializer = VendedorProductoSerializer(productos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
