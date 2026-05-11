@@ -24,8 +24,7 @@ router = DefaultRouter()
 router.register(r"productos", ProductoViewSet)
 # config/urls.py
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
     path("api/", include("inventario.urls")),
-    # path("api/", include("usuarios.urls")),
-    # path("api/", include("ventas.urls")),
+    path('api/vendedor/', include('vendedor.urls'))
 ]
