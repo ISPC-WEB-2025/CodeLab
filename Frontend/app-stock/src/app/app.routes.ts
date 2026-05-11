@@ -12,6 +12,8 @@ import { StockSucursalComponent } from './features/stock/stock-sucursal.componen
 import { ListaMovimientosComponent } from './features/movimientos/lista-movimientos.component';
 import { FormMovimientoComponent } from './features/movimientos/form-movimiento.component';
 import { FormStockComponent } from './features/stock/form-stock/form-stock.component';
+import { VendedorComponent } from './features/vendedor/vendedor.component';
+import { CatalogoComponent } from './features/vendedor/catalogo/catalogo.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -23,7 +25,6 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     children: [
-      // estas rutas ahora son "HIJAS" del dashboard
       { path: '', redirectTo: 'stock', pathMatch: 'full' },
       { path: 'stock', component: StockSucursalComponent },
       { path: 'productos', component: ListaProductosComponent },
@@ -37,5 +38,12 @@ export const routes: Routes = [
       { path: 'stock/editar/:id', component: FormStockComponent },
     ],
   },
-  { path: '**', redirectTo: 'home' }, // captura cualquier ruta no definida
+  {
+  path: 'vendedor',
+  component: VendedorComponent,
+  children: [
+    { path: 'catalogo', component: CatalogoComponent },
+  ]
+},
+  { path: '**', redirectTo: 'home' },
 ];

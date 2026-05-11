@@ -1,0 +1,26 @@
+<div class="catalogo-container">
+  <h2>Catálogo de Productos</h2>
+
+  <table class="tabla-productos">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Proveedor</th>
+        <th>Precio</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (producto of productos; track producto.id_art) {
+        <tr>
+          <td>{{ producto.codigo }}</td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.categoria }}</td>
+          <td>{{ producto.proveedor }}</td>
+          <td>{{ producto.precio_venta }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
