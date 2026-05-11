@@ -207,4 +207,4 @@ marimo/_lsp/
 __marimo__/
 
 node_modules/
-package-lock.json 
+package-lock.json Backend/todostock_db.sql
