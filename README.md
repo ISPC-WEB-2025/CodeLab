@@ -2,7 +2,6 @@
 
 ![Static Badge](https://img.shields.io/github/last-commit/ISPC-WEB-2025/CodeLab?label=Último%20cambio&color=blue)
 
-
 ## 1. Descripción del proyecto
 
 Este proyecto consiste en el desarrollo de una **plataforma web integral** diseñada para la administración y control de inventarios en tiempo real. La idea es que el sistema permita a las empresas gestionar sus productos, proveedores y movimientos de mercadería de manera ágil y centralizada.
@@ -27,60 +26,130 @@ Nuestra solución se diferencia por las siguientes características:
 
 * **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
-
-
 ## 2. Instrucciones de instalación
-
 
 ### Prerrequisitos
 
-* **Python 3.8**
-* **MySQL**
-* **Git**
+Antes de comenzar, asegurate de tener instalado:
 
+* **Git** → [git-scm.com](https://git-scm.com)
+* **Node.js** (v18 o superior, incluye npm) → [nodejs.org](https://nodejs.org)
+* **Python** (v3.10 o superior) → [python.org](https://python.org)
+* **MySQL** → [mysql.com](https://mysql.com)
 
-1. Clonar el repositorio de GitHub: `git clone ...`
+---
 
+### 1. Clonar el repositorio
 
-2. Instala dependencias de frontend:
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd <NOMBRE_DEL_PROYECTO>
+```
 
-   a. Instalar Angular Cli utilizando el siguiente comando: `npm install -g @angular/cli`
-   
-   b. Para evaluar que la instalación haya sido exitosa, utilizar el siguiente comando: `ng version`
-   
-   c. En caso de estar usando Windows, hay que permitir la ejecución de scripts explícitamente. Para eso, introducir lo siguiente: `Set.ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+---
 
-  
-3. Instala dependencias de backend:
+### 2. Frontend (Angular)
 
-   a. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.
-   
-   b. En terminal: `pip install -r requirements.txt`
-   
-   c. Crea la base de datos en MySQL: `nombre_db`
-   
-   d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
-   
-   e. Completalo con tus datos para conectarte con tu servidor MySQL.
-   
-   f. En terminal: `python manage.py migrate`
-   
-   g. En terminal: `python manage.py runserver`
+**a.** Instalar Angular CLI globalmente (si no está instalado):
 
+```bash
+npm install -g @angular/cli
+```
 
+**b.** Verificar la instalación:
+
+```bash
+ng version
+```
+
+**c.** *(Solo Windows)* Permitir ejecución de scripts en PowerShell:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+**d.** Navegar a la carpeta del proyecto frontend:
+
+```bash
+cd Frontend/app-stock
+```
+
+**e.** Instalar dependencias:
+
+```bash
+npm install
+```
+
+**f.** Iniciar el servidor de desarrollo:
+
+```bash
+ng serve
+```
+
+> [!NOTE]
+> Al ejecutar `npm install` pueden aparecer advertencias de dependencias deprecadas. Estas corresponden a dependencias internas de Angular v19 y no afectan el funcionamiento de la aplicación. **No ejecutar** `npm audit fix --force` ya que puede romper la compatibilidad del proyecto.
+
+---
+
+### 3. Backend (Django)
+
+**a.** Crear y activar el entorno virtual:
+
+```bash
+# Crear
+python -m venv venv
+
+# Activar en Linux/Mac
+source venv/bin/activate
+
+# Activar en Windows
+venv\Scripts\activate
+```
+
+**b.** Instalar dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+**c.** Crear la base de datos en MySQL:
+
+```sql
+CREATE DATABASE nombre_db;
+```
+
+**d.** Crear el archivo de variables de entorno copiando el modelo:
+
+```bash
+cp .env_modelo .env
+```
+
+**e.** Completar `.env` con tus credenciales de MySQL.
+
+**f.** Ejecutar migraciones:
+
+```bash
+python manage.py migrate
+```
+
+**g.** Iniciar el servidor:
+
+```bash
+python manage.py runserver
+```
+
+---
+>>>>>>> Stashed changes
 
 ## 3. Uso básico
 
-* Backend corre en http://127.0.0.1:8000/
+* Backend corre en <http://127.0.0.1:8000/>
+* Api disponible en <http://http://127.0.0.1:8000/api/>
+* Frontend corre en <http://localhost:4200/>
 
-* Api disponible en http://http://127.0.0.1:8000/api/
-
-* Frontend corre en http://localhost:4200/
-
-
+* Vista previa de la página: [CodeLab](https://ispc-web-2025.github.io/CodeLab/)
 
 ## 4. Lista de requerimientos
-
   
 * **Requerimientos Funcionales (RF)**
 
@@ -94,7 +163,6 @@ Nuestra solución se diferencia por las siguientes características:
 
      **RF5 - Baja de productos:** El usuario podrá eliminar productos del sistema, impactando directamente en la base de datos MySQL.
   
-
 * **Requerimientos No Funcionales (RNF)**
 
     **RNF1 - Seguridad:**  El sistema no debe exponer información sensible (como usuarios o contraseñas de la DB) en el código fuente, utilizando archivos .env y brindando un .env_modelo para el despliegue seguro.
@@ -103,11 +171,9 @@ Nuestra solución se diferencia por las siguientes características:
 
     **RNF3 - Diseño responsivo:** La interfaz del sistema, desarrollada con Angular y Bootstrap, debe ser completamente responsiva, garantizando una visualización y usabilidad óptima en dispositivos móviles, tablets y computadoras de escritorio.
 
-
-
 ## 5. Tecnologías utilizadas
 
-* **Frontend:** Angular 
+* **Frontend:** Angular
 * **Backend:** Python y Django Rest Framework
 * **Base de Datos:** MySQL
 * **Estilos:** CSS3 y Bootstrap

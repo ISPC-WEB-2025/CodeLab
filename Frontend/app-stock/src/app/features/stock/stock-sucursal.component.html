@@ -1,0 +1,41 @@
+<div class="stock-contenedor">
+  <h2>Gestión de Stock</h2>
+
+  <p *ngIf="cargando">Cargando datos...</p>
+  <p *ngIf="error" class="texto-error">{{ error }}</p>
+
+  <div *ngIf="!cargando && !error">
+    <p class="contador">Total de registros: {{ stockLista.length }}</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Sucursal</th>
+          <th>Cantidad</th>
+          <th>Stock Mínimo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let item of stockLista"
+          [class.fila-stock-bajo]="item.cantidad_stock <= item.stock_min"
+        >
+          <td>{{ item.nombre_producto }}</td>
+          <td>{{ item.nombre_sucursal }}</td>
+          <td>{{ item.cantidad_stock }}</td>
+          <td>{{ item.stock_min }}</td>
+          <td class="celda-acciones">
+            <button class="btn-editar" (click)="editar(item.id_stock)">
+              Editar
+            </button>
+            <button class="btn-eliminar" (click)="eliminar(item.id_stock)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

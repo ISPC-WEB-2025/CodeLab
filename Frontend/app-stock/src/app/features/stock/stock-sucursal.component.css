@@ -1,0 +1,164 @@
+/* ===== CONTENEDOR ===== */
+.stock-contenedor {
+  padding: 0.5rem 0;
+}
+
+.stock-contenedor h2 {
+  font-size: 1.8rem;
+  color: #1e3a2f;
+  margin-bottom: 0.4rem;
+}
+
+.contador {
+  font-size: 0.88rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.texto-error {
+  color: #8b2020;
+}
+
+/* ===== TABLA ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+thead {
+  background-color: #1e3a2f;
+  color: white;
+}
+
+th {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.92rem;
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background-color: #f0f7f3;
+}
+
+/* ===== FILA STOCK BAJO ===== */
+.fila-stock-bajo {
+  background-color: #fde8e8 !important;
+  color: #8b2020;
+}
+
+.fila-stock-bajo:hover {
+  background-color: #fad4d4 !important;
+}
+
+/* ===== ACCIONES ===== */
+.celda-acciones {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-editar,
+.btn-eliminar {
+  border: none;
+  padding: 0.4rem 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+  white-space: nowrap;
+}
+
+.btn-editar:active,
+.btn-eliminar:active {
+  transform: scale(0.97);
+}
+
+.btn-editar {
+  background-color: #2d5a3d;
+  color: white;
+}
+
+.btn-editar:hover {
+  background-color: #1e3a2f;
+}
+
+.btn-eliminar {
+  background-color: #c0392b;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background-color: #8b2020;
+}
+
+/* ===== RESPONSIVE — TABLET (768px) ===== */
+@media (max-width: 768px) {
+  .stock-contenedor h2 {
+    font-size: 1.4rem;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  th,
+  td {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.88rem;
+  }
+
+  .celda-acciones {
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: stretch;
+  }
+
+  .btn-editar,
+  .btn-eliminar {
+    width: 100%;
+    text-align: center;
+    padding: 0.45rem 0.5rem;
+  }
+}
+
+/* ===== RESPONSIVE — MOBILE (480px) ===== */
+@media (max-width: 480px) {
+  .stock-contenedor h2 {
+    font-size: 1.2rem;
+  }
+
+  th,
+  td {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.82rem;
+  }
+
+  .btn-editar,
+  .btn-eliminar {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
+}
