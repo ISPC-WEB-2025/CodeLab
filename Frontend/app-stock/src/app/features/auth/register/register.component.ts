@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { validadorPassword } from './register.validator';
 
 @Component({
   selector: 'app-register',
@@ -36,6 +37,8 @@ export class RegisterComponent {
       email:["", [Validators.required, Validators.email], []],
       password:["", [Validators.required, Validators.minLength(8)], []],
       confirm_password:["", [Validators.required, Validators.minLength(8)], []],
+    }, {
+      validators: [validadorPassword("password", "confirm_password")]
     });
   }
 
@@ -62,17 +65,11 @@ export class RegisterComponent {
 
     if (this.registerForm.valid) {
       const registerData = this.registerForm.value;
+      const nombre = registerData.nombre;
+      const email = registerData.email;
 
-      const pass = registerData.password;
-      const c_pass = registerData.confirm_password;
-
-      if ((pass !== c_pass) || (pass.value !== c_pass.value)) {
-        this.registerErrored = true;
-      }
-      else {
-        this.registerErrored = false;
-        alert(`Usuario registrado! Nombre: ${registerData.nombre}, email: ${registerData.email}`);
-      }
+      this.registerErrored = false;
+      alert(`Usuario registrado! Nombre: ${nombre}, email: ${email}`);
     }
     else {
       this.registerErrored = true;
