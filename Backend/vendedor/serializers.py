@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Producto, Categoria, Proveedor, ProductoProveedor
 
+
 class VendedorProductoSerializer(serializers.ModelSerializer):
     categoria = serializers.CharField(source='id_cat.nombre', read_only=True)
     proveedor = serializers.SerializerMethodField()
