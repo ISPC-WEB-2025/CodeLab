@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop  # Se ejecuta cada vez que subas cambios a develop
+      - main     # Se ejecuta cada vez que hagamos merge de develop a main
 
 jobs:
   build-and-deploy:
