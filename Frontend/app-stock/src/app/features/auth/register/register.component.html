@@ -1,5 +1,7 @@
 <div class="bg-image container-fluid vh-100 d-flex justify-content-center align-items-center">
     <div class="col-6 shadow-2-strong rounded-1 vh-50 bg-light px-2 py-2">
+        <a routerLink="/home">⟵ Volver al inicio</a>
+        <hr>
         <h1 class="text-center mt-4 mb-4 fw-bold">{{creaTuCuenta}}</h1>
         <main class="form-signin d-flex justify-content-center align-items-center">
             <form [formGroup]="registerForm" (ngSubmit)="onEnviar($event)">
