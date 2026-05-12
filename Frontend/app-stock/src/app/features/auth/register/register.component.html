@@ -30,7 +30,7 @@
                         <div class="d-flex flex-column gap-2 my-2 col">
                             <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
                             <input type="password" class="form-control form-control-lg" name="password" formControlName="password" id="password" placeholder="Tu contraseña" required>
-                            @if (password?.errors && password?.touched && registroError) {
+                            @if (password?.errors && password?.touched && registerErrored) {
                                 <div class="text-danger">{{password?.hasError("required") && !password?.hasError("minlength") ? passwordVacio : 
                                     password?.hasError("minlength") ? passwordCorto : 
                                     password?.hasError("mismatch") ? passwordNoCoincide : errorDesconocido}}
@@ -40,7 +40,7 @@
                         <div class="d-flex flex-column gap-2 my-2 col">
                             <label for="confirm_password" class="form-label" aria-placeholder="Tu contraseña"></label>
                             <input type="password" class="form-control form-control-lg" name="confirm_password" formControlName="confirm_password" id="confirm_password" placeholder="Confirma tu contraseña" required>
-                            @if (c_password?.errors && c_password?.touched && registroError) {
+                            @if (c_password?.errors && c_password?.touched && registerErrored) {
                                 <div class="text-danger">{{c_password?.hasError("required") && !c_password?.hasError("minlength") ? passwordVacio : 
                                     c_password?.hasError("minlength") ? passwordCorto : 
                                     c_password?.hasError("mismatch") ? passwordNoCoincide : errorDesconocido}}
