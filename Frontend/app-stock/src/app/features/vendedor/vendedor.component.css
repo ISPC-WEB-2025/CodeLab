@@ -62,9 +62,22 @@
 }
 
 .sidebar-footer a {
-  color: #a8c5b5;
+   display: block;
+  text-align: center;
+  color: white;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  border: 2px solid #a8c5b5;
+  border-radius: 6px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.sidebar-footer a:hover {
+  background-color: #a8c5b5;
+  color: #1e3a2f;
 }
 
 .dashboard-content {
