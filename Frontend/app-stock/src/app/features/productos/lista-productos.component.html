@@ -5,14 +5,16 @@
   <h2>Productos</h2>
 
   @if (cargando) {
-<p>Cargando datos...</p>
-}
-  @if (error) {
-<p class="texto-error">{{ error }}</p>
-}
+  <p>Cargando datos...</p>
+  }
+  @if (error === 'demo') {
+  <p class="aviso-demo">
+    ⚠️ Backend no disponible en este entorno. Se muestran datos de prueba.
+  </p>
+  }
 
-  @if (!cargando && !error) {
-<div>
+  @if (!cargando && error !== 'Error al cargar los productos. Verificá que el backend esté corriendo.') {
+  <div>
     <p class="contador">Total de productos: {{ productos.length }}</p>
 
     <table class="table border-bottom border-success-subtle">
@@ -28,7 +30,7 @@
       </thead>
       <tbody>
         @for (producto of productos; track producto) {
-<tr>
+        <tr>
           <td>{{ producto.nombre }}</td>
           <td>{{ producto.codigo }}</td>
           <td>{{ producto.precio_venta ? ('$' + producto.precio_venta) : '-' }}</td>
@@ -40,9 +42,9 @@
             </button>
           </td>
         </tr>
-}
+        }
       </tbody>
     </table>
   </div>
-}
+  }
 </div>

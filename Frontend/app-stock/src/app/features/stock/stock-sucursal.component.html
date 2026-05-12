@@ -1,9 +1,6 @@
 <div class="stock-contenedor">
     <h2>Gestión de Stock</h2>
 
-    @if (cargando) {
-    <p>Cargando datos...</p>
-    }
     <!-- Estado de error: se activa cuando no se conecte al backend real -->
     @if (error === 'demo') {
     <p class="aviso-demo">
