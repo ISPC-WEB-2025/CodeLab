@@ -5,26 +5,26 @@
 ## 1. Descripción del proyecto
 
 Este proyecto consiste en el desarrollo de una **plataforma web integral** diseñada para la administración y control de inventarios en tiempo real. La idea es que el sistema permita a las empresas gestionar sus productos, proveedores y movimientos de mercadería de manera ágil y centralizada.
-  
+
 Muchas pequeñas y medianas empresas aún dependen de procesos manuales o planillas de cálculo propensas a errores para controlar sus activos. Esto deriva en diversos problemas como:
 
-* *Falta de visibilidad*, es decir, no saber con certeza cuánta mercadería hay disponible.
+- _Falta de visibilidad_, es decir, no saber con certeza cuánta mercadería hay disponible.
 
-* *Pérdida de ventas*, debido a la ausencia de alertas tempranas en las bajas de stock.
+- _Pérdida de ventas_, debido a la ausencia de alertas tempranas en las bajas de stock.
 
-* *Desperdicio de capital* por exceso de productos estacionales o de baja rotación acumulados en depósito.
+- _Desperdicio de capital_ por exceso de productos estacionales o de baja rotación acumulados en depósito.
 
-* *Desorganización* y dificultad para rastrear entradas y salidas de distintas sucursales o depósitos.
+- _Desorganización_ y dificultad para rastrear entradas y salidas de distintas sucursales o depósitos.
 
 Nuestra solución se diferencia por las siguientes características:
 
-* **Modular y adaptable**: su estructura permite configurar categorías y atributos de productos según el rubro de la empresa (desde una ferretería hasta una tienda de ropa).
+- **Modular y adaptable**: su estructura permite configurar categorías y atributos de productos según el rubro de la empresa (desde una ferretería hasta una tienda de ropa).
 
-* **Escalable**: gracias al uso de una API REST sólida, el sistema puede crecer en funciones sin comprometer el rendimiento.
+- **Escalable**: gracias al uso de una API REST sólida, el sistema puede crecer en funciones sin comprometer el rendimiento.
 
-* **Accesibilidad total**: al ser una aplicación web, los dueños de negocio pueden monitorear su stock desde cualquier dispositivo con acceso a internet.
+- **Accesibilidad total**: al ser una aplicación web, los dueños de negocio pueden monitorear su stock desde cualquier dispositivo con acceso a internet.
 
-* **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
+- **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
 ## 2. Instrucciones de instalación
 
@@ -32,10 +32,10 @@ Nuestra solución se diferencia por las siguientes características:
 
 Antes de comenzar, asegurate de tener instalado:
 
-* **Git** → [git-scm.com](https://git-scm.com)
-* **Node.js** (v18 o superior, incluye npm) → [nodejs.org](https://nodejs.org)
-* **Python** (v3.10 o superior) → [python.org](https://python.org)
-* **MySQL** → [mysql.com](https://mysql.com)
+- **Git** → [git-scm.com](https://git-scm.com)
+- **Node.js** (v18 o superior, incluye npm) → [nodejs.org](https://nodejs.org)
+- **Python** (v3.10 o superior) → [python.org](https://python.org)
+- **MySQL** → [mysql.com](https://mysql.com)
 
 ---
 
@@ -62,7 +62,7 @@ npm install -g @angular/cli
 ng version
 ```
 
-**c.** *(Solo Windows)* Permitir ejecución de scripts en PowerShell:
+**c.** _(Solo Windows)_ Permitir ejecución de scripts en PowerShell:
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
@@ -142,37 +142,39 @@ python manage.py runserver
 
 ## 3. Uso básico
 
-* Backend corre en <http://127.0.0.1:8000/>
-* Api disponible en <http://127.0.0.1:8000/api/>
-* Frontend corre en <http://localhost:4200/>
+- Backend corre en <http://127.0.0.1:8000/>
+- Api disponible en <http://127.0.0.1:8000/api/>
+- Frontend corre en <http://localhost:4200/>
 
-* Vista previa de la página: [CodeLab](https://ispc-web-2025.github.io/CodeLab/)
+- Vista previa de la página: [CodeLab](https://ispc-web-2025.github.io/CodeLab/)
 
 ## 4. Lista de requerimientos
-  
-* **Requerimientos Funcionales (RF)**
 
-     **RF1 - Registro de productos:** El sistema permitirá dar de alta productos ingresando obligatoriamente nombre, descripción, precio y stock inicial.
+- **Requerimientos Funcionales (RF)**
 
-     **RF2 - Gestión centralizada:** El sistema permitirá a las empresas administrar de manera ágil y centralizada sus productos, la información de sus proveedores y el registro de movimientos de mercadería.
+| ID      | Descripción                                                                                                                                                                      | Prioridad | Actor                    |
+| :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: | :----------------------- |
+| **RF1** | **Registro de productos:** El sistema debe permitir dar de alta productos ingresando: nombre, descripción, precio, código y stock inicial.                                       |   Must    | Administrador            |
+| **RF2** | **Gestión de productos:** El sistema debe permitir crear, editar y eliminar productos del catálogo.                                                                              |   Must    | Administrador / Vendedor |
+| **RF3** | **Gestión de proveedores:** El sistema debe permitir registrar, editar y eliminar proveedores, asociándolos a los productos correspondientes.                                    |   Must    | Administrador            |
+| **RF4** | **Registro de movimientos:** El sistema debe registrar cada entrada y salida de mercadería, indicando fecha, cantidad, producto y usuario responsable.                           |   Must    | Vendedor                 |
+| **RF5** | **Gestión de inventario:** El sistema debe permitir actualizar el stock de un producto existente, registrando tanto entradas como salidas de mercadería.                         |   Must    | Vendedor                 |
+| **RF6** | **Baja de productos:** El sistema debe permitir eliminar un producto del catálogo.                                                                                               |   Must    | Administrador            |
+| **RF7** | **Alertas de stock mínimo:** El sistema debe notificar al usuario cuando el stock de un producto caiga por debajo de un umbral mínimo configurable.                              |  Should   | Sistema                  |
+| **RF8** | **Autenticación de usuarios:** El sistema debe contar con un módulo de inicio de sesión que permitirá el acceso únicamente a usuarios registrados mediante usuario y contraseña. |   Must    | Administrador            |
 
-     **RF3 - Consulta y filtrado:** El usuario podrá visualizar el listado completo de productos y proveedores, con la capacidad de filtrar resultados por categoría para agilizar la búsqueda.
+- **Requerimientos No Funcionales (RNF)**
 
-     **RF4 - Gestión de inventario:** El sistema permitirá actualizar el stock de un producto existente, registrando tanto entradas como salidas de mercadería.
-
-     **RF5 - Baja de productos:** El usuario podrá eliminar productos del sistema, impactando directamente en la base de datos MySQL.
-  
-* **Requerimientos No Funcionales (RNF)**
-
-    **RNF1 - Seguridad:**  El sistema no debe exponer información sensible (como usuarios o contraseñas de la DB) en el código fuente, utilizando archivos .env y brindando un .env_modelo para el despliegue seguro.
-
-    **RNF2 - Rendimiento:** Los datos modificados en la base de datos deben ser actualizados y visibles para todos los usuarios que acceden al sistema en un tiempo de respuesta menor a 2 segundos.
-
-    **RNF3 - Diseño responsivo:** La interfaz del sistema, desarrollada con Angular y Bootstrap, debe ser completamente responsiva, garantizando una visualización y usabilidad óptima en dispositivos móviles, tablets y computadoras de escritorio.
+| ID       | Categoría         | Descripción                                                                                                                                                                                                                                                     |
+| :------- | :---------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **RNF1** | **Seguridad**     | El sistema no debe exponer credenciales de base de datos, tokens de API ni datos de usuarios en respuestas, logs públicos o código del cliente.                                                                                                                 |
+| **RNF2** | **Rendimiento**   | Los datos modificados en el inventario deben ser visibles para todos los usuarios en un tiempo de respuesta menor a 2 segundos, medido bajo condiciones normales de operación con hasta 50 usuarios concurrentes y carga de red estable.                        |
+| **RNF3** | **Usabilidad**    | La interfaz debe adaptarse correctamente a dispositivos móviles, tablets y escritorio, garantizando que todos los elementos sean legibles e interactuables sin desplazamiento horizontal. Compatible con Chrome ≥ 110, Firefox ≥ 110, Safari ≥ 16 y Edge ≥ 110. |
+| **RNF4** | **Accesibilidad** | La plataforma debe ser accesible para usuarios con discapacidades visuales, motoras o cognitivas.                                                                                                                                                               |
 
 ## 5. Tecnologías utilizadas
 
-* **Frontend:** Angular
-* **Backend:** Python y Django Rest Framework
-* **Base de Datos:** MySQL
-* **Estilos:** CSS3 y Bootstrap
+- **Frontend:** Angular
+- **Backend:** Python y Django Rest Framework
+- **Base de Datos:** MySQL
+- **Estilos:** CSS3 y Bootstrap
