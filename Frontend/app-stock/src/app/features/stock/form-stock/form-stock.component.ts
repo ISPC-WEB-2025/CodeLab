@@ -7,12 +7,12 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { StockSucursalService } from '../../../core/services/stock-sucursal.service';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-form-stock',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './form-stock.component.html',
   styleUrl: './form-stock.component.css',
 })

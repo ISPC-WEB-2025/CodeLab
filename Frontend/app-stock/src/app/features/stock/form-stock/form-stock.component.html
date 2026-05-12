@@ -1,9 +1,12 @@
 <div class="form-contenedor">
   <h2>Editar Stock</h2>
 
-  <p *ngIf="cargando">Cargando datos...</p>
+  @if (cargando) {
+<p>Cargando datos...</p>
+}
 
-  <form *ngIf="!cargando" [formGroup]="formulario" (ngSubmit)="guardar()">
+  @if (!cargando) {
+<form [formGroup]="formulario" (ngSubmit)="guardar()">
     <div class="campo">
       <label for="cantidad_stock">Cantidad en stock</label>
       <input
@@ -11,29 +14,33 @@
         type="number"
         formControlName="cantidad_stock"
       />
-      <span
-        class="error"
-        *ngIf="
+      @if (
           formulario.get('cantidad_stock')?.invalid &&
           formulario.get('cantidad_stock')?.touched
-        "
+        ) {
+<span
+        class="error"
+       
       >
         La cantidad es obligatoria y debe ser mayor o igual a 0
       </span>
+}
     </div>
 
     <div class="campo">
       <label for="stock_min">Stock mínimo</label>
       <input id="stock_min" type="number" formControlName="stock_min" />
-      <span
-        class="error"
-        *ngIf="
+      @if (
           formulario.get('stock_min')?.invalid &&
           formulario.get('stock_min')?.touched
-        "
+        ) {
+<span
+        class="error"
+       
       >
         El stock mínimo es obligatorio y debe ser mayor o igual a 0
       </span>
+}
     </div>
 
     <div class="botones">
@@ -43,4 +50,5 @@
       <button type="button" (click)="cancelar()">Cancelar</button>
     </div>
   </form>
+}
 </div>

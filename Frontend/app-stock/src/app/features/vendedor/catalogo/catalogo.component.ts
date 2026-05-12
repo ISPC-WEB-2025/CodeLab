@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { VendedorService } from '../../../core/services/vendedor.service';
 
 @Component({
   selector: 'app-catalogo',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './catalogo.component.html',
   styleUrl: './catalogo.component.css'
 })
