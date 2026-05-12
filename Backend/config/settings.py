@@ -131,3 +131,6 @@ STATIC_URL = "static/"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
 ]
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'inventario.exceptions.custom_exception_handler',
+}
