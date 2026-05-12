@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { StockSucursalService } from '../../core/services/stock-sucursal.service';
 import { StockSucursal } from '../../core/models/stock-sucursal.model';
 
 @Component({
   selector: 'app-stock-sucursal',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './stock-sucursal.component.html',
   styleUrl: './stock-sucursal.component.css',
 })

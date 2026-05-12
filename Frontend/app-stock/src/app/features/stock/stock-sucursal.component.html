@@ -1,10 +1,15 @@
 <div class="stock-contenedor">
   <h2>Gestión de Stock</h2>
 
-  <p *ngIf="cargando">Cargando datos...</p>
-  <p *ngIf="error" class="texto-error">{{ error }}</p>
+  @if (cargando) {
+<p>Cargando datos...</p>
+}
+  @if (error) {
+<p class="texto-error">{{ error }}</p>
+}
 
-  <div *ngIf="!cargando && !error">
+  @if (!cargando && !error) {
+<div>
     <p class="contador">Total de registros: {{ stockLista.length }}</p>
 
     <table>
@@ -18,8 +23,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let item of stockLista"
+        @for (item of stockLista; track item) {
+<tr
+         
           [class.fila-stock-bajo]="item.cantidad_stock <= item.stock_min"
         >
           <td>{{ item.nombre_producto }}</td>
@@ -35,7 +41,9 @@
             </button>
           </td>
         </tr>
+}
       </tbody>
     </table>
   </div>
+}
 </div>

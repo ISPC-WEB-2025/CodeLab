@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { ProductoService } from '../../core/services/producto.service';
 import { CategoriaService } from '../../core/services/categoria.service';
@@ -7,7 +7,7 @@ import { CategoriaService } from '../../core/services/categoria.service';
 
 @Component({
   selector: 'app-form-producto',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './form-producto.component.html',
   styleUrl: './form-producto.component.css'
 })
