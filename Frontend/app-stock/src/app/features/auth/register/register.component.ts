@@ -14,7 +14,7 @@ import { validadorPassword } from './register.validator';
 export class RegisterComponent {
   // Texto localizable 
   // TODO(TMF): AGREGAR MAS STRINGS QUE SE PUEDAN LOCALIZAR/SEAN TRADUCIBLES
-  readonly creaTuCuenta: string = "¡Create tu cuenta y llenate de sorpresas!";
+  readonly creaTuCuenta: string = "¡Creá tu cuenta!";
 
   readonly registroError: string = "Hay campos que son inválidos. ¡Por favor revisalos antes de enviar el formulario!";
   readonly errorDesconocido: string = "Error desconocido.";
