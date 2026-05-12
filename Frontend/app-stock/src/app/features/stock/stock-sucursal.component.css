@@ -68,13 +68,6 @@ tbody tr:hover {
 }
 
 /* ===== ACCIONES ===== */
-.celda-acciones {
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-  align-items: center;
-}
-
 .btn-editar,
 .btn-eliminar {
   border: none;
@@ -110,6 +103,15 @@ tbody tr:hover {
 
 .btn-eliminar:hover {
   background-color: #8b2020;
+}
+
+.aviso-demo {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
 
 /* ===== RESPONSIVE — TABLET (768px) ===== */

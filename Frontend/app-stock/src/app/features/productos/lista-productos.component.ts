@@ -18,10 +18,10 @@ export class ListaProductosComponent implements OnInit {
   error: string = '';
 
   constructor(private productoService: ProductoService,
-              private router: Router) {}
-              irAltaProducto() {
-              this.router.navigate(['/dashboard/productos/nuevo']);
-              }
+    private router: Router) { }
+  irAltaProducto() {
+    this.router.navigate(['/dashboard/productos/nuevo']);
+  }
 
   ngOnInit() {
     this.productoService.getAll().subscribe({
@@ -30,7 +30,13 @@ export class ListaProductosComponent implements OnInit {
         this.cargando = false;
       },
       error: () => {
-        this.error = 'Error al cargar los productos. Verificá que el backend esté corriendo.';
+        // Fallback: datos de prueba cuando el backend no está disponible
+        this.productos = [
+          { id_art: 1, nombre: 'Perfil de aluminio 45mm', codigo: 'ALU-45', precio_venta: 12500.00, id_cat: 1, descripcion: 'Perfil para guías de cortinas' },
+          { id_art: 2, nombre: 'Motor Tubular 50Nm', codigo: 'MOT-50', precio_venta: 85000.00, id_cat: 4, descripcion: 'Motor para cortinas de enrollar pesadas' },
+          { id_art: 3, nombre: 'Lama de aluminio inyectado', codigo: 'LAM-PORT', precio_venta: 4500.50, id_cat: 3, descripcion: 'Lama para portones rodantes' }
+        ];
+        this.error = 'demo';
         this.cargando = false;
       }
     });
