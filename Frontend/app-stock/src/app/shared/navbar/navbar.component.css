@@ -1,8 +1,3 @@
-/* .cal-sans-regular {
-  font-family: "Cal Sans";
-  font-weight: 400;
-  font-style: normal;
-} */
 
 .texto-navbar {
   color: #2d5132;
@@ -16,4 +11,32 @@
   font-size: 25px;
   font-weight: regular;
   font-family: "Cal Sans"
+}
+
+.btn-acceso {  
+  background-color: #1e3a2f;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+
+}
+
+.btn-acceso:hover {
+  background-color: #2d5a3d;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .texto-navbar,
+  .texto-navbar1 {
+    font-size: 1.2rem;
+  }
+
+  .btn-acceso {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
 }

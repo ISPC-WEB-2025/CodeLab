@@ -2,112 +2,179 @@
 
 ![Static Badge](https://img.shields.io/github/last-commit/ISPC-WEB-2025/CodeLab?label=Último%20cambio&color=blue)
 
-
 ## 1. Descripción del proyecto
 
 Este proyecto consiste en el desarrollo de una **plataforma web integral** diseñada para la administración y control de inventarios en tiempo real. La idea es que el sistema permita a las empresas gestionar sus productos, proveedores y movimientos de mercadería de manera ágil y centralizada.
-  
+
 Muchas pequeñas y medianas empresas aún dependen de procesos manuales o planillas de cálculo propensas a errores para controlar sus activos. Esto deriva en diversos problemas como:
 
-* *Falta de visibilidad*, es decir, no saber con certeza cuánta mercadería hay disponible.
+- _Falta de visibilidad_, es decir, no saber con certeza cuánta mercadería hay disponible.
 
-* *Pérdida de ventas*, debido a la ausencia de alertas tempranas en las bajas de stock.
+- _Pérdida de ventas_, debido a la ausencia de alertas tempranas en las bajas de stock.
 
-* *Desperdicio de capital* por exceso de productos estacionales o de baja rotación acumulados en depósito.
+- _Desperdicio de capital_ por exceso de productos estacionales o de baja rotación acumulados en depósito.
 
-* *Desorganización* y dificultad para rastrear entradas y salidas de distintas sucursales o depósitos.
+- _Desorganización_ y dificultad para rastrear entradas y salidas de distintas sucursales o depósitos.
 
 Nuestra solución se diferencia por las siguientes características:
 
-* **Modular y adaptable**: su estructura permite configurar categorías y atributos de productos según el rubro de la empresa (desde una ferretería hasta una tienda de ropa).
+- **Modular y adaptable**: su estructura permite configurar categorías y atributos de productos según el rubro de la empresa (desde una ferretería hasta una tienda de ropa).
 
-* **Escalable**: gracias al uso de una API REST sólida, el sistema puede crecer en funciones sin comprometer el rendimiento.
+- **Escalable**: gracias al uso de una API REST sólida, el sistema puede crecer en funciones sin comprometer el rendimiento.
 
-* **Accesibilidad total**: al ser una aplicación web, los dueños de negocio pueden monitorear su stock desde cualquier dispositivo con acceso a internet.
+- **Accesibilidad total**: al ser una aplicación web, los dueños de negocio pueden monitorear su stock desde cualquier dispositivo con acceso a internet.
 
-* **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
-
-
+- **Interfaz intuitiva**: diseñada con foco en la experiencia de usuario (UX) para reducir la curva de aprendizaje del personal.
 
 ## 2. Instrucciones de instalación
 
-
 ### Prerrequisitos
 
-* **Python 3.8**
-* **MySQL**
-* **Git**
+Antes de comenzar, asegurate de tener instalado:
 
+- **Git** → [git-scm.com](https://git-scm.com)
+- **Node.js** (v18 o superior, incluye npm) → [nodejs.org](https://nodejs.org)
+- **Python** (v3.10 o superior) → [python.org](https://python.org)
+- **MySQL** → [mysql.com](https://mysql.com)
 
-1. Clonar el repositorio de GitHub: `git clone ...`
+---
 
+### 1. Clonar el repositorio
 
-2. Instala dependencias de frontend:
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd <NOMBRE_DEL_PROYECTO>
+```
 
-   a. Instalar Angular Cli utilizando el siguiente comando: `npm install -g @angular/cli`
-   
-   b. Para evaluar que la instalación haya sido exitosa, utilizar el siguiente comando: `ng version`
-   
-   c. En caso de estar usando Windows, hay que permitir la ejecución de scripts explícitamente. Para eso, introducir lo siguiente: `Set.ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+---
 
-  
-3. Instala dependencias de backend:
+### 2. Frontend (Angular)
 
-   a. Crea y activa el entorno virtual. Puedes hacerlo directamente sobre el directorio de tu repositorio local.
-   
-   b. En terminal: `pip install -r requirements.txt`
-   
-   c. Crea la base de datos en MySQL: `nombre_db`
-   
-   d. Crea archivo `.env` y copia el contenido de `.env_modelo` a este archivo.
-   
-   e. Completalo con tus datos para conectarte con tu servidor MySQL.
-   
-   f. En terminal: `python manage.py migrate`
-   
-   g. En terminal: `python manage.py runserver`
+**a.** Instalar Angular CLI globalmente (si no está instalado):
 
+```bash
+npm install -g @angular/cli
+```
 
+**b.** Verificar la instalación:
+
+```bash
+ng version
+```
+
+**c.** _(Solo Windows)_ Permitir ejecución de scripts en PowerShell:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+**d.** Navegar a la carpeta del proyecto frontend:
+
+```bash
+cd Frontend/app-stock
+```
+
+**e.** Instalar dependencias:
+
+```bash
+npm install
+```
+
+**f.** Iniciar el servidor de desarrollo:
+
+```bash
+ng serve
+```
+
+> [!NOTE]
+> Al ejecutar `npm install` pueden aparecer advertencias de dependencias deprecadas. Estas corresponden a dependencias internas de Angular v19 y no afectan el funcionamiento de la aplicación. **No ejecutar** `npm audit fix --force` ya que puede romper la compatibilidad del proyecto.
+
+---
+
+### 3. Backend (Django)
+
+**a.** Crear y activar el entorno virtual:
+
+```bash
+# Crear
+python -m venv venv
+
+# Activar en Linux/Mac
+source venv/bin/activate
+
+# Activar en Windows
+venv\Scripts\activate
+```
+
+**b.** Instalar dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+**c.** Crear la base de datos en MySQL:
+
+```sql
+CREATE DATABASE nombre_db;
+```
+
+**d.** Crear el archivo de variables de entorno copiando el modelo:
+
+```bash
+cp .env_modelo .env
+```
+
+**e.** Completar `.env` con tus credenciales de MySQL.
+
+**f.** Ejecutar migraciones:
+
+```bash
+python manage.py migrate
+```
+
+**g.** Iniciar el servidor:
+
+```bash
+python manage.py runserver
+```
+
+---
 
 ## 3. Uso básico
 
-* Backend corre en http://127.0.0.1:8000/
+- Backend corre en <http://127.0.0.1:8000/>
+- Api disponible en <http://127.0.0.1:8000/api/>
+- Frontend corre en <http://localhost:4200/>
 
-* Api disponible en http://http://127.0.0.1:8000/api/
-
-* Frontend corre en http://localhost:4200/
-
-
+- Vista previa de la página: [CodeLab](https://ispc-web-2025.github.io/CodeLab/)
 
 ## 4. Lista de requerimientos
 
-  
-* **Requerimientos Funcionales (RF)**
+- **Requerimientos Funcionales (RF)**
 
-     **RF1 - Registro de productos:** El sistema permitirá dar de alta productos ingresando obligatoriamente nombre, descripción, precio y stock inicial.
+| ID      | Descripción                                                                                                                                                                      | Prioridad | Actor                    |
+| :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: | :----------------------- |
+| **RF1** | **Registro de productos:** El sistema debe permitir dar de alta productos ingresando: nombre, descripción, precio, código y stock inicial.                                       |   Must    | Administrador            |
+| **RF2** | **Gestión de productos:** El sistema debe permitir crear, editar y eliminar productos del catálogo.                                                                              |   Must    | Administrador / Vendedor |
+| **RF3** | **Gestión de proveedores:** El sistema debe permitir registrar, editar y eliminar proveedores, asociándolos a los productos correspondientes.                                    |   Must    | Administrador            |
+| **RF4** | **Registro de movimientos:** El sistema debe registrar cada entrada y salida de mercadería, indicando fecha, cantidad, producto y usuario responsable.                           |   Must    | Vendedor                 |
+| **RF5** | **Gestión de inventario:** El sistema debe permitir actualizar el stock de un producto existente, registrando tanto entradas como salidas de mercadería.                         |   Must    | Vendedor                 |
+| **RF6** | **Baja de productos:** El sistema debe permitir eliminar un producto del catálogo.                                                                                               |   Must    | Administrador            |
+| **RF7** | **Alertas de stock mínimo:** El sistema debe notificar al usuario cuando el stock de un producto caiga por debajo de un umbral mínimo configurable.                              |  Should   | Sistema                  |
+| **RF8** | **Autenticación de usuarios:** El sistema debe contar con un módulo de inicio de sesión que permitirá el acceso únicamente a usuarios registrados mediante usuario y contraseña. |   Must    | Administrador            |
 
-     **RF2 - Gestión centralizada:** El sistema permitirá a las empresas administrar de manera ágil y centralizada sus productos, la información de sus proveedores y el registro de movimientos de mercadería.
+- **Requerimientos No Funcionales (RNF)**
 
-     **RF3 - Consulta y filtrado:** El usuario podrá visualizar el listado completo de productos y proveedores, con la capacidad de filtrar resultados por categoría para agilizar la búsqueda.
-
-     **RF4 - Gestión de inventario:** El sistema permitirá actualizar el stock de un producto existente, registrando tanto entradas como salidas de mercadería.
-
-     **RF5 - Baja de productos:** El usuario podrá eliminar productos del sistema, impactando directamente en la base de datos MySQL.
-  
-
-* **Requerimientos No Funcionales (RNF)**
-
-    **RNF1 - Seguridad:**  El sistema no debe exponer información sensible (como usuarios o contraseñas de la DB) en el código fuente, utilizando archivos .env y brindando un .env_modelo para el despliegue seguro.
-
-    **RNF2 - Rendimiento:** Los datos modificados en la base de datos deben ser actualizados y visibles para todos los usuarios que acceden al sistema en un tiempo de respuesta menor a 2 segundos.
-
-    **RNF3 - Diseño responsivo:** La interfaz del sistema, desarrollada con Angular y Bootstrap, debe ser completamente responsiva, garantizando una visualización y usabilidad óptima en dispositivos móviles, tablets y computadoras de escritorio.
-
-
+| ID       | Categoría         | Descripción                                                                                                                                                                                                                                                     |
+| :------- | :---------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **RNF1** | **Seguridad**     | El sistema no debe exponer credenciales de base de datos, tokens de API ni datos de usuarios en respuestas, logs públicos o código del cliente.                                                                                                                 |
+| **RNF2** | **Rendimiento**   | Los datos modificados en el inventario deben ser visibles para todos los usuarios en un tiempo de respuesta menor a 2 segundos, medido bajo condiciones normales de operación con hasta 50 usuarios concurrentes y carga de red estable.                        |
+| **RNF3** | **Usabilidad**    | La interfaz debe adaptarse correctamente a dispositivos móviles, tablets y escritorio, garantizando que todos los elementos sean legibles e interactuables sin desplazamiento horizontal. Compatible con Chrome ≥ 110, Firefox ≥ 110, Safari ≥ 16 y Edge ≥ 110. |
+| **RNF4** | **Accesibilidad** | La plataforma debe ser accesible para usuarios con discapacidades visuales, motoras o cognitivas.                                                                                                                                                               |
 
 ## 5. Tecnologías utilizadas
 
-* **Frontend:** Angular 
-* **Backend:** Python y Django Rest Framework
-* **Base de Datos:** MySQL
-* **Estilos:** CSS3 y Bootstrap
+- **Frontend:** Angular
+- **Backend:** Python y Django Rest Framework
+- **Base de Datos:** MySQL
+- **Estilos:** CSS3 y Bootstrap
