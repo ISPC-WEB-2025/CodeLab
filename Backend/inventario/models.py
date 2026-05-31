@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 
 class Categoria(models.Model):
     id_cat = models.AutoField(primary_key=True)
@@ -19,7 +20,11 @@ class Producto(models.Model):
     descripcion = models.TextField(null=True, blank=True)
     codigo = models.CharField(max_length=50, unique=True)
     precio_venta = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True
+        max_digits=10, 
+        decimal_places=2, 
+        null=True, 
+        blank=True,
+        validators=[MinValueValidator(Decimal('0.00'))]
     )
     id_cat = models.ForeignKey(Categoria, on_delete=models.PROTECT, db_column="id_cat")
     # Agregamos db_column='id_cat' para que busque la columna exacta que creaste
