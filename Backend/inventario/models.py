@@ -72,3 +72,33 @@ class StockSucursal(models.Model):
     class Meta:
         managed = False
         db_table = "STOCK_SUCURSAL"
+
+class Movimiento(models.Model):
+    TIPO_CHOICES = [
+        ('Entrada', 'Entrada'),
+        ('Salida', 'Salida'),
+        ('Traslado', 'Traslado'),
+    ]
+
+    id_mov = models.AutoField(primary_key=True)
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    fecha_hora = models.DateTimeField()
+    cantidad = models.IntegerField()
+    motivo = models.CharField(max_length=255, null=True, blank=True)
+    
+    # Referenciamos de este mismo archivo
+    id_art = models.ForeignKey(Producto, on_delete=models.PROTECT, db_column="id_art")
+    id_suc = models.ForeignKey(Sucursal, on_delete=models.PROTECT, db_column="id_suc")
+    id_prov = models.ForeignKey(Proveedor, on_delete=models.PROTECT, db_column="id_prov", null=True, blank=True)
+    
+    # Usuario está en otra aplicación (usuarios/models.py)
+    # Por eso lo mantenemos entre comillas, para que Django lo vaya a buscar allá (no requiere importarlo acá, lo busca al momento de ejecutar la migración)
+    # Lazy-loading: para evitar problemas de importación circular si dsp necesitamos importar algo de acá en usuarios/models.py
+    id_usuario = models.ForeignKey("usuarios.Usuario", on_delete=models.PROTECT, db_column="id_usuario")
+
+    class Meta:
+        managed = False  
+        db_table = "MOVIMIENTO"
+
+    def __str__(self):
+        return f"{self.tipo} - {self.cantidad} unid. de {self.id_art.nombre} ({self.fecha_hora.strftime('%d/%m/%Y')})"
