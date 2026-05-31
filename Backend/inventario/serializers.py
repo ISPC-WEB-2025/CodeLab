@@ -10,19 +10,45 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 class ProductoSerializer(serializers.ModelSerializer):
     # nombre de la categoría para facilitar la lectura desde Angular
-    categoria_nombre = serializers.ReadOnlyField(source='id_cat.nombre') 
-    
+    categoria_nombre = serializers.ReadOnlyField(source="id_cat.nombre")
+    nombre = serializers.CharField(
+        allow_blank=True
+    )  # Permitir cadena vacía, pero validaremos en validate_nombre
+    codigo = serializers.CharField(
+        allow_blank=True
+    )  # Permitir cadena vacía, pero validaremos en validate_codigo
+
     class Meta:
         model = Producto
         fields = [
-            'id_art', 
-            'nombre', 
-            'descripcion', 
-            'codigo', 
-            'precio_venta', 
-            'id_cat',           
-            'categoria_nombre'  
+            "id_art",
+            "nombre",
+            "descripcion",
+            "codigo",
+            "precio_venta",
+            "id_cat",
+            "categoria_nombre",
         ]
+
+    def validate_nombre(self, value):
+        if not value or not value.strip():
+            raise serializers.ValidationError("El nombre del producto es obligatorio.")
+        return value.strip()
+
+    def validate_codigo(self, value):
+        if not value or not value.strip():
+            raise serializers.ValidationError("El código del producto es obligatorio.")
+
+        qs = Producto.objects.filter(codigo=value.strip())
+        # En edición excluimos el producto actual para no chocar consigo mismo
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError(
+                f"Ya existe un producto con el código '{value}'."
+            )
+
+        return value.strip()
 
 
 class SucursalSerializer(serializers.ModelSerializer):
