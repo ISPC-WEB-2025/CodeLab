@@ -10,7 +10,7 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 class ProductoSerializer(serializers.ModelSerializer):
     # nombre de la categoría para facilitar la lectura desde Angular
-    categoria_nombre = serializers.ReadOnlyField(source='id_cat.nombre') 
+    categoria = CategoriaSerializer(source='id_cat', read_only=True)
     
     class Meta:
         model = Producto
@@ -20,8 +20,8 @@ class ProductoSerializer(serializers.ModelSerializer):
             'descripcion', 
             'codigo', 
             'precio_venta', 
-            'id_cat',           
-            'categoria_nombre'  
+            'id_cat',       # Angular usa este para mandar al back el num de categoria en el POST/PUT    
+            'categoria'     # y este para leer el objeto completo en el GET
         ]
 
 
