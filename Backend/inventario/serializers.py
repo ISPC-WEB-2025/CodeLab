@@ -9,9 +9,20 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 
 class ProductoSerializer(serializers.ModelSerializer):
+    # nombre de la categoría para facilitar la lectura desde Angular
+    categoria_nombre = serializers.ReadOnlyField(source='id_cat.nombre') 
+    
     class Meta:
         model = Producto
-        fields = "__all__"
+        fields = [
+            'id_art', 
+            'nombre', 
+            'descripcion', 
+            'codigo', 
+            'precio_venta', 
+            'id_cat',           
+            'categoria_nombre'  
+        ]
 
 
 class SucursalSerializer(serializers.ModelSerializer):
