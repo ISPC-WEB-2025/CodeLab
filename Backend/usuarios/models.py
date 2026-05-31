@@ -73,8 +73,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     #Lógica de roles
     @property
     def es_admin(self):
-        """Devuelve True si el usuario tiene asignado el rol de Administrador."""
-        return self.rol is not None and self.rol.nombre.lower() == 'administrador'
+        """Devuelve True si el usuario tiene asignado el rol de Administrador o si es superusuario."""
+        return self.is_superuser or (self.rol is not None and self.rol.nombre.lower() == 'administrador')
+    
 
     @property
     def es_empleado(self):
