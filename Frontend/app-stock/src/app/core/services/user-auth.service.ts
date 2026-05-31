@@ -1,27 +1,43 @@
 import { Injectable } from '@angular/core';
-import { TempUsersService } from './temp-users.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 
-// Este servicio es completamente inseguro, está acá unicamente para pruebas de frontend. 
-// Lo más seguro es que debas realizar la conexión a una base de datos real para sacar los datos que necesites.
-// NO UTILIZAR ESTE SERVICIO SI ESTAS DE ACUERDO CON ESTO.
 export class UserAuthService {
-  private listaUsuarios:any;
-  
-  constructor(private TempUsersService:TempUsersService) {
-    this.listaUsuarios = TempUsersService.obtenerTodos;
+  private apiUrl = 'http://localhost:8000/api/usuarios/login/';
+
+  constructor(private http: HttpClient) { }
+
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<any>(this.apiUrl, { email, password }).pipe(
+      tap(response => {
+        if (response.token) {
+          localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('es_admin', response.es_admin.toString());
+          localStorage.setItem('es_empleado', response.es_empleado.toString());
+        }
+      })
+    );
   }
 
-  public autenticar(email:string, password:string) {
-    console.warn("Atención!: Se está utilizando un autenticador inseguro, por lo que deberás cambiarlo antes de llevar a producción este sitio web.");
-    for(const user of this.listaUsuarios) {
-      if(email === user.email && password === user.password) {
-        return user;
-      }
-    }
-    return null;
+  getToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken(); 
+  }
+
+  isAdmin(): boolean {
+    return localStorage.getItem('es_admin') === 'true';
+  }
+
+  logout(): void {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('es_admin');
+    localStorage.removeItem('es_empleado');
   }
 }
