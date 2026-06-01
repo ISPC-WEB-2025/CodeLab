@@ -4,7 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response #Es el traductor. Agarra diccionarios de Python y los convierte en JSON
 from rest_framework.authtoken.models import Token #El modelo de Token que viene con Django REST Framework
 from rest_framework import status #Nos da códigos de estado HTTP para usar en las respuestas (200, 400, 401, etc)
-from django.contrib.auth import authenticate #va a la base de datos, busca el usuario y verifica si la contraseña desencriptada coincide.
+from django.contrib.auth import authenticate#va a la base de datos, busca el usuario y verifica si la contraseña desencriptada coincide.
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .models import Usuario
+from .serializers import UsuarioSerializer
 
 class LoginUsuarioView(APIView):
     def post(self, request): #define vista, solo recibe post, no get (ej barra de naveg) / request contiene lo que envía Angular
@@ -29,3 +33,7 @@ class LoginUsuarioView(APIView):
             return Response({
                 'error': 'Email o contraseña incorrectos.'
             }, status=status.HTTP_401_UNAUTHORIZED)
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
