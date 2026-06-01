@@ -1,82 +1,47 @@
 <div class="stock-contenedor">
-    <h2>Gestión de Stock</h2>
+  <h2>Gestión de Stock</h2>
 
-    <!-- Estado de error: se activa cuando no se conecte al backend real -->
-    @if (error === 'demo') {
+  @if (error === 'demo') {
     <p class="aviso-demo">
-        ⚠️ Backend no disponible en este entorno. Se muestran datos de prueba.
+      ⚠️ Backend no disponible en este entorno. Se muestran datos de prueba.
     </p>
-    }
+  }
 
-    <!-- Estado de carga -->
-    @if (cargando) {
+  @if (cargando) {
     <p>Cargando datos...</p>
-    }
+  }
 
-    <!-- Tabla de datos -->
-    @if (!cargando && stockLista.length > 0) {
-    <table>
+  @if (!cargando && stockLista.length > 0) {
+    <div>
+      <p class="contador">Total de registros: {{ stockLista.length }}</p>
+
+      <table>
         <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Sucursal</th>
-                <th>Cantidad</th>
-                <th>Stock Mínimo</th>
-                <th>Acciones</th>
-            </tr>
+          <tr>
+            <th>Producto</th>
+            <th>Sucursal</th>
+            <th>Cantidad</th>
+            <th>Stock Mínimo</th>
+            <th>Acciones</th>
+          </tr>
         </thead>
         <tbody>
-            @for (item of stockLista; track item.id_stock) {
-            <tr>
-                <td>{{ item.nombre_producto }}</td>
-                <td>{{ item.nombre_sucursal }}</td>
-                <td>{{ item.cantidad_stock }}</td>
-                <td>{{ item.stock_min }}</td>
-                <td>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-sm btn-success" (click)="editar(item.id_stock)">Editar</button>
-                        <button class="btn btn-sm btn-danger" (click)="eliminar(item.id_stock)">Eliminar</button>
-                    </div>
-                </td>
+          @for (item of stockLista; track item.id_stock) {
+            <tr [class.fila-stock-bajo]="item.cantidad_stock <= item.stock_min">
+              <td>{{ item.nombre_producto }}</td>
+              <td>{{ item.nombre_sucursal }}</td>
+              <td>{{ item.cantidad_stock }}</td>
+              <td>{{ item.stock_min }}</td>
+              <td>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-success" (click)="editar(item.id_stock)">Editar</button>
+                  <button class="btn btn-sm btn-danger" (click)="eliminar(item.id_stock)">Eliminar</button>
+                </div>
+              </td>
             </tr>
-            }
+          }
         </tbody>
-    </table>
-    }
-
-    @if (!cargando && !error) {
-    <div>
-        <p class="contador">Total de registros: {{ stockLista.length }}</p>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Sucursal</th>
-                    <th>Cantidad</th>
-                    <th>Stock Mínimo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (item of stockLista; track item) {
-                <tr [class.fila-stock-bajo]="item.cantidad_stock <= item.stock_min">
-                    <td>{{ item.nombre_producto }}</td>
-                    <td>{{ item.nombre_sucursal }}</td>
-                    <td>{{ item.cantidad_stock }}</td>
-                    <td>{{ item.stock_min }}</td>
-                    <td class="celda-acciones">
-                        <button class="btn-editar" (click)="editar(item.id_stock)">
-                            Editar
-                        </button>
-                        <button class="btn-eliminar" (click)="eliminar(item.id_stock)">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
+      </table>
     </div>
-    }
+  }
 </div>

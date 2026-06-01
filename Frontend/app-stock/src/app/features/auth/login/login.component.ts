@@ -1,79 +1,97 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  FormsModule,
+} from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { UserAuthService } from '../../../core/services/user-auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterLink, CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
-  providers: [UserAuthService],
 })
-
 export class LoginComponent {
-  // Texto localizable 
-  // TODO(TMF): AGREGAR MAS STRINGS QUE SE PUEDAN LOCALIZAR/SEAN TRADUCIBLES
-  readonly mensajeBienvenida: string = "¡Bienvenido a ToDo Stock!";
+  // 1. Inyección de dependencias usando inject() en lugar de constructor tradicional
+  private userAuthService = inject(UserAuthService);
+  private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
   
-  readonly emailInvalido: string = "Por favor ingresá tu correo electrónico";
-  readonly passwordNoExiste: string = "Por favor ingresá  tu contraseña";
-  readonly passwordInvalido: string = "La contraseña tiene que tener 8 o más caracteres";
-  readonly datosIncorrectos: string = "El nombre o contraseña ingresados son incorrectos";
+  // Texto localizable
+  // TODO(TMF): AGREGAR MAS STRINGS QUE SE PUEDAN LOCALIZAR/SEAN TRADUCIBLES
+  readonly mensajeBienvenida: string = '¡Bienvenido a ToDo Stock!';
+  readonly emailInvalido: string = 'Por favor ingresá tu correo electrónico';
+  readonly passwordNoExiste: string = 'Por favor ingresá  tu contraseña';
+  readonly passwordInvalido: string = 'La contraseña tiene que tener 8 o más caracteres';
+  readonly datosIncorrectos: string = 'El nombre o contraseña ingresados son incorrectos';
+  
   // URI de imagenes
-  readonly imagenURI: string = "assets/deposito.png";
+  readonly imagenURI: string = 'assets/deposito.png';
+  
   // LoginForms, para detectar datos cuando se clickea el boton de iniciar sesion, y su estado
   public loginForm!: FormGroup;
   public loginError: Boolean = false;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor() {
     this.loginForm = this.formBuilder.group({
-      email:["", [Validators.required, Validators.email], []],
-      password:["", [Validators.required, Validators.minLength(8)], []],
-      recordar:["", []],
+      email: ['', [Validators.required, Validators.email], []],
+      password: ['', [Validators.required, Validators.minLength(8)], []],
+      recordar: ['', []],
     });
   }
 
   // Getters para que el template pueda ver nuestros datos
   get email() {
-    return this.loginForm.get("email");
+    return this.loginForm.get('email');
   }
 
   get password() {
-    return this.loginForm.get("password");
+    return this.loginForm.get('password');
   }
 
-  get loginErrored():Boolean {
+  get loginErrored(): Boolean {
     return this.loginError;
   }
-
-  // Inyeccion de servicio
-  private auth = inject(UserAuthService);
 
   public onEnviar(event: Event) {
     event.preventDefault(); // Previene que el navegador haga su trabajo por defecto, ahora lo manejamos desde acá
 
     // Procedemos si todos los datos del formulario estan llenados y son válidos antes de contactar con el backend
-    if(this.loginForm.valid) {
-      const loginData = this.loginForm;
-      const email = loginData.value.email;
-      const password = loginData.value.password;
+    if (this.loginForm.valid) {
+      const email = this.loginForm.value.email;
+      const password = this.loginForm.value.password;
 
-      // Función autenticadora
-      const usuario = this.auth.autenticar(email, password);
+      // Llamada asincrónica al backend usando .subscribe()
+      this.userAuthService.login(email, password).subscribe({
+        next: (respuesta) => {
+          // Si Django devuelve 200 OK, entramos acá
+          this.loginError = false;
 
-      // Logeado con éxito, lo mostramos con un alert por el momento
-      if(usuario) {
-        this.loginError = false;
-        alert(`¡Bienvenido ${usuario.nombre}@rol:${usuario.role}, fuiste logeado con exito!`);
-      }
-      // Fallo en login, se muestra un mensaje en rojo en el template
-      else {
-        this.loginError = true;
-      }
-    }
-    // Fallo en login, al menos un campo tiene errores. Lo mostramos al marcar a todos los campos como tocados
-    else {
+          // Redirigir según los booleanos que definimos en el backend
+          if (respuesta.es_admin) {
+            this.router.navigate(['/dashboard']);
+          } else if (respuesta.es_empleado) {
+            this.router.navigate(['/vendedor']); // Mantenemos la ruta a vendedor
+          } else {
+            // Fallback por si el usuario no tiene ningún rol asignado
+            console.warn('Usuario sin rol definido');
+            this.router.navigate(['/']);
+          }
+        },
+        error: (err) => {
+          // Si Django devuelve 401 Unauthorized, entramos acá
+          console.error('Error de autenticación', err);
+          this.loginError = true;
+        }
+      });
+    } else {
+      // Fallo en login, al menos un campo tiene errores
       this.loginForm.markAllAsTouched();
     }
   }

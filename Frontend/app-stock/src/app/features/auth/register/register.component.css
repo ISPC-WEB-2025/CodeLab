@@ -1,6 +1,6 @@
 .bg-image {
     height: 100vh;
-    background-image: url(../../../../../public/assets/deposito.png); /* ../../Ughhhhhh/Que/Horror/Esto.png */
+    background-image: url("/assets/deposito.png"); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
