@@ -1,57 +1,91 @@
 import { Component, OnInit } from '@angular/core';
-
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // Importar módulos reactivos
 import { ProductoService } from '../../core/services/producto.service';
 import { CategoriaService } from '../../core/services/categoria.service';
 
 
 @Component({
   selector: 'app-form-producto',
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './form-producto.component.html',
   styleUrl: './form-producto.component.css'
 })
 export class FormProductoComponent implements OnInit {
 
   categorias: any[] = [];
+  productoForm!: FormGroup; // Definición del contenedor del formulario  
 
-  producto = {
-    nombre: '',
-    codigo: '',
-    precio_venta: null,
-    id_cat: null,
-    descripcion: ''
-  };
-
-  constructor(private productoService: ProductoService,
-              private categoriaService: CategoriaService) {}
+  constructor(
+    private fb: FormBuilder,
+    private productoService: ProductoService,
+    private categoriaService: CategoriaService
+  ) { }
 
   ngOnInit() {
-    this.categoriaService.getAll().subscribe(data => {
-      this.categorias = data;
+    this.initForm();
+    this.cargarCategorias();
+  }
+
+  initForm() {
+    this.productoForm = this.fb.group({
+      nombre: ['', [Validators.required]],
+      codigo: ['', [Validators.required]],
+      precio_venta: [null],
+      id_cat: ['', [Validators.required]],
+      descripcion: ['']
     });
   }
 
+  cargarCategorias() {
+    this.categoriaService.getAll().subscribe({
+      next: (data) => this.categorias = data,
+      error: (err) => console.error('Error al cargar categorías:', err)
+    });
+  }
+
+  // variable para almacenar los errores
+  erroresBackend: any = null;
+
   guardar() {
-    this.productoService.create(this.producto).subscribe({
+    // 1. Limpiar errores previos ante un nuevo intento de envío
+    this.erroresBackend = null;
+
+    // 2. Validación preventiva en Frontend
+    if (this.productoForm.invalid) {
+      alert('Por favor, completa los campos obligatorios del formulario.');
+      return;
+    }
+
+    // 3. Extracción de datos del Formulario Reactivo
+    const productoData = this.productoForm.value;
+
+    // 4. Envío al Servicio HTTP
+    this.productoService.create(productoData).subscribe({
       next: () => {
         alert('Producto guardado correctamente');
         this.resetForm();
       },
       error: (err) => {
-        console.error('Error al guardar:', err);
-        alert('Hubo un error al guardar el producto');
+        console.error('Error capturado:', err);
+
+        // 5. Interceptación de errores de validación de Django (HTTP 400)
+        if (err.status === 400 && err.error) {
+          this.erroresBackend = err.error;
+        } else {
+          // Fallback para caídas de servidor o errores 500
+          alert('Hubo un error inesperado en el servidor. Intentá más tarde.');
+        }
       }
     });
   }
 
   resetForm() {
-    this.producto = {
+    this.productoForm.reset({
       nombre: '',
       codigo: '',
       precio_venta: null,
-      id_cat: null,
+      id_cat: '',
       descripcion: ''
-    };
+    });
   }
 }
