@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 
+
 class Categoria(models.Model):
     id_cat = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
@@ -20,11 +21,7 @@ class Producto(models.Model):
     descripcion = models.TextField(null=True, blank=True)
     codigo = models.CharField(max_length=50, unique=True)
     precio_venta = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        null=True, 
-        blank=True,
-        validators=[MinValueValidator(Decimal('0.00'))]
+        max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )
     id_cat = models.ForeignKey(Categoria, on_delete=models.PROTECT, db_column="id_cat")
     # Agregamos db_column='id_cat' para que busque la columna exacta que creaste
@@ -78,11 +75,12 @@ class StockSucursal(models.Model):
         managed = False
         db_table = "STOCK_SUCURSAL"
 
+
 class Movimiento(models.Model):
     TIPO_CHOICES = [
-        ('Entrada', 'Entrada'),
-        ('Salida', 'Salida'),
-        ('Traslado', 'Traslado'),
+        ("Entrada", "Entrada"),
+        ("Salida", "Salida"),
+        ("Traslado", "Traslado"),
     ]
 
     id_mov = models.AutoField(primary_key=True)
@@ -90,19 +88,23 @@ class Movimiento(models.Model):
     fecha_hora = models.DateTimeField()
     cantidad = models.IntegerField()
     motivo = models.CharField(max_length=255, null=True, blank=True)
-    
+
     # Referenciamos de este mismo archivo
     id_art = models.ForeignKey(Producto, on_delete=models.PROTECT, db_column="id_art")
     id_suc = models.ForeignKey(Sucursal, on_delete=models.PROTECT, db_column="id_suc")
-    id_prov = models.ForeignKey(Proveedor, on_delete=models.PROTECT, db_column="id_prov", null=True, blank=True)
-    
+    id_prov = models.ForeignKey(
+        Proveedor, on_delete=models.PROTECT, db_column="id_prov", null=True, blank=True
+    )
+
     # Usuario está en otra aplicación (usuarios/models.py)
     # Por eso lo mantenemos entre comillas, para que Django lo vaya a buscar allá (no requiere importarlo acá, lo busca al momento de ejecutar la migración)
     # Lazy-loading: para evitar problemas de importación circular si dsp necesitamos importar algo de acá en usuarios/models.py
-    id_usuario = models.ForeignKey("usuarios.Usuario", on_delete=models.PROTECT, db_column="id_usuario")
+    id_usuario = models.ForeignKey(
+        "usuarios.Usuario", on_delete=models.PROTECT, db_column="id_usuario"
+    )
 
     class Meta:
-        managed = False  
+        managed = False
         db_table = "MOVIMIENTO"
 
     def __str__(self):

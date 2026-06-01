@@ -31,13 +31,15 @@ class ProveedorViewSet(viewsets.ModelViewSet):
 
 
 class StockSucursalViewSet(viewsets.ModelViewSet):
-    queryset = StockSucursal.objects.select_related('id_art', 'id_suc').all()
+    queryset = StockSucursal.objects.select_related("id_art", "id_suc").all()
     serializer_class = StockSucursalSerializer
 
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        response.status_code = status.HTTP_200_OK
-        return response
+    # REMOVIDO: update()
+    # Justificación: Redundante. El método update() nativo de ModelViewSet ya procesa
+    # internamente la actualización y retorna un estado HTTP 200 OK por defecto.
+    # Forzar el status_code manualmente no altera ni aporta comportamiento extra.
 
-    def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs)
+    # REMOVIDO: destroy()
+    # Justificación: Código muerto (Dead Code). Invocar a super().destroy() sin añadir
+    # lógica de validación previa o posterior al borrado duplica el comportamiento
+    # heredado de la clase padre sin ningún propósito técnico

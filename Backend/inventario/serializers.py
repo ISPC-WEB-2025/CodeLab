@@ -11,7 +11,7 @@ class CategoriaSerializer(serializers.ModelSerializer):
 class ProductoSerializer(serializers.ModelSerializer):
     # nombre de la categoría para facilitar la lectura desde Angular
 
-    categoria = CategoriaSerializer(source='id_cat', read_only=True)    
+    categoria = CategoriaSerializer(source="id_cat", read_only=True)
     nombre = serializers.CharField(
         allow_blank=True
     )  # Permitir cadena vacía, pero validaremos en validate_nombre
@@ -22,13 +22,13 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = [
-            'id_art', 
-            'nombre', 
-            'descripcion', 
-            'codigo', 
-            'precio_venta', 
-            'id_cat',       # Angular usa este para mandar al back el num de categoria en el POST/PUT    
-            'categoria'     # y este para leer el objeto completo en el GET
+            "id_art",
+            "nombre",
+            "descripcion",
+            "codigo",
+            "precio_venta",
+            "id_cat",  # Angular usa este para mandar al back el num de categoria en el POST/PUT
+            "categoria",  # y este para leer el objeto completo en el GET
         ]
 
     def validate_nombre(self, value):
@@ -70,4 +70,12 @@ class StockSucursalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StockSucursal
-        fields = "__all__"
+        fields = [  # definir explícitamente los campos para controlar el orden y evitar exponer campos innecesarios
+            "id_stock",
+            "cantidad_stock",
+            "stock_min",
+            "id_art",
+            "id_suc",
+            "nombre_producto",
+            "nombre_sucursal",
+        ]
