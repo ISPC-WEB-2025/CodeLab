@@ -41,6 +41,8 @@ export class RegisterComponent {
   registerForm!: FormGroup;
   registerErrored: boolean = false;
 
+  protected esconderPassword: boolean = true;
+
   constructor(private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group(
       {
@@ -101,5 +103,10 @@ export class RegisterComponent {
       this.registerErrored = true;
       this.registerForm.markAllAsTouched();
     }
+  }
+
+  // Funcion para alternar la vista de contraseñas al clickear en el ojo
+  public alternarVisibilidadPassword(){
+    this.esconderPassword = !this.esconderPassword;
   }
 }

@@ -46,7 +46,12 @@
                     <div class="row align-items-start">
                         <div class="d-flex flex-column gap-2 my-2 col">
                             <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
-                            <input type="password" class="form-control form-control-lg" name="password" formControlName="password" id="password" placeholder="Tu contraseña" required>
+                            <div class="d-inline">
+                                <input [type]="esconderPassword ? 'password' : 'text'"  class="form-control form-control-lg" name="password" formControlName="password" id="password" placeholder="Tu contraseña" required>
+                                <button type="button" (click)="alternarVisibilidadPassword()" class="btn btn-outline-secondary toggle-btn">
+                                    <i [class]="esconderPassword ? 'bi bi-eye' : 'bi bi-eye-slash'">o</i> <!-- TODO: CAMBIAR ESTO -->
+                                </button>
+                            </div>
                             @if (password?.errors && password?.touched && registerErrored) {
                                 <div class="text-danger">{{password?.hasError("required") && !password?.hasError("minlength") ? passwordVacio : 
                                     password?.hasError("minlength") ? passwordCorto : 
@@ -56,7 +61,7 @@
                         </div>
                         <div class="d-flex flex-column gap-2 my-2 col">
                             <label for="confirm_password" class="form-label" aria-placeholder="Tu contraseña"></label>
-                            <input type="password" class="form-control form-control-lg" name="confirm_password" formControlName="confirm_password" id="confirm_password" placeholder="Confirma tu contraseña" required>
+                            <input [type]="esconderPassword ? 'password' : 'text'" class="form-control form-control-lg" name="confirm_password" formControlName="confirm_password" id="confirm_password" placeholder="Confirma tu contraseña" required>
                             @if (c_password?.errors && c_password?.touched && registerErrored) {
                                 <div class="text-danger">{{c_password?.hasError("required") && !c_password?.hasError("minlength") ? passwordVacio : 
                                     c_password?.hasError("minlength") ? passwordCorto : 
