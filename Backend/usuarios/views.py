@@ -52,5 +52,7 @@ class LoginUsuarioView(APIView):
 # --- VISTA DEL CRUD DE USUARIOS (TK58) ---
 class UserViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer    
-    permission_classes = [EsAdminParaModificar]
+
+    serializer_class = UsuarioSerializer
+    permission_classes = [IsAuthenticated]
+
