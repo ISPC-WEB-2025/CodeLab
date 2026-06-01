@@ -6,9 +6,10 @@ import { CategoriaService } from '../../core/services/categoria.service';
 
 @Component({
   selector: 'app-form-producto',
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './form-producto.component.html',
-  styleUrl: './form-producto.component.css'
+  styleUrls: ['./form-producto.component.css']
 })
 export class FormProductoComponent implements OnInit {
 
@@ -30,7 +31,7 @@ export class FormProductoComponent implements OnInit {
     this.productoForm = this.fb.group({
       nombre: ['', [Validators.required]],
       codigo: ['', [Validators.required]],
-      precio_venta: [null],
+      precio_venta: [null, [Validators.required]],
       id_cat: ['', [Validators.required]],
       descripcion: ['']
     });
@@ -63,17 +64,17 @@ export class FormProductoComponent implements OnInit {
     this.productoService.create(productoData).subscribe({
       next: () => {
         alert('Producto guardado correctamente');
-        this.resetForm();
+        this.productoForm.reset();
+        this.erroresBackend = null; // Limpiar errores después de un envío exitoso
       },
       error: (err) => {
-        console.error('Error capturado:', err);
 
         // 5. Interceptación de errores de validación de Django (HTTP 400)
-        if (err.status === 400 && err.error) {
-          this.erroresBackend = err.error;
+        if (err.error && err.error.detalle) {
+          this.erroresBackend = err.error.detalle;
         } else {
           // Fallback para caídas de servidor o errores 500
-          alert('Hubo un error inesperado en el servidor. Intentá más tarde.');
+          this.erroresBackend = err.error;
         }
       }
     });
