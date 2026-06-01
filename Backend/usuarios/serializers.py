@@ -6,7 +6,7 @@ class RoleSerializer(serializers.ModelSerializer):
         model = Role  
         fields = '__all__'
 
-class UserSerializer(serializers.ModelSerializer):
+class UsuarioSerializer(serializers.ModelSerializer):
     # Sacamos el RoleSerializer anidado para poder guardar roles fácilmente.
     # Así, Angular solo tiene que mandar el ID del rol (ej: "rol": 1)
 
@@ -33,3 +33,13 @@ class UserSerializer(serializers.ModelSerializer):
             rol=rol_asignado
         )
         return user
+    
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if password:
+            instance.set_password(password)
+        instance.save()
+        return instance
+
