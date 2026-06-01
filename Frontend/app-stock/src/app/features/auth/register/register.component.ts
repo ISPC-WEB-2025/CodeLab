@@ -32,6 +32,8 @@ export class RegisterComponent {
   readonly passwordCorto: string =
     'La contraseña tiene que tener 8 o más caracteres.';
   readonly passwordNoCoincide: string = 'Las contraseñas no coinciden.';
+  readonly dniInvalido:string = 'El número de documento tiene que ser único y tener entre 7 u 8 dígitos.';
+  readonly fdnInvalido:string = 'Ingresá una fecha de nacimiento.';
   // URI de imagenes
   readonly imagenURI: string = 'assets/deposito.png';
   readonly cajaURI: string = 'assets/ToDoLogosf.png';
@@ -44,6 +46,8 @@ export class RegisterComponent {
       {
         nombre: ['', [Validators.required, Validators.minLength(6)], []],
         email: ['', [Validators.required, Validators.email], []],
+        dni: ['', [Validators.required, Validators.pattern(/^\d{7,8}$/)], []],
+        fdn: ['', [Validators.required], []],
         password: ['', [Validators.required, Validators.minLength(8)], []],
         confirm_password: [
           '',
@@ -72,6 +76,14 @@ export class RegisterComponent {
 
   get c_password() {
     return this.registerForm.get('confirm_password');
+  }
+
+  get dni() {
+    return this.registerForm.get('dni');
+  }
+
+  get fdn() {
+    return this.registerForm.get('fdn');  // Fecha De Nacimiento
   }
 
   // Manejo de formulario
