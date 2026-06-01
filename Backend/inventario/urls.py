@@ -28,5 +28,5 @@ router.register(r"proveedores", ProveedorViewSet)
 router.register(r"stock", StockSucursalViewSet, basename="stock")
 
 urlpatterns = [
-    path("api/", include(router.urls)),
+    path("", include(router.urls)),
 ]
