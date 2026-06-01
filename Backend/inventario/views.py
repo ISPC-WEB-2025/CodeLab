@@ -1,4 +1,5 @@
-from rest_framework import viewsets, status
+# Backend/inventario/views.py
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal
 from .serializers import (
@@ -13,6 +14,8 @@ from .serializers import (
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nombre', 'codigo']
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):
