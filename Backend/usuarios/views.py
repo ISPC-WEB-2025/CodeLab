@@ -9,6 +9,20 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Usuario
 from .serializers import UsuarioSerializer
+from rest_framework.permissions import BasePermission, SAFE_METHODS
+
+
+class EsAdminParaModificar(BasePermission):
+    # Permite a cualquier usuario logueado VER (GET), 
+    # pero solo a los Administradores CREAR, EDITAR o BORRAR.
+
+    def has_permission(self, request, view):
+        # Si la petición es GET (solo lectura - SAFE_METHODS), dejamos pasar
+        if request.method in SAFE_METHODS:
+            return request.user and request.user.is_authenticated
+        
+        # Si es POST, PUT o DELETE, verificamos que sea admin usando tu propiedad 'es_admin'
+        return bool(request.user and request.user.is_authenticated and request.user.es_admin)
 
 class LoginUsuarioView(APIView):
     def post(self, request): #define vista, solo recibe post, no get (ej barra de naveg) / request contiene lo que envía Angular
@@ -34,7 +48,11 @@ class LoginUsuarioView(APIView):
                 'error': 'Email o contraseña incorrectos.'
             }, status=status.HTTP_401_UNAUTHORIZED)
 
-class UsuarioViewSet(viewsets.ModelViewSet):
+            
+# --- VISTA DEL CRUD DE USUARIOS (TK58) ---
+class UserViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
+
     serializer_class = UsuarioSerializer
     permission_classes = [IsAuthenticated]
+

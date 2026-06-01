@@ -1,30 +1,37 @@
 from rest_framework import serializers
-from .models import Usuario, Role
+from .models import Role, Usuario
 
 class RoleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Role
-        fields = ['id', 'nombre']
+    class Meta: 
+        model = Role  
+        fields = '__all__'
 
 class UsuarioSerializer(serializers.ModelSerializer):
-    rol = RoleSerializer(read_only=True)
-    rol_id = serializers.PrimaryKeyRelatedField(
-        queryset=Role.objects.all(),
-        source='rol',
-        write_only=True
-    )
+    # Sacamos el RoleSerializer anidado para poder guardar roles fácilmente.
+    # Así, Angular solo tiene que mandar el ID del rol (ej: "rol": 1)
+
     class Meta:
-        model = Usuario
-        fields = ['id', 'nombre', 'email', 'dni', 'fecha_nacimiento', 'rol', 'rol_id', 'is_active', 'password']
+        model = Usuario  # Sin coma
+        # Es mejor listar los campos para no exponer datos de seguridad internos
+        fields = ['id', 'email', 'nombre', 'dni', 'fecha_nacimiento', 'rol', 'password']
+        
         extra_kwargs = {
-            'password': {'write_only':True}
+            'password': {'write_only': True}
         }
-    
+        
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = Usuario(**validated_data)
-        user.set_password(password)
-        user.save()
+        # Extraemos el rol. Al sacar el read_only, ahora sí va a llegar el ID correctamente.
+        rol_asignado = validated_data.get('rol', None)
+
+        # Usamos TU manager personalizado para crear el usuario y encriptar la clave
+        user = Usuario.objects.create_user(
+            email=validated_data['email'],
+            nombre=validated_data['nombre'],
+            dni=validated_data['dni'],
+            fecha_nacimiento=validated_data['fecha_nacimiento'],
+            password=validated_data['password'],
+            rol=rol_asignado
+        )
         return user
     
     def update(self, instance, validated_data):
@@ -35,3 +42,4 @@ class UsuarioSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
