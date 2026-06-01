@@ -6,8 +6,6 @@ from .views import LoginUsuarioView, UserViewSet
 router = DefaultRouter()
 router.register(r'', UserViewSet, basename='usuario')
 
-
-
 urlpatterns = [
     # 2. La ruta de login
     path('login/', LoginUsuarioView.as_view(), name='api_login'),    
