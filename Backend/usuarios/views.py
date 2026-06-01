@@ -9,11 +9,8 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Usuario
 from .serializers import UsuarioSerializer
-
-from rest_framework import viewsets
 from rest_framework.permissions import BasePermission, SAFE_METHODS
-from .models import Usuario
-from .serializers import UsuarioSerializer
+
 
 class EsAdminParaModificar(BasePermission):
     # Permite a cualquier usuario logueado VER (GET), 
@@ -55,5 +52,5 @@ class LoginUsuarioView(APIView):
 # --- VISTA DEL CRUD DE USUARIOS (TK58) ---
 class UserViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
-    serializer_class = UserSerializer    
+    serializer_class = UsuarioSerializer    
     permission_classes = [EsAdminParaModificar]
