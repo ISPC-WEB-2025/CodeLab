@@ -24,12 +24,14 @@ export class UserAuthService {
     );
   }
 
-  registro(nombre: string, email: string, dni: number, fdn: any, password: string): Observable<any> {
+  // TODO: ¿Esta bien que Fecha De Nacimiento(fdn) sea de tipo any? Averiguar de que tipo se necesita
+  registro(nombre: string, email: string, dni: number, fdn: any, rol: string, password: string): Observable<any> {
     return this.http.post(this.registroURL, {
       nombre, 
       email, 
       dni, 
       fdn, 
+      rol,
       password
     }).pipe(
       tap(response => {

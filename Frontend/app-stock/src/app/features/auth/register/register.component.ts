@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { validadorPassword } from './register.validator';
+import { UserAuthService } from '../../../core/services/user-auth.service';
 
 @Component({
   selector: 'app-register',
@@ -41,6 +42,8 @@ export class RegisterComponent {
   registerForm!: FormGroup;
   registerErrored: boolean = false;
 
+  private userAuthService = Inject(UserAuthService);
+  private router = Inject(Router);
   protected esconderPassword: boolean = true;
 
   constructor(private formBuilder: FormBuilder) {
@@ -86,7 +89,7 @@ export class RegisterComponent {
 
   get fdn() {
     return this.registerForm.get('fdn');  // Fecha De Nacimiento
-  }
+  } 
 
   // Manejo de formulario
   public onEnviar(event: Event) {
@@ -94,11 +97,24 @@ export class RegisterComponent {
 
     if (this.registerForm.valid) {
       const registerData = this.registerForm.value;
-      const nombre = registerData.nombre;
-      const email = registerData.email;
+      
+      const nombre: string = registerData.nombre;
+      const email: string = registerData.email;
+      const dni: number = registerData.dni;
+      const fdn: any = registerData.fdn;
+      const password: string = registerData.password; // ¿Quizas algo acá para validar una última vez si las dos contras coinciden?
 
+      this.userAuthService.registrar(nombre, email, dni, fdn, null, password).subscribe({
+        // TODO: En vez de console.log, ¡tambien deberia mostrarse un modal!
+        next: () => {
+          console.log("¡Usuario creado con exito!");
+          setTimeout(() => this.router.navigate(['/login']), 2000);
+        },
+        error: (error: any) => {
+          console.error("¡Error al registrar usuario!", error);
+        },
+      });
       this.registerErrored = false;
-      alert(`Usuario registrado! Nombre: ${nombre}, email: ${email}`);
     } else {
       this.registerErrored = true;
       this.registerForm.markAllAsTouched();
@@ -106,7 +122,7 @@ export class RegisterComponent {
   }
 
   // Funcion para alternar la vista de contraseñas al clickear en el ojo
-  public alternarVisibilidadPassword(){
+  public alternarVisibilidadPassword() {
     this.esconderPassword = !this.esconderPassword;
   }
 }
