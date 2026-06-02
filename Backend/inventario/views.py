@@ -1,13 +1,15 @@
 # Backend/inventario/views.py
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
-from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal
+from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal, Movimiento
+from django.db import transaction
 from .serializers import (
     ProductoSerializer,
     CategoriaSerializer,
     SucursalSerializer,
     ProveedorSerializer,
     StockSucursalSerializer,
+    MovimientoSerializer,
 )
 
 
@@ -46,3 +48,50 @@ class StockSucursalViewSet(viewsets.ModelViewSet):
     # Justificación: Código muerto (Dead Code). Invocar a super().destroy() sin añadir
     # lógica de validación previa o posterior al borrado duplica el comportamiento
     # heredado de la clase padre sin ningún propósito técnico
+
+class MovimientoViewSet(viewsets.ModelViewSet):
+    queryset = Movimiento.objects.select_related('id_art', 'id_suc', 'id_prov').all()
+    serializer_class = MovimientoSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        tipo     = serializer.validated_data['tipo']
+        cantidad = serializer.validated_data['cantidad']
+        producto = serializer.validated_data['id_art']
+        sucursal = serializer.validated_data['id_suc']
+
+        # TK44: verificar que existe registro de stock para ese producto+sucursal
+        try:
+            stock_obj = StockSucursal.objects.get(id_art=producto, id_suc=sucursal)
+        except StockSucursal.DoesNotExist:
+            return Response(
+                {'error': 'No existe registro de stock para ese producto en esa sucursal.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # TK44: validar stock suficiente si es Salida
+        if tipo == 'Salida' and stock_obj.cantidad_stock < cantidad:
+            return Response(
+                {
+                    'error': 'Stock insuficiente.',
+                    'stock_disponible': stock_obj.cantidad_stock,
+                    'cantidad_solicitada': cantidad,
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # TK43: aplicar el movimiento y actualizar stock en una transacción atómica
+        with transaction.atomic():
+            if tipo == 'Entrada':
+                stock_obj.cantidad_stock += cantidad
+            elif tipo == 'Salida':
+                stock_obj.cantidad_stock -= cantidad
+            # Traslado no modifica stock_sucursal (requeriría origen y destino)
+
+            stock_obj.save()
+            self.perform_create(serializer)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
