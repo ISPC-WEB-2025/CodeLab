@@ -80,7 +80,12 @@ class StockSucursalSerializer(serializers.ModelSerializer):
         ]
 
 class MovimientoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Movimiento
         fields = '__all__'
         read_only_fields = ['fecha_hora', 'id_mov']
+        extra_kwargs = {
+            'id_usuario': {'required': False, 'allow_null': True},
+            'id_prov':    {'required': False, 'allow_null': True},
+        }
