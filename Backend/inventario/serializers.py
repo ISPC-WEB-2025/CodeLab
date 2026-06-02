@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal, Movimiento
-
+from django.utils import timezone
 
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -84,8 +84,14 @@ class MovimientoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movimiento
         fields = '__all__'
-        read_only_fields = ['fecha_hora', 'id_mov']
         extra_kwargs = {
+            'fecha_hora': {'required': False, 'allow_null': True},
             'id_usuario': {'required': False, 'allow_null': True},
             'id_prov':    {'required': False, 'allow_null': True},
+            'id_mov':     {'required': False},
         }
+
+    def create(self, validated_data):
+        if not validated_data.get('fecha_hora'):
+            validated_data['fecha_hora'] = timezone.now()
+        return super().create(validated_data)
