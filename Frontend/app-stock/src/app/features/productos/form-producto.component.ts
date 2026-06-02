@@ -53,7 +53,7 @@ export class FormProductoComponent implements OnInit {
 
     // 2. Validación preventiva en Frontend
     if (this.productoForm.invalid) {
-      alert('Por favor, completa los campos obligatorios del formulario.');
+      this.productoForm.markAllAsTouched();
       return;
     }
 
