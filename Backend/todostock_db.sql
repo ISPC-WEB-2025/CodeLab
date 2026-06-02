@@ -105,6 +105,7 @@ CREATE TABLE MOVIMIENTO (
     id_art     INT                                     NOT NULL,
     id_suc     INT                                     NOT NULL,
     id_prov    INT                                     NULL,
+    id_usuario bigint                                  NOT NULL,  -- en django es bigint
     PRIMARY KEY (id_mov),
     CONSTRAINT fk_mov_producto
         FOREIGN KEY (id_art)  REFERENCES PRODUCTO  (id_art),
@@ -112,9 +113,10 @@ CREATE TABLE MOVIMIENTO (
         FOREIGN KEY (id_suc)  REFERENCES SUCURSAL  (id_suc),
     CONSTRAINT fk_mov_proveedor
         FOREIGN KEY (id_prov) REFERENCES PROVEEDOR (id_prov),
+    CONSTRAINT fk_mov_usuario                          -- ← AGREGAR
+        FOREIGN KEY (id_usuario) REFERENCES usuarios_usuario (id),
     CONSTRAINT chk_mov_cantidad CHECK (cantidad > 0)
 );
-
 -- ============================================
 --   DATOS DE PRUEBA
 -- ===========================================
