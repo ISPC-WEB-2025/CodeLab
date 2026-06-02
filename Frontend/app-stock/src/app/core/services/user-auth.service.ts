@@ -7,18 +7,33 @@ import { Observable, tap } from 'rxjs';
 })
 
 export class UserAuthService {
-  private apiUrl = 'http://localhost:8000/api/usuarios/login/';
+  private loginURL = 'http://localhost:8000/api/usuarios/login/';
+  private registroURL = '';  // TODO: Agregar URL de registro 
 
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(this.apiUrl, { email, password }).pipe(
+    return this.http.post<any>(this.loginURL, { email, password }).pipe(
       tap(response => {
         if (response.token) {
           localStorage.setItem('auth_token', response.token);
           localStorage.setItem('es_admin', response.es_admin.toString());
           localStorage.setItem('es_empleado', response.es_empleado.toString());
         }
+      })
+    );
+  }
+
+  registro(nombre: string, email: string, dni: number, fdn: any, password: string): Observable<any> {
+    return this.http.post(this.registroURL, {
+      nombre, 
+      email, 
+      dni, 
+      fdn, 
+      password
+    }).pipe(
+      tap(response => {
+        console.log('Usuario registrado con exito.', response);
       })
     );
   }
