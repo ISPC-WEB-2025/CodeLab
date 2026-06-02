@@ -83,4 +83,4 @@ class MovimientoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movimiento
         fields = '__all__'
-        read_only_fields = ['fecha_hora']
+        read_only_fields = ['fecha_hora', 'id_mov']
