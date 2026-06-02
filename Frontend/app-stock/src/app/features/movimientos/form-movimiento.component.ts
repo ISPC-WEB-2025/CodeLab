@@ -46,13 +46,11 @@ export class FormMovimientoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Cargar productos para el select
     this.productoService.getAll().subscribe({
       next: (data) => (this.productos = data),
       error: () => (this.errorMsg = 'No se pudieron cargar los productos.'),
     });
 
-    // Cargar sucursales disponibles desde stock
     this.stockService.getAll().subscribe({
       next: (data) => (this.sucursales = data),
       error: () => (this.errorMsg = 'No se pudieron cargar las sucursales.'),
@@ -76,14 +74,12 @@ export class FormMovimientoComponent implements OnInit {
       next: () => {
         this.exitoso = true;
         this.guardando = false;
-        // Redirigir a la lista después de 1.5 segundos
         setTimeout(
           () => this.router.navigate(['/dashboard/movimientos']),
           1500,
         );
       },
       error: (err) => {
-        // TK44: mostrar el mensaje de error 400 del backend
         this.errorMsg = err.error?.error || 'Error al registrar el movimiento.';
         if (err.error?.stock_disponible !== undefined) {
           this.errorMsg += ` Stock disponible: ${err.error.stock_disponible} unidades.`;
