@@ -67,7 +67,7 @@ export class FormMovimientoComponent implements OnInit {
       ...this.formulario.value,
       fecha_hora: new Date().toISOString(),
       id_prov: null,
-      id_usuario: null,
+      // id_usuario: null, - backend asignará el usuario autenticado automáticamente, no es necesario enviarlo desde el frontend
     };
 
     this.movimientoService.create(payload).subscribe({
@@ -80,6 +80,10 @@ export class FormMovimientoComponent implements OnInit {
         );
       },
       error: (err) => {
+        console.log('❌ Error completo:', err);
+        console.log('Status:', err.status);
+        console.log('Response:', err.error);
+
         this.errorMsg = err.error?.error || 'Error al registrar el movimiento.';
         if (err.error?.stock_disponible !== undefined) {
           this.errorMsg += ` Stock disponible: ${err.error.stock_disponible} unidades.`;

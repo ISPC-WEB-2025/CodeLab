@@ -3,6 +3,7 @@ from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal, Movimiento
 from django.db import transaction
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .serializers import (
     ProductoSerializer,
     CategoriaSerializer,
@@ -52,6 +53,11 @@ class StockSucursalViewSet(viewsets.ModelViewSet):
 class MovimientoViewSet(viewsets.ModelViewSet):
     queryset = Movimiento.objects.select_related('id_art', 'id_suc', 'id_prov').all()
     serializer_class = MovimientoSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        # Asigna automáticamente el usuario del request
+        serializer.save(id_usuario=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

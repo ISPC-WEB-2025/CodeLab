@@ -86,7 +86,7 @@ class MovimientoSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {
             'fecha_hora': {'required': False, 'allow_null': True},
-            'id_usuario': {'required': False, 'allow_null': True},
+            'id_usuario': {'read_only': True},
             'id_prov':    {'required': False, 'allow_null': True},
             'id_mov':     {'required': False},
         }

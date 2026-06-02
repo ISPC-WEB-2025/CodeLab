@@ -7,6 +7,7 @@ from rest_framework import status #Nos da códigos de estado HTTP para usar en l
 from django.contrib.auth import authenticate#va a la base de datos, busca el usuario y verifica si la contraseña desencriptada coincide.
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Usuario
 from .serializers import UsuarioSerializer
 from rest_framework.permissions import BasePermission, SAFE_METHODS
@@ -35,10 +36,14 @@ class LoginUsuarioView(APIView):
 
         if user is not None:
             # 3. Si todo está bien, buscamos su token (o le creamos uno nuevo si no tenía)
-            token, created = Token.objects.get_or_create(user=user)
+            # token, created = Token.objects.get_or_create(user=user)
+            # Genera tokens JWT
+            refresh = RefreshToken.for_user(user)
             
             return Response({
-                'token': token.key, #devuelve token para que Angular lo guarde y lo mande en cada petición
+                # 'token': token.key, #devuelve token para que Angular lo guarde y lo mande en cada petición
+                'access': str(refresh.access_token), #token de acceso JWT para autenticación en cada petición
+                'refresh': str(refresh), #token de refresco para obtener nuevos tokens JWT cuando el actual expire                
                 'email': user.email, 
                 'es_admin': user.es_admin,
                 'es_empleado': user.es_empleado #booleanos para poder usar *ngIf en el html y mostrar/ocultar cosas según el rol del usuario
