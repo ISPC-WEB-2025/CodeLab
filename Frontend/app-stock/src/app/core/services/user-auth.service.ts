@@ -8,7 +8,7 @@ import { Observable, tap } from 'rxjs';
 
 export class UserAuthService {
   private loginURL = 'http://localhost:8000/api/usuarios/login/';
-  private registroURL = '';  // TODO: Agregar URL de registro 
+  private registroURL = 'http://localhost:8000/api/usuarios/registro/'; 
 
   constructor(private http: HttpClient) { }
 
@@ -25,13 +25,12 @@ export class UserAuthService {
   }
 
   // TODO: ¿Esta bien que Fecha De Nacimiento(fdn) sea de tipo any? Averiguar de que tipo se necesita
-  registro(nombre: string, email: string, dni: number, fdn: any, rol: string, password: string): Observable<any> {
-    return this.http.post(this.registroURL, {
+  registrar(nombre: string, email: string, dni: number, fdn: any, password: string): Observable<any> {
+    return this.http.post<any>(this.registroURL, {
       nombre, 
       email, 
       dni, 
       fdn, 
-      rol,
       password
     }).pipe(
       tap(response => {
