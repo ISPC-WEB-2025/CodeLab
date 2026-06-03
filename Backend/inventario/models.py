@@ -100,7 +100,11 @@ class Movimiento(models.Model):
     # Por eso lo mantenemos entre comillas, para que Django lo vaya a buscar allá (no requiere importarlo acá, lo busca al momento de ejecutar la migración)
     # Lazy-loading: para evitar problemas de importación circular si dsp necesitamos importar algo de acá en usuarios/models.py
     id_usuario = models.ForeignKey(
-        "usuarios.Usuario", on_delete=models.PROTECT, db_column="id_usuario"
+        "usuarios.Usuario",
+        on_delete=models.PROTECT,
+        db_column="id_usuario",
+        null=True,
+        blank=True,
     )
 
     class Meta:
