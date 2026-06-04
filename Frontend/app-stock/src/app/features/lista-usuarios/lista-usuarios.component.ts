@@ -2,11 +2,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Usuario } from '../../core/models/usuario.model';
 import { UsuarioService } from '../../core/services/usuario.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-lista-usuarios',
   standalone: true,
-  imports: [], 
+  imports: [RouterLink], 
   templateUrl: './lista-usuarios.component.html',
   styleUrl: './lista-usuarios.component.css'
 })

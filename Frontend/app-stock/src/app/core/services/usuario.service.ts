@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Usuario } from '../models/usuario.model'; // Ajustá esta ruta según dónde guardaste la interfaz
+import { Usuario } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  // La ruta base exacta que configuraste en tu backend
+  private http = inject(HttpClient);
   private apiUrl = 'http://127.0.0.1:8000/api/usuarios/';
 
-  constructor(private http: HttpClient) { }
+  // constructor(private http: HttpClient) { }
 
   // 1. GET: Traer la lista completa de usuarios
   getUsuarios(): Observable<Usuario[]> {

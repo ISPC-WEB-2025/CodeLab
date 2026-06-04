@@ -16,6 +16,7 @@ import { VendedorComponent } from './features/vendedor/vendedor.component';
 import { CatalogoComponent } from './features/vendedor/catalogo/catalogo.component';
 import { authGuard } from './core/guards/auth.guard';
 import { ListaUsuariosComponent } from './features/lista-usuarios/lista-usuarios.component';
+import { FormUsuariosComponent } from './features/form-usuarios/form-usuarios.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -39,7 +40,9 @@ export const routes: Routes = [
       { path: 'movimientos', component: ListaMovimientosComponent },
       { path: 'movimientos/nuevo', component: FormMovimientoComponent },
       { path: 'stock/editar/:id', component: FormStockComponent },
-      {path: 'lista-usuarios', component: ListaUsuariosComponent}
+      {path: 'lista-usuarios', component: ListaUsuariosComponent},
+      {path: 'form-usuarios/nuevo', component: FormUsuariosComponent},
+      {path: 'form-usuarios/editar/:id', component: FormUsuariosComponent}
     ],
   },
   {
