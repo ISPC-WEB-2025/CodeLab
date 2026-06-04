@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ProductoService } from '../../core/services/producto.service';
 import { Producto } from '../../core/models/producto.model';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 
 @Component({
