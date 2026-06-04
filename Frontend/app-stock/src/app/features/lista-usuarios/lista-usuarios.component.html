@@ -1,0 +1,62 @@
+<div class="usuarios-contenedor">
+  @if (cargando) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-muted">Cargando usuarios desde el servidor...</p>
+    </div>
+  } @else {
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Gestión de Usuarios</h2>
+      <button class="btn btn-success" routerLink="/dashboard/usuarios/nuevo">
+        + Agregar usuario
+      </button>
+    </div>
+
+    <div class="card shadow-sm usuarios-contenedor">
+      <div class="card-body p-0">
+        <div class="p-3 bg-light border-bottom">
+          <p class="contador-us">Total de usuarios: {{ usuarios.length }}</p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="thead-usuarios">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (usuario of usuarios; track usuario.id) {
+                <tr>
+                  <td>{{ usuario.id }}</td>
+                  <td>{{ usuario.nombre }}</td>
+                  <td>{{ usuario.apellido }}</td>
+                  <td>{{ usuario.email }}</td>
+                  <td>
+                    <span class="badge bg-primary">{{ usuario.rol }}</span>
+                  </td>
+                  <td class="text-center celda-acciones">
+                    <button class="btn btn-sm btn-outline-danger">
+                      <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="text-center py-4 text-muted">
+                    No hay usuarios registrados en la base de datos.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>
