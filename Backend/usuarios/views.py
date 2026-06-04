@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from rest_framework.views import APIView
 from rest_framework.response import (
     Response,
@@ -11,10 +9,11 @@ from rest_framework import (
     status,
 )  # Nos da códigos de estado HTTP para usar en las respuestas (200, 400, 401, etc)
 from django.contrib.auth import (
-    authenticate,
+    authenticate
 )  # va a la base de datos, busca el usuario y verifica si la contraseña desencriptada coincide.
+#from django.contrib.auth.models import (User, Group) 
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Usuario
 from .serializers import UsuarioSerializer
 from rest_framework.permissions import BasePermission, SAFE_METHODS
@@ -67,6 +66,39 @@ class LoginUsuarioView(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
+class RegistroUsuarioView(APIView):
+    permission_classes = [AllowAny] # Permite acceso sin hacer login
+
+    def post(self, request):
+        nombre = request.data.get("nombre")
+        email = request.data.get("email")
+        dni = request.data.get("dni")
+        fdn = request.data.get("fdn")
+        password = request.data.get("password")
+
+        # Validaciones 
+        if not nombre or not email or not password:
+            return Response(
+                {"error": "Falta datos de nombre, email o contraseña."}, status = status.HTTP_400_BAD_REQUEST
+            )   
+        
+        if Usuario.objects.filter(email=email).exists():
+            return Response(
+                {"error": "Este email ya existe."}, status = status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Crear el usuario
+        usuario = Usuario.objects.create_user(
+            nombre = nombre,
+            email = email,
+            dni = dni,
+            fecha_nacimiento = fdn,
+            password = password
+        )
+
+        return Response(
+            {"mensaje": "Usuario creado exitosamente."}, status = status.HTTP_201_CREATED
+        )
 
 # --- VISTA DEL CRUD DE USUARIOS (TK58) ---
 class UserViewSet(viewsets.ModelViewSet):

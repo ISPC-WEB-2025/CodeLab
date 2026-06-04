@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,10 +17,13 @@ import { UserAuthService } from '../../../core/services/user-auth.service';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  // Inyección de servicios
+  private userAuthService = inject(UserAuthService);
+  private router = inject(Router);
+
   // Texto localizable
   // TODO(TMF): AGREGAR MAS STRINGS QUE SE PUEDAN LOCALIZAR/SEAN TRADUCIBLES
   readonly creaTuCuenta: string = '¡Creá tu cuenta!';
-
   readonly registroError: string =
     'Hay campos que son inválidos. ¡Por favor revisalos antes de enviar el formulario!';
   readonly errorDesconocido: string = 'Error desconocido.';
@@ -38,12 +41,10 @@ export class RegisterComponent {
   // URI de imagenes
   readonly imagenURI: string = 'assets/deposito.png';
   readonly cajaURI: string = 'assets/ToDoLogosf.png';
-  // Registro de formularios
-  registerForm!: FormGroup;
-  registerErrored: boolean = false;
 
-  private userAuthService = Inject(UserAuthService);
-  private router = Inject(Router);
+  // Registro de formularios
+  public registerForm!: FormGroup;
+  public registerErrored: boolean = false;
   protected esconderPassword: boolean = true;
 
   constructor(private formBuilder: FormBuilder) {
@@ -104,7 +105,7 @@ export class RegisterComponent {
       const fdn: any = registerData.fdn;
       const password: string = registerData.password; // ¿Quizas algo acá para validar una última vez si las dos contras coinciden?
 
-      this.userAuthService.registrar(nombre, email, dni, fdn, null, password).subscribe({
+      this.userAuthService.registrar(nombre, email, dni, fdn, password).subscribe({
         // TODO: En vez de console.log, ¡tambien deberia mostrarse un modal!
         next: () => {
           console.log("¡Usuario creado con exito!");
