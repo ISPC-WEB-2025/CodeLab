@@ -6,9 +6,6 @@ from .views import LoginUsuarioView, UserViewSet
 router = DefaultRouter()
 router.register(r'', UserViewSet, basename='usuario')
 
-router = DefaultRouter()
-router.register(r'', UsuarioViewSet, basename='usuario')
-
 
 urlpatterns = [
     # 2. La ruta de login
