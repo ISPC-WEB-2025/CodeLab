@@ -4,6 +4,13 @@
   </button>
 </div>
 
+<select class="form-select mb-3" style="max-width: 300px" [(ngModel)]="sucursalSeleccionada">
+  <option [ngValue]="null">-- Todas las sucursales --</option>
+  @for (s of sucursales; track s.id) {
+  <option [ngValue]="s.id">{{ s.nombre }}</option>
+  }
+</select>
+
 <div class="movimientos-contenedor">
   <h2>Movimientos de Stock</h2>
 
@@ -19,7 +26,8 @@
   @if (movimientos.length === 0) {
   <p class="sin-resultados">Todavía no hay movimientos registrados.</p>
   } @else {
-  <p class="contador">Total de movimientos: {{ movimientos.length }}</p>
+  <!-- para mostrar el total de movimientos filtrada por sucursal -->
+  <p class="contador">Total de movimientos: {{ movimientosFiltrados.length }}</p>
 
   <div class="table-responsive">
     <table class="table border-bottom border-success-subtle">
@@ -35,7 +43,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (mov of movimientos; track mov.id_mov) {
+        @for (mov of movimientosFiltrados; track mov.id_mov) {
         <tr>
           <td>{{ mov.id_mov }}</td>
           <td>

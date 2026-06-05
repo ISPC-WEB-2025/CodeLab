@@ -4,6 +4,7 @@ import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
+  FormsModule,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +18,7 @@ import { StockSucursal } from '../../../core/models/stock-sucursal.model';
 @Component({
   selector: 'app-form-movimiento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './form-movimiento.component.html',
   styleUrl: './form-movimiento.component.css',
 })
