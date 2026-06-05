@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalService } from '../../core/services/modal.service';
 
 import { StockSucursalService } from '../../core/services/stock-sucursal.service';
 import { StockSucursal } from '../../core/models/stock-sucursal.model';
@@ -21,9 +22,10 @@ export class StockSucursalComponent implements OnInit {
   constructor(
     private stockService: StockSucursalService,
     private router: Router,
+    private modalService: ModalService
   ) { }
-  eliminar(id: number): void {
-    if (confirm('¿Estás seguro que querés eliminar este registro?')) {
+  async eliminar(id: number): Promise<void> {
+    if (await this.modalService.confirmar('¿Estás seguro que querés eliminar este registro?')) {
       this.stockService.delete(id).subscribe({
         next: () => {
           this.stockLista = this.stockLista.filter(
@@ -31,7 +33,7 @@ export class StockSucursalComponent implements OnInit {
           );
         },
         error: () => {
-          alert('Error al eliminar. Verificá que el backend esté corriendo.');
+          this.modalService.error('Error al eliminar. Verificá que el backend esté corriendo.');
         },
       });
     }
