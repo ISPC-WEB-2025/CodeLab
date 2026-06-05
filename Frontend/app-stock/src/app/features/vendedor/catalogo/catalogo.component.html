@@ -1,6 +1,17 @@
 <div class="catalogo-container">
   <h2>Catálogo de Productos</h2>
 
+  <!-- Selector de Sucursales -->
+  <div class="mb-3">
+    <select class="form-select" style="max-width: 300px" [(ngModel)]="sucursalSeleccionada">
+      <option [ngValue]="null">-- Todas las sucursales --</option>
+      @for (s of sucursales; track s.id) {
+      <option [ngValue]="s.id">{{ s.nombre }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Tabla con el Catalogo de productos -->
   <table class="tabla-productos table border-bottom border-success-subtle">
     <thead>
       <tr>
@@ -9,18 +20,29 @@
         <th>Categoría</th>
         <th>Proveedor</th>
         <th>Precio</th>
+        @if (sucursalSeleccionada) {
+        <th>Stock (unidades)</th>
+        }
       </tr>
     </thead>
     <tbody>
-      @for (producto of productos; track producto.id_art) {
-        <tr>
-          <td>{{ producto.codigo }}</td>
-          <td>{{ producto.nombre }}</td>
-          <td>{{ producto.categoria }}</td>
-          <td>{{ producto.proveedor }}</td>
-          <td>{{ producto.precio_venta }}</td>
-        </tr>
+      @for (producto of productosFiltrados; track producto.id_art) {
+      <tr>
+        <td>{{ producto.codigo }}</td>
+        <td>{{ producto.nombre }}</td>
+        <td>{{ producto.categoria }}</td>
+        <td>{{ producto.proveedor }}</td>
+        <td>{{ producto.precio_venta }}</td>
+        <!-- ← nuevo -->
+        @if (sucursalSeleccionada) {
+        <td>
+          <span class="badge" [class.bg-success]="(getStockEnSucursal(producto.id_art) ?? 0) > 0"
+            [class.bg-danger]="(getStockEnSucursal(producto.id_art) ?? 0) === 0">
+            {{ getStockEnSucursal(producto.id_art) ?? 0 }}
+          </span>
+        </td>
+        }
+      </tr>
       }
-    </tbody>
   </table>
 </div>

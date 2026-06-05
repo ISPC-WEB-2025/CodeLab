@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // Importar módulos reactivos
 import { ProductoService } from '../../core/services/producto.service';
 import { CategoriaService } from '../../core/services/categoria.service';
+import { ModalService } from '../../core/services/modal.service';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class FormProductoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productoService: ProductoService,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    private modalService: ModalService
   ) { }
 
   ngOnInit() {
@@ -63,7 +65,7 @@ export class FormProductoComponent implements OnInit {
     // 4. Envío al Servicio HTTP
     this.productoService.create(productoData).subscribe({
       next: () => {
-        alert('Producto guardado correctamente');
+        this.modalService.exito('Producto guardado correctamente');
         this.productoForm.reset();
         this.erroresBackend = null; // Limpiar errores después de un envío exitoso
       },

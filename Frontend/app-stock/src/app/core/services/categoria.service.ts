@@ -5,9 +5,9 @@ import { Categoria } from '../models/categoria.model';
 
 @Injectable({ providedIn: 'root' })
 export class CategoriaService {
-  private apiUrl = 'http://localhost:8000/api/categorias/';
+  private apiUrl = 'http://localhost:8000/api/inventario/categorias/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<Categoria[]> {
     return this.http.get<Categoria[]>(this.apiUrl);

@@ -86,6 +86,7 @@ class Movimiento(models.Model):
     id_mov = models.AutoField(primary_key=True)
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
     fecha_hora = models.DateTimeField()
+    stock_previo = models.IntegerField(null=True, blank=True)
     cantidad = models.IntegerField()
     motivo = models.CharField(max_length=255, null=True, blank=True)
 
