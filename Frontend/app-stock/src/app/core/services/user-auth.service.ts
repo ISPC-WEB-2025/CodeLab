@@ -16,6 +16,7 @@ export class UserAuthService {
     return this.http.post<any>(this.loginURL, { email, password }).pipe(
       tap(response => {
         if (response.token) {
+          localStorage.setItem('nombre_usuario', response.nombre);
           localStorage.setItem('auth_token', response.token);
           localStorage.setItem('es_admin', response.es_admin.toString());
           localStorage.setItem('es_empleado', response.es_empleado.toString());
@@ -41,6 +42,10 @@ export class UserAuthService {
 
   getToken(): string | null {
     return localStorage.getItem('auth_token');
+  }
+
+  getUsername(): string | null {
+    return localStorage.getItem('nombre_usuario');
   }
 
   isLoggedIn(): boolean {
