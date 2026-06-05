@@ -21,6 +21,7 @@ export class ListaMovimientosComponent implements OnInit {
   error = '';
   sucursales: { id: number, nombre: string }[] = [];
   sucursalSeleccionada: number | null = null;
+  stockTotal: StockSucursal[] = [];
   // Para el filtro de sucursales
   get movimientosFiltrados() {
     if (!this.sucursalSeleccionada) return this.movimientos;
@@ -56,5 +57,14 @@ export class ListaMovimientosComponent implements OnInit {
 
   irNuevoMovimiento(): void {
     this.router.navigate(['/vendedor/movimientos/nuevo']);
+  }
+
+  // Método para obtener el stock de un producto en la sucursal seleccionada
+  getStock(id_art: number): number | null {
+    if (!this.sucursalSeleccionada) return null;
+    const registro = this.stockTotal.find(
+      s => s.id_art === id_art && s.id_suc === this.sucursalSeleccionada
+    );
+    return registro ? registro.cantidad_stock : null;
   }
 }

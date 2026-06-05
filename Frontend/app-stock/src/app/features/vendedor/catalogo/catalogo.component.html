@@ -20,14 +20,12 @@
         <th>Categoría</th>
         <th>Proveedor</th>
         <th>Precio</th>
-        @if (sucursalSeleccionada) {
-        <th>Stock disponible</th>
-        }
+
       </tr>
     </thead>
     <tbody>
-      @for (producto of productos; track producto.id_art) {
-      @if (!sucursalSeleccionada || getStock(producto.id_art) !== null) {
+      @for (producto of productosFiltrados; track producto.id_art) {
+
       <tr>
         <td>{{ producto.codigo }}</td>
         <td>{{ producto.nombre }}</td>
@@ -35,7 +33,7 @@
         <td>{{ producto.proveedor }}</td>
         <td>{{ producto.precio_venta }}</td>
       </tr>
-      }}
+      }
     </tbody>
   </table>
 </div>

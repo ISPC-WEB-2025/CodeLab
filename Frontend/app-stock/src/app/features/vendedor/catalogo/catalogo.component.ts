@@ -36,13 +36,12 @@ export class CatalogoComponent implements OnInit {
     });
   }
 
-  // Método para obtener el stock de un producto en la sucursal seleccionada
-  getStock(id_art: number): number | null {
-    if (!this.sucursalSeleccionada) return null;
-    const registro = this.stockTotal.find(
-      s => s.id_art === id_art && s.id_suc === this.sucursalSeleccionada
+  // Método para que solo muestre productos que tengan stock en la sucursal seleccionada
+  get productosFiltrados(): any[] {
+    if (!this.sucursalSeleccionada) return this.productos;
+    return this.productos.filter(p =>
+      this.stockTotal.some(s => s.id_art === p.id_art && s.id_suc === this.sucursalSeleccionada)
     );
-    return registro ? registro.cantidad_stock : null;
   }
 }
 
