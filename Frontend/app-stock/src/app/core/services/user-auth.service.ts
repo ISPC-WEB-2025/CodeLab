@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class UserAuthService {
   private loginURL = 'http://localhost:8000/api/usuarios/login/';
   private registroURL = 'http://localhost:8000/api/usuarios/registro/'; 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(this.loginURL, { email, password }).pipe(
@@ -57,8 +58,12 @@ export class UserAuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('es_admin');
-    localStorage.removeItem('es_empleado');
+    localStorage.clear(); // Borramos los datos de sesion y localStorage
+    sessionStorage.clear();
+
+    // Recargamos la pagina y redirigimos al login, tambien para evitar problemas a priori
+    this.router.navigate(['/login']).then(() => {
+      window.location.reload(); 
+    });
   }
 }
