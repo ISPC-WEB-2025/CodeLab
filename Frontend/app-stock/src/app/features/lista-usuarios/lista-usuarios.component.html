@@ -24,7 +24,6 @@
               <tr>
                 <th>ID</th>
                 <th>Nombre</th>
-                <th>Apellido</th>
                 <th>Email</th>
                 <th>Rol</th>
                 <th class="text-center">Acciones</th>
@@ -35,15 +34,18 @@
                 <tr>
                   <td>{{ usuario.id }}</td>
                   <td>{{ usuario.nombre }}</td>
-                  <td>{{ usuario.apellido }}</td>
                   <td>{{ usuario.email }}</td>
                   <td>
                     <span class="badge bg-primary">{{ usuario.rol }}</span>
                   </td>
                   <td class="text-center celda-acciones">
-                    <button class="btn btn-sm btn-outline-danger">
+                    <button class="btn btn-sm btn-outline-success" [routerLink]="['/dashboard/form-usuarios/editar', usuario.id]">
+                      <i class="bi bi-pencil"></i> Editar
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar" (click)="prepararEliminacion(usuario.id!)">
                       <i class="bi bi-trash"></i> Eliminar
                     </button>
+                   
                   </td>
                 </tr>
               } @empty {
@@ -59,4 +61,21 @@
       </div>
     </div>
   }
+  <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que querés eliminar a este usuario? Esta acción no se puede deshacer.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="confirmarEliminacion()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
 </div>

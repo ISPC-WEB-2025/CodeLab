@@ -7,7 +7,7 @@
       </button>
     </div>
     
-    <div class="card-body p-4">
+    <div class="form-grid-responsive card-body p-4">
       <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
         
         <div class="row mb-3">
@@ -47,15 +47,27 @@
               }
           </div>
         </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Fecha de Nacimiento *</label>
+            <input type="date" class="form-control" formControlName="fecha_nacimiento"
+              [class.is-invalid]="usuarioForm.get('fecha_nacimiento')?.invalid && usuarioForm.get('fecha_nacimiento')?.touched">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Contraseña *</label>
+            <input type="password" class="form-control" formControlName="password"
+              [class.is-invalid]="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched">
+          </div>
+        </div>
 
         <div class="mb-4">
           <label class="form-label fw-bold">Rol en el Sistema *</label>
           <select class="form-select" formControlName="rol"
             [class.is-invalid]="usuarioForm.get('rol')?.invalid && usuarioForm.get('rol')?.touched">
             <option value="">-- Seleccioná un rol --</option>
-            <option value="Administrador">Administrador</option>
-            <option value="Ventas">Ventas</option>
-            <option value="Deposito">Depósito</option>
+            <option value="1">Administrador</option>
+            <option value="2">Ventas</option>
+            <option value="3">Depósito</option>
           </select>
           @if (usuarioForm.get('rol')?.invalid && usuarioForm.get('rol')?.touched) {
             <div class="invalid-feedback">Debe asignar un rol al usuario.</div>
