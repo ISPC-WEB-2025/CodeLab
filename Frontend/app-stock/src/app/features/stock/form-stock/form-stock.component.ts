@@ -6,6 +6,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ModalService } from '../../../core/services/modal.service';
 import { StockSucursalService } from '../../../core/services/stock-sucursal.service';
 
 
@@ -27,6 +28,7 @@ export class FormStockComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
+    private modalService: ModalService,
     private stockService: StockSucursalService,
   ) {
     this.formulario = this.fb.group({
@@ -47,7 +49,7 @@ export class FormStockComponent implements OnInit {
         this.cargando = false;
       },
       error: () => {
-        alert('No se pudo cargar el registro.');
+        this.modalService.error('No se pudo cargar el registro.');
         this.router.navigate(['/dashboard/stock']);
       },
     });
@@ -71,7 +73,7 @@ export class FormStockComponent implements OnInit {
         });
       },
       error: () => {
-        alert('Error al guardar. Verificá que el backend esté corriendo.');
+        this.modalService.error('Error al guardar. Verificá que el backend esté corriendo.');
         this.guardando = false;
       },
     });

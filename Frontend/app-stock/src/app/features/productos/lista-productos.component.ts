@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { ModalService } from '../../core/services/modal.service';
 
 import { ProductoService } from '../../core/services/producto.service';
 import { Producto } from '../../core/models/producto.model';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-productos',
@@ -25,7 +26,8 @@ export class ListaProductosComponent implements OnInit {
   constructor(
     private productoService: ProductoService,
     private router: Router,
-  ) {}
+    private modalService: ModalService
+  ) { }
 
   irAltaProducto() {
     this.router.navigate(['/dashboard/productos/nuevo']);
@@ -93,14 +95,14 @@ export class ListaProductosComponent implements OnInit {
     this.busqueda$.next(this.terminoBusqueda);
   }
 
-  eliminar(id: number) {
-    if (confirm('¿Estás seguro que querés eliminar este producto?')) {
+  async eliminar(id: number) {
+    if (await this.modalService.confirmar('¿Estás seguro que querés eliminar este producto?')) {
       this.productoService.delete(id).subscribe({
         next: () => {
           this.productos = this.productos.filter((p) => p.id_art !== id);
         },
         error: () => {
-          alert('Error al eliminar. Verificá que el backend esté corriendo.');
+          this.modalService.error('Error al eliminar. Verificá que el backend esté corriendo.');
         },
       });
     }
