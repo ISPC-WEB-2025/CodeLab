@@ -17,4 +17,9 @@ export interface Movimiento {
   producto?: Producto;
   sucursal?: Sucursal;
   proveedor?: Proveedor;
+  //campos aplanados para facilitar el acceso en la UI
+  nombre_producto?: string;
+  nombre_sucursal?: string;
+
+
 }

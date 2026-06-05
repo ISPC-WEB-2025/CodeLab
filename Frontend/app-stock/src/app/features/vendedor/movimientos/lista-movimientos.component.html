@@ -8,56 +8,52 @@
   <h2>Movimientos de Stock</h2>
 
   @if (cargando) {
-    <p>Cargando datos...</p>
+  <p>Cargando datos...</p>
   }
 
   @if (error) {
-    <div class="alert alert-danger">⚠️ {{ error }}</div>
+  <div class="alert alert-danger">⚠️ {{ error }}</div>
   }
 
   @if (!cargando && !error) {
-    @if (movimientos.length === 0) {
-      <p class="sin-resultados">Todavía no hay movimientos registrados.</p>
-    } @else {
-      <p class="contador">Total de movimientos: {{ movimientos.length }}</p>
+  @if (movimientos.length === 0) {
+  <p class="sin-resultados">Todavía no hay movimientos registrados.</p>
+  } @else {
+  <p class="contador">Total de movimientos: {{ movimientos.length }}</p>
 
-      <div class="table-responsive">
-        <table class="table border-bottom border-success-subtle">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Tipo</th>
-              <th>Producto</th>
-              <th>Sucursal</th>
-              <th>Cantidad</th>
-              <th>Motivo</th>
-              <th>Fecha y hora</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (mov of movimientos; track mov.id_mov) {
-              <tr>
-                <td>{{ mov.id_mov }}</td>
-                <td>
-                  <span
-                    class="badge"
-                    [class.bg-success]="mov.tipo === 'Entrada'"
-                    [class.bg-danger]="mov.tipo === 'Salida'"
-                    [class.bg-warning]="mov.tipo === 'Traslado'"
-                  >
-                    {{ mov.tipo }}
-                  </span>
-                </td>
-                <td>{{ mov.id_art }}</td>
-                <td>{{ mov.id_suc }}</td>
-                <td>{{ mov.cantidad }}</td>
-                <td>{{ mov.motivo || "-" }}</td>
-                <td>{{ mov.fecha_hora | date: "dd/MM/yyyy HH:mm" }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    }
+  <div class="table-responsive">
+    <table class="table border-bottom border-success-subtle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tipo</th>
+          <th>Producto</th>
+          <th>Sucursal</th>
+          <th>Cantidad</th>
+          <th>Motivo</th>
+          <th>Fecha y hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (mov of movimientos; track mov.id_mov) {
+        <tr>
+          <td>{{ mov.id_mov }}</td>
+          <td>
+            <span class="badge" [class.bg-success]="mov.tipo === 'Entrada'" [class.bg-danger]="mov.tipo === 'Salida'"
+              [class.bg-warning]="mov.tipo === 'Traslado'">
+              {{ mov.tipo }}
+            </span>
+          </td>
+          <td>{{ mov.nombre_producto }}</td>
+          <td>{{ mov.nombre_sucursal }}</td>
+          <td>{{ mov.cantidad }}</td>
+          <td>{{ mov.motivo || "-" }}</td>
+          <td>{{ mov.fecha_hora | date: "dd/MM/yyyy HH:mm" }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
   }
 </div>
