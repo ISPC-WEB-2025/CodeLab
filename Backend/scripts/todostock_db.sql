@@ -100,6 +100,7 @@ CREATE TABLE MOVIMIENTO (
     id_mov     INT          NOT NULL AUTO_INCREMENT,
     tipo       ENUM('Entrada','Salida','Traslado') NOT NULL,
     fecha_hora DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    stock_previo INT NULL,
     cantidad   INT          NOT NULL,
     motivo     VARCHAR(255) NULL,
     id_art     INT          NOT NULL,
