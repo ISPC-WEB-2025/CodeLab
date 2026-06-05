@@ -1,4 +1,4 @@
-<nav class="navbar bg-body-tertiary navbar-expand-lg">
+<!-- <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="d-flex align-items-center gap-1 px-3">
     <a class="navbar-brand" href="#">
       <img src="assets/ToDoLogosf.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
@@ -16,5 +16,39 @@
   </ul>
   <div class="px-3 ms-auto">
     <a routerLink="/login" class="btn-acceso">Acceder al sistema</a>
+  </div>
+</nav> -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid px-3">
+    
+    <div class="d-flex align-items-center gap-1">
+      <a class="navbar-brand m-0" href="#">
+        <img src="assets/ToDoLogosf.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
+      </a>
+      <span class="texto-navbar">ToDo</span>
+      <span class="texto-navbar1">Stock</span>
+    </div>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menuNavbar">
+      
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/quienes-somos">Quiénes somos</a>
+        </li>
+      </ul>
+      
+      <div class="d-flex justify-content-center mt-2 mt-lg-0">
+        <a routerLink="/login" class="btn-acceso">Acceder al sistema</a>
+      </div>
+
+    </div>
+
   </div>
 </nav>
