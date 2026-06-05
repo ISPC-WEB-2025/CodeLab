@@ -5,9 +5,9 @@ import { Movimiento } from '../models/movimiento.model';
 
 @Injectable({ providedIn: 'root' })
 export class MovimientoService {
-  private apiUrl = 'http://localhost:8000/api/movimientos/';
+  private apiUrl = 'http://localhost:8000/api/inventario/movimientos/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<Movimiento[]> {
     return this.http.get<Movimiento[]>(this.apiUrl);
