@@ -3,6 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Usuario } from '../../core/models/usuario.model';
 import { UsuarioService } from '../../core/services/usuario.service';
 import { RouterLink } from '@angular/router';
+import { ModalService } from '../../core/services/modal.service';
 
 @Component({
   selector: 'app-lista-usuarios',
@@ -17,6 +18,7 @@ export class ListaUsuariosComponent implements OnInit {
   cargando: boolean = true; // Arranca en true para mostrar un spinner o texto de carga
 
   private usuarioService = inject(UsuarioService);
+  private modalService = inject(ModalService);
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -33,5 +35,24 @@ export class ListaUsuariosComponent implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  eliminarUsuario(id: number): void {
+    // Le preguntamos al usuario si está seguro antes de hacer el desastre
+    const confirmacion = window.confirm('¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer.');
+
+    if (confirmacion) {
+      this.usuarioService.eliminarUsuario(id).subscribe({
+        next: () => {
+          this.modalService.exito('¡Usuario eliminado correctamente!');
+          // Volvemos a pedir la lista al backend para que desaparezca de la tabla visualmente
+          this.cargarUsuarios(); 
+        },
+        error: (err) => {
+          console.error('Error al eliminar usuario:', err);
+          this.modalService.error('Hubo un problema al intentar eliminar el usuario.');
+        }
+      });
+    }
   }
 }

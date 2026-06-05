@@ -39,12 +39,13 @@
                     <span class="badge bg-primary">{{ usuario.rol }}</span>
                   </td>
                   <td class="text-center celda-acciones">
-                    <button class="btn btn-sm btn-outline-danger">
+                    <button class="btn btn-sm btn-outline-success" [routerLink]="['/dashboard/form-usuarios/editar', usuario.id]">
+                      <i class="bi bi-pencil"></i> Editar
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="eliminarUsuario(usuario.id!)">
                       <i class="bi bi-trash"></i> Eliminar
                     </button>
-                    <button class="btn btn-sm btn-outline-success" [routerLink]="['/dashboard/usuarios/editar', usuario.id]">
-                      <i class="bi bi-trash"></i> Editar
-                    </button>
+                   
                   </td>
                 </tr>
               } @empty {
