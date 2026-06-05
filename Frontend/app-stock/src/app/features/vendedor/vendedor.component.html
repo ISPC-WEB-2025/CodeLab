@@ -7,7 +7,9 @@
         </div>
         <nav class="sidebar-nav">
             <a routerLink="catalogo" routerLinkActive="active">Catalogo</a>
-            <a routerLink="movimientos" routerLinkActive="active">Movimientos</a>
+            @if( estaLogeado ) {
+                <a routerLink="movimientos" routerLinkActive="active">Movimientos</a>
+            }
         </nav>
         <div class="sidebar-footer">
             <a routerLink="/home">Volver al inicio</a>
