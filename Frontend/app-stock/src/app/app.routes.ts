@@ -9,8 +9,8 @@ import { FormProductoComponent } from './features/productos/form-producto.compon
 import { ListaProveedoresComponent } from './features/proveedores/lista-proveedores.component';
 import { FormProveedorComponent } from './features/proveedores/form-proveedor.component';
 import { StockSucursalComponent } from './features/stock/stock-sucursal.component';
-import { ListaMovimientosComponent } from './features/movimientos/lista-movimientos.component';
-import { FormMovimientoComponent } from './features/movimientos/form-movimiento.component';
+import { ListaMovimientosComponent } from './features/vendedor/movimientos/lista-movimientos.component';
+import { FormMovimientoComponent } from './features/vendedor/movimientos/form-movimiento.component';
 import { FormStockComponent } from './features/stock/form-stock/form-stock.component';
 import { VendedorComponent } from './features/vendedor/vendedor.component';
 import { CatalogoComponent } from './features/vendedor/catalogo/catalogo.component';
@@ -37,20 +37,22 @@ export const routes: Routes = [
       { path: 'proveedores', component: ListaProveedoresComponent },
       { path: 'proveedores/nuevo', component: FormProveedorComponent },
       { path: 'proveedores/editar/:id', component: FormProveedorComponent },
-      { path: 'movimientos', component: ListaMovimientosComponent },
-      { path: 'movimientos/nuevo', component: FormMovimientoComponent },
+      // { path: 'movimientos', component: ListaMovimientosComponent },
+      // { path: 'movimientos/nuevo', component: FormMovimientoComponent },
       { path: 'stock/editar/:id', component: FormStockComponent },
-      {path: 'lista-usuarios', component: ListaUsuariosComponent},
-      {path: 'form-usuarios/nuevo', component: FormUsuariosComponent},
-      {path: 'form-usuarios/editar/:id', component: FormUsuariosComponent}
+      { path: 'lista-usuarios', component: ListaUsuariosComponent },
+      { path: 'form-usuarios/nuevo', component: FormUsuariosComponent },
+      { path: 'form-usuarios/editar/:id', component: FormUsuariosComponent }
     ],
   },
   {
-  path: 'vendedor',
-  component: VendedorComponent,
-  children: [
-    { path: 'catalogo', component: CatalogoComponent },
-  ]
-},
+    path: 'vendedor',
+    component: VendedorComponent,
+    children: [
+      { path: 'catalogo', component: CatalogoComponent },
+      { path: 'movimientos', component: ListaMovimientosComponent },
+      { path: 'movimientos/nuevo', component: FormMovimientoComponent },
+    ]
+  },
   { path: '**', redirectTo: 'home' },
 ];

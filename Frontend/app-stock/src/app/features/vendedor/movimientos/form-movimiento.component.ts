@@ -8,11 +8,11 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { MovimientoService } from '../../core/services/movimiento.service';
-import { ProductoService } from '../../core/services/producto.service';
-import { StockSucursalService } from '../../core/services/stock-sucursal.service';
-import { Producto } from '../../core/models/producto.model';
-import { StockSucursal } from '../../core/models/stock-sucursal.model';
+import { MovimientoService } from '../../../core/services/movimiento.service';
+import { ProductoService } from '../../../core/services/producto.service';
+import { StockSucursalService } from '../../../core/services/stock-sucursal.service';
+import { Producto } from '../../../core/models/producto.model';
+import { StockSucursal } from '../../../core/models/stock-sucursal.model';
 
 @Component({
   selector: 'app-form-movimiento',
@@ -75,7 +75,7 @@ export class FormMovimientoComponent implements OnInit {
         this.exitoso = true;
         this.guardando = false;
         setTimeout(
-          () => this.router.navigate(['/dashboard/movimientos']),
+          () => this.router.navigate(['/vendedor/movimientos']),
           1500,
         );
       },
@@ -90,6 +90,6 @@ export class FormMovimientoComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.router.navigate(['/dashboard/movimientos']);
+    this.router.navigate(['/vendedor/movimientos']);
   }
 }

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { MovimientoService } from '../../core/services/movimiento.service';
-import { Movimiento } from '../../core/models/movimiento.model';
+import { MovimientoService } from '../../../core/services/movimiento.service';
+import { Movimiento } from '../../../core/models/movimiento.model';
 
 @Component({
   selector: 'app-lista-movimientos',
@@ -20,7 +20,7 @@ export class ListaMovimientosComponent implements OnInit {
   constructor(
     private movimientoService: MovimientoService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.movimientoService.getAll().subscribe({
@@ -36,6 +36,6 @@ export class ListaMovimientosComponent implements OnInit {
   }
 
   irNuevoMovimiento(): void {
-    this.router.navigate(['/dashboard/movimientos/nuevo']);
+    this.router.navigate(['/vendedor/movimientos/nuevo']);
   }
 }
