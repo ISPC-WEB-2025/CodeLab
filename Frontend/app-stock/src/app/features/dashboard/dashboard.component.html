@@ -9,7 +9,9 @@
             <a routerLink="stock" routerLinkActive="active">Stock</a>
             <a routerLink="productos" routerLinkActive="active">Productos</a>
             <!-- <a routerLink="movimientos" routerLinkActive="active">Movimientos</a> -->
-            <a routerLink="lista-usuarios" routerLinkActive="active">Usuarios</a>
+            @if(estaLogeado && esAdmin) {
+                <a routerLink="lista-usuarios" routerLinkActive="active">Usuarios</a>
+            }
             <a routerLink="proveedores" routerLinkActive="active">Proveedores</a>
         </nav>
         <div class="sidebar-footer">

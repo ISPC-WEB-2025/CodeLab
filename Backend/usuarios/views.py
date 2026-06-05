@@ -53,6 +53,7 @@ class LoginUsuarioView(APIView):
 
             return Response(
                 {
+                    "nombre": user.nombre,
                     "token": token.key,  # devuelve token para que Angular lo guarde y lo mande en cada petición
                     "email": user.email,
                     "es_admin": user.es_admin,

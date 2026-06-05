@@ -15,7 +15,13 @@
         </li>
   </ul>
   <div class="px-3 ms-auto">
-    <a routerLink="/login" class="btn-acceso">Acceder al sistema</a>
+    @if( !estaLogeado ) { 
+      <a routerLink="/login" class="btn-acceso">Acceder al sistema</a>
+    }
+    @else {
+      <span class="mx-2">Bienvenido, <strong>{{ nombreUsuario }}</strong></span>
+      <button (click)="logout()" class="btn btn-outline-danger">Cerrar sesión</button>
+    }
   </div>
 </nav> -->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">

@@ -37,8 +37,8 @@ export const routes: Routes = [
       { path: 'proveedores', component: ListaProveedoresComponent },
       { path: 'proveedores/nuevo', component: FormProveedorComponent },
       { path: 'proveedores/editar/:id', component: FormProveedorComponent },
-      // { path: 'movimientos', component: ListaMovimientosComponent },
-      // { path: 'movimientos/nuevo', component: FormMovimientoComponent },
+      { path: 'movimientos', component: ListaMovimientosComponent },
+      { path: 'movimientos/nuevo', component: FormMovimientoComponent },
       { path: 'stock/editar/:id', component: FormStockComponent },
       { path: 'lista-usuarios', component: ListaUsuariosComponent },
       { path: 'form-usuarios/nuevo', component: FormUsuariosComponent },
@@ -50,8 +50,8 @@ export const routes: Routes = [
     component: VendedorComponent,
     children: [
       { path: 'catalogo', component: CatalogoComponent },
-      { path: 'movimientos', component: ListaMovimientosComponent },
-      { path: 'movimientos/nuevo', component: FormMovimientoComponent },
+      { path: 'movimientos', component: ListaMovimientosComponent, canActivate:[authGuard] },
+      { path: 'movimientos/nuevo', component: FormMovimientoComponent, canActivate:[authGuard] },
     ]
   },
   { path: '**', redirectTo: 'home' },
