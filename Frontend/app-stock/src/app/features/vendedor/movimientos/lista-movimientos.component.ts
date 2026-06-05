@@ -49,10 +49,12 @@ export class ListaMovimientosComponent implements OnInit {
 
     // Cargar sucursales para el filtro
     this.stockService.getAll().subscribe(data => {
+      this.stockTotal = data;
       const mapa = new Map<number, string>();
       data.forEach(s => mapa.set(s.id_suc, s.nombre_sucursal!));
       this.sucursales = Array.from(mapa.entries()).map(([id, nombre]) => ({ id, nombre }));
     });
+
   }
 
   irNuevoMovimiento(): void {
@@ -60,10 +62,9 @@ export class ListaMovimientosComponent implements OnInit {
   }
 
   // Método para obtener el stock de un producto en la sucursal seleccionada
-  getStock(id_art: number): number | null {
-    if (!this.sucursalSeleccionada) return null;
+  getStock(id_art: number, id_suc: number): number | null {
     const registro = this.stockTotal.find(
-      s => s.id_art === id_art && s.id_suc === this.sucursalSeleccionada
+      s => s.id_art === id_art && s.id_suc === id_suc
     );
     return registro ? registro.cantidad_stock : null;
   }
