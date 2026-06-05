@@ -1,0 +1,58 @@
+.usuarios-contenedor {
+  padding: 0.5rem 0;
+}
+
+.usuarios-contenedor   h2 {
+  font-size: 1.8rem;
+  color: #1e3a2f;
+  margin-bottom: 0.4rem;
+}
+
+.contador-us {
+  font-size: 0.88rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+.texto-error {
+  color: #8b2020;
+}
+.thead-usuarios {
+    background-color: #1e3a2f;
+    color: white;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+thead {
+  background-color: #1e3a2f;
+  color: white;
+}
+
+th {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.92rem;
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background-color: #f0f7f3;
+}
