@@ -57,10 +57,6 @@ ngOnInit() {
           fecha_nacimiento: usuario.fecha_nacimiento,
           rol: usuario.rol
         });
-        
-   
-        // this.usuarioForm.get('password')?.clearValidators();
-        // this.usuarioForm.get('password')?.updateValueAndValidity();
       },
       error: (err) => {
         console.error('Error al traer usuario', err);
@@ -83,10 +79,6 @@ ngOnInit() {
         password: datosForm.password
       };
 
-      // // Mandamos la contraseña SOLO si el usuario escribió una nueva
-      // if (datosForm.password) {
-      //   datosParaEnviar.password = datosForm.password;
-      // }
 
       if (this.esEdicion && this.usuarioId) {
         // MODO EDICIÓN (PUT)

@@ -36,23 +36,25 @@ export class ListaUsuariosComponent implements OnInit {
       }
     });
   }
+  usuarioAEliminar: number | null = null;
 
-  eliminarUsuario(id: number): void {
-    // Le preguntamos al usuario si está seguro antes de hacer el desastre
-    const confirmacion = window.confirm('¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer.');
-
-    if (confirmacion) {
-      this.usuarioService.eliminarUsuario(id).subscribe({
+  prepararEliminacion(id: number): void {
+    this.usuarioAEliminar = id;
+  }
+   confirmarEliminacion(): void {
+    if (this.usuarioAEliminar) {
+      this.usuarioService.eliminarUsuario(this.usuarioAEliminar).subscribe({
         next: () => {
           this.modalService.exito('¡Usuario eliminado correctamente!');
-          // Volvemos a pedir la lista al backend para que desaparezca de la tabla visualmente
           this.cargarUsuarios(); 
+          this.usuarioAEliminar = null; // Limpiamos
         },
         error: (err) => {
           console.error('Error al eliminar usuario:', err);
           this.modalService.error('Hubo un problema al intentar eliminar el usuario.');
+          this.usuarioAEliminar = null;
         }
       });
     }
+   }
   }
-}
