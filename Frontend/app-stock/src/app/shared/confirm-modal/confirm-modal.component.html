@@ -1,0 +1,10 @@
+<div class="modal-header bg-dark text-white">
+    <h5 class="modal-title">Confirmar acción</h5>
+</div>
+<div class="modal-body">
+    <p>{{ mensaje }}</p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" (click)="activeModal.dismiss()">Cancelar</button>
+    <button class="btn btn-danger" (click)="activeModal.close(true)">Confirmar</button>
+</div>

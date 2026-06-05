@@ -96,7 +96,7 @@ export class ListaProductosComponent implements OnInit {
   }
 
   async eliminar(id: number) {
-    if (await this.modalService.confirmar('¿Estás seguro que querés eliminar este producto?')) {
+    if (await this.modalService.confirmar('¿Eliminar este producto? Esta acción no se puede deshacer.')) {
       this.productoService.delete(id).subscribe({
         next: () => {
           this.productos = this.productos.filter((p) => p.id_art !== id);
