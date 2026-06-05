@@ -20,6 +20,6 @@ export interface Movimiento {
   //campos aplanados para facilitar el acceso en la UI
   nombre_producto?: string;
   nombre_sucursal?: string;
-
+  stock_previo?: number;
 
 }

@@ -23,8 +23,10 @@
   }
 
   @if (!cargando && !error) {
-  @if (movimientos.length === 0) {
-  <p class="sin-resultados">Todavía no hay movimientos registrados.</p>
+  @if (movimientosFiltrados.length === 0) {
+  <p class="sin-resultados">
+    {{ sucursalSeleccionada ? 'No hay movimientos para esta sucursal.' : 'Todavía no hay movimientos registrados.' }}
+  </p>
   } @else {
   <!-- para mostrar el total de movimientos filtrada por sucursal -->
   <p class="contador">Total de movimientos: {{ movimientosFiltrados.length }}</p>
@@ -36,7 +38,7 @@
           <th>#</th>
           <th>Producto</th>
           <th>Sucursal</th>
-          <th>Stock</th>
+          <th>Stock Previo</th>
           <th>Cantidad</th>
           <th>Tipo</th>
           <th>Motivo</th>
@@ -49,7 +51,7 @@
           <td>{{ mov.id_mov }}</td>
           <td>{{ mov.nombre_producto }}</td>
           <td>{{ mov.nombre_sucursal }}</td>
-          <td>{{ getStock(mov.id_art, mov.id_suc) ?? '-' }}</td>
+          <td>{{ mov.stock_previo ?? '-' }}</td>
           <td>{{ mov.cantidad }}</td>
           <td>
             <span class="badge" [class.bg-success]="mov.tipo === 'Entrada'" [class.bg-danger]="mov.tipo === 'Salida'"

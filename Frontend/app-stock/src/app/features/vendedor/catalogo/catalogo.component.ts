@@ -43,5 +43,14 @@ export class CatalogoComponent implements OnInit {
       this.stockTotal.some(s => s.id_art === p.id_art && s.id_suc === this.sucursalSeleccionada)
     );
   }
+
+  // Para mostrar el stock disponible en la sucursal seleccionada para cada producto
+  getStockEnSucursal(idProducto: number): number | null {
+    if (!this.sucursalSeleccionada) return null;
+    const registro = this.stockTotal.find(
+      s => s.id_art === idProducto && s.id_suc === this.sucursalSeleccionada
+    );
+    return registro ? registro.cantidad_stock : null;
+  }
 }
 
