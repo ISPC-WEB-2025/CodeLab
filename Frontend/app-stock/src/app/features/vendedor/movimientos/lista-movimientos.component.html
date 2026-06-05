@@ -1,0 +1,71 @@
+<div class="d-flex justify-content-end mb-3">
+  <button class="btn btn-primary" (click)="irNuevoMovimiento()">
+    + Registrar Movimiento
+  </button>
+</div>
+
+<select class="form-select mb-3" style="max-width: 300px" [(ngModel)]="sucursalSeleccionada">
+  <option [ngValue]="null">-- Todas las sucursales --</option>
+  @for (s of sucursales; track s.id) {
+  <option [ngValue]="s.id">{{ s.nombre }}</option>
+  }
+</select>
+
+<div class="movimientos-contenedor">
+  <h2>Movimientos de Stock</h2>
+
+  @if (cargando) {
+  <p>Cargando datos...</p>
+  }
+
+  @if (error) {
+  <div class="alert alert-danger">⚠️ {{ error }}</div>
+  }
+
+  @if (!cargando && !error) {
+  @if (movimientosFiltrados.length === 0) {
+  <p class="sin-resultados">
+    {{ sucursalSeleccionada ? 'No hay movimientos para esta sucursal.' : 'Todavía no hay movimientos registrados.' }}
+  </p>
+  } @else {
+  <!-- para mostrar el total de movimientos filtrada por sucursal -->
+  <p class="contador">Total de movimientos: {{ movimientosFiltrados.length }}</p>
+
+  <div class="table-responsive">
+    <table class="table border-bottom border-success-subtle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Producto</th>
+          <th>Sucursal</th>
+          <th>Stock Previo</th>
+          <th>Cantidad</th>
+          <th>Tipo</th>
+          <th>Motivo</th>
+          <th>Fecha y hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (mov of movimientosFiltrados; track mov.id_mov) {
+        <tr>
+          <td>{{ mov.id_mov }}</td>
+          <td>{{ mov.nombre_producto }}</td>
+          <td>{{ mov.nombre_sucursal }}</td>
+          <td>{{ mov.stock_previo ?? '-' }}</td>
+          <td>{{ mov.cantidad }}</td>
+          <td>
+            <span class="badge" [class.bg-success]="mov.tipo === 'Entrada'" [class.bg-danger]="mov.tipo === 'Salida'"
+              [class.bg-warning]="mov.tipo === 'Traslado'">
+              {{ mov.tipo }}
+            </span>
+          </td>
+          <td>{{ mov.motivo || "-" }}</td>
+          <td>{{ mov.fecha_hora | date: "dd/MM/yyyy HH:mm" }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+  }
+</div>

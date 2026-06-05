@@ -1,0 +1,95 @@
+<div class="stock-contenedor">
+  <h2>Registrar Movimiento</h2>
+
+  @if (exitoso) {
+  <div class="alert alert-success">
+    Movimiento registrado correctamente. El stock fue actualizado.
+  </div>
+  }
+
+  @if (errorMsg) {
+  <div class="alert alert-danger">⚠️ {{ errorMsg }}</div>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="guardar()">
+    <div class="mb-3">
+      <label class="form-label">Tipo de movimiento *</label>
+      <select class="form-select" formControlName="tipo">
+        <option value="">-- Seleccioná un tipo --</option>
+        <option value="Entrada">Entrada</option>
+        <option value="Salida">Salida</option>
+        <!-- <option value="Traslado">Traslado</option> # Traslado lo gestionaría administrador -->
+      </select>
+      @if (formulario.get("tipo")?.invalid && formulario.get("tipo")?.touched) {
+      <small class="text-danger">El tipo es obligatorio.</small>
+      }
+    </div>
+
+    <!-- Sucursal primero -->
+    <div class="mb-3">
+      <label class="form-label">Sucursal *</label>
+      <select class="form-select" formControlName="id_suc">
+        <option value="">-- Seleccioná una sucursal --</option>
+        @for (s of sucursales; track s.id) {
+        <option [value]="s.id">{{ s.nombre }}</option>
+        }
+      </select>
+      @if (formulario.get('id_suc')?.invalid && formulario.get('id_suc')?.touched) {
+      <small class="text-danger">La sucursal es obligatoria.</small>
+      }
+    </div>
+
+    <!-- Producto segundo, filtrado por sucursal -->
+    <div class="mb-3">
+      <label class="form-label">Producto *</label>
+
+      <!-- deshabilita el select de producto hasta que se elija una sucursal -->
+      <select class="form-select" formControlName="id_art"
+        [attr.disabled]="!formulario.get('id_suc')?.value ? true : null">
+        <option value="">
+          {{ formulario.get('id_suc')?.value ? '-- Selecciona un producto --' : '-- Selecciona una sucursal primero --'
+          }}
+        </option>
+        @for (p of productosFiltrados; track p.id_art) {
+        <option [value]="p.id_art">{{ p.nombre }} ({{ p.codigo }})</option>
+        }
+      </select>
+      <!-- muestra el mensaje de error solo si el campo es inválido y el usuario ya interactuó con él -->
+      @if (formulario.get('id_art')?.invalid && formulario.get('id_art')?.touched) {
+      <small class="text-danger">El producto es obligatorio.</small>
+      }
+    </div>
+
+    <!-- Indicador de stock -->
+    @if (stockDisponible !== null) {
+    <div class="alert mb-3" [class.alert-info]="stockDisponible > 0" [class.alert-warning]="stockDisponible === 0">
+      Stock disponible: <strong>{{ stockDisponible }} unidades</strong>
+    </div>
+    }
+
+    <div class="mb-3">
+      <label class="form-label">Cantidad *</label>
+      <input type="number" class="form-control" formControlName="cantidad" min="1" placeholder="Ej: 10" />
+      @if (
+      formulario.get("cantidad")?.invalid &&
+      formulario.get("cantidad")?.touched
+      ) {
+      <small class="text-danger">La cantidad debe ser mayor a 0.</small>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Motivo (opcional)</label>
+      <input type="text" class="form-control" formControlName="motivo" placeholder="Ej: Reposición mensual" />
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid || guardando">
+        {{ guardando ? "Guardando..." : "Registrar movimiento" }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancelar()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

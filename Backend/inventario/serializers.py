@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal, Movimiento
 from django.utils import timezone
 
+
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
@@ -11,12 +12,8 @@ class CategoriaSerializer(serializers.ModelSerializer):
 class ProductoSerializer(serializers.ModelSerializer):
 
     categoria = CategoriaSerializer(source="id_cat", read_only=True)
-    nombre = serializers.CharField(
-        allow_blank=True
-    )  
-    codigo = serializers.CharField(
-        allow_blank=True
-    )  
+    nombre = serializers.CharField(allow_blank=True)
+    codigo = serializers.CharField(allow_blank=True)
 
     class Meta:
         model = Producto
@@ -26,8 +23,8 @@ class ProductoSerializer(serializers.ModelSerializer):
             "descripcion",
             "codigo",
             "precio_venta",
-            "id_cat",  
-            "categoria",  
+            "id_cat",
+            "categoria",
         ]
 
     def validate_nombre(self, value):
@@ -69,7 +66,7 @@ class StockSucursalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StockSucursal
-        fields = [ 
+        fields = [
             "id_stock",
             "cantidad_stock",
             "stock_min",
@@ -79,19 +76,22 @@ class StockSucursalSerializer(serializers.ModelSerializer):
             "nombre_sucursal",
         ]
 
+
 class MovimientoSerializer(serializers.ModelSerializer):
+    nombre_producto = serializers.CharField(source="id_art.nombre", read_only=True)
+    nombre_sucursal = serializers.CharField(source="id_suc.nombre", read_only=True)
 
     class Meta:
         model = Movimiento
-        fields = '__all__'
+        fields = "__all__"
         extra_kwargs = {
-            'fecha_hora': {'required': False, 'allow_null': True},
-            'id_usuario': {'required': False, 'allow_null': True},
-            'id_prov':    {'required': False, 'allow_null': True},
-            'id_mov':     {'required': False},
+            "fecha_hora": {"required": False, "allow_null": True},
+            "id_usuario": {"required": False, "allow_null": True},
+            "id_prov": {"required": False, "allow_null": True},
+            "id_mov": {"required": False},
         }
 
     def create(self, validated_data):
-        if not validated_data.get('fecha_hora'):
-            validated_data['fecha_hora'] = timezone.now()
+        if not validated_data.get("fecha_hora"):
+            validated_data["fecha_hora"] = timezone.now()
         return super().create(validated_data)
