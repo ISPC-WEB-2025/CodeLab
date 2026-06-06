@@ -33,7 +33,8 @@ export class FormUsuariosComponent implements OnInit {
     rol: ['', Validators.required]
   });
 
-ngOnInit() {
+  ngOnInit() {
+    // this.usuarioForm.get('apellido')?.disable()
     // Escuchamos la URL para saber si es /nuevo o /editar/:id
     this.route.params.subscribe(params => {
       if (params['id']) {
