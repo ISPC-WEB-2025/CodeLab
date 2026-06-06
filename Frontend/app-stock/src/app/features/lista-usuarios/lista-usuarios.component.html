@@ -38,11 +38,11 @@
                   <td>
                     <span class="badge bg-primary">{{ usuario.rol }}</span>
                   </td>
-                  <td class="text-center celda-acciones">
-                    <button class="btn btn-sm btn-outline-success" [routerLink]="['/dashboard/form-usuarios/editar', usuario.id]">
+                  <td class="d-flex gap-2 justify-content-center text-center celda-acciones ">
+                    <button class="btn btn-sm btn-success" [routerLink]="['/dashboard/form-usuarios/editar', usuario.id]">
                       <i class="bi bi-pencil"></i> Editar
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar" (click)="prepararEliminacion(usuario.id!)">
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar" (click)="prepararEliminacion(usuario.id!)">
                       <i class="bi bi-trash"></i> Eliminar
                     </button>
                    
