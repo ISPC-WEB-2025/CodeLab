@@ -19,7 +19,7 @@
     "model": "usuarios.role",
     "pk": 3,
     "fields": {
-      "nombre": "DEP�SITO",
+      "nombre": "DEPOSITO",
       "descripcion": ""
     }
   }
