@@ -1,0 +1,89 @@
+classDiagram
+    class Categoria {
+        - int id_cat
+        - String nombre
+        + __str__() String
+    }
+
+    class Producto {
+        - int id_art
+        - String nombre
+        - String descripcion
+        - String codigo
+        - float precio_venta
+        + __str__() String
+    }
+
+    class Sucursal {
+        - int id_suc
+        - String nombre
+        - String direccion
+        + __str__() String
+    }
+
+    class Proveedor {
+        - int id_prov
+        - String nombre
+        - String cuit
+        - String telefono
+        - String email
+        - String direccion
+        + __str__() String
+    }
+
+    class StockSucursal {
+        - int id_stock
+        - int cantidad_stock
+        - int stock_min
+        + verificarStockMinimo() boolean
+        + actualizarStock(cantidad) void
+    }
+
+    class ProductoProveedor {
+        - int id_enlace
+        - float precio_costo
+    }
+
+    class Role {
+        - int id
+        - String nombre
+        - String descripcion
+        + __str__() String
+    }
+
+    class Usuario {
+        - int id_usuario
+        - String nombre
+        - String email
+        - String dni
+        - Date fecha_nacimiento
+        - String password
+        - boolean activo
+        + __str__() String
+    }
+
+    class Movimiento {
+        - int id_mov
+        - String tipo
+        - DateTime fecha_hora
+        - int cantidad
+        - String motivo
+        + registrarMovimiento() void
+    }
+
+    %% Relaciones %%
+    Categoria "1" -- "*" Producto : clasifica
+    Producto "1" -- "*" StockSucursal : tiene
+    Sucursal "1" -- "*" StockSucursal : almacena
+    
+    Producto "1" -- "*" ProductoProveedor : provisto_por
+    Proveedor "1" -- "*" ProductoProveedor : provee
+    
+    Role "1" -- "*" Usuario : asignado_a
+    
+    %% Relaciones del Movimiento (basadas en tu modelo lógico) %%
+    Movimiento "*" -- "1" Producto : involucra
+    Movimiento "*" -- "1" Sucursal : ocurre_en
+    Movimiento "*" -- "0..1" Proveedor : origina
+    Movimiento "*" -- "1" Usuario : registra
+    

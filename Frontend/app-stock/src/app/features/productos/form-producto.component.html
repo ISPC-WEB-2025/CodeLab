@@ -1,48 +1,77 @@
+<form [formGroup]="productoForm" (ngSubmit)="guardar()" class="p-4 border rounded shadow-sm bg-white">
 
-<form class="p-4 border rounded shadow-sm ">
-    <h3 class="mb-4 alta">Alta de Productos</h3>
-    <p>Ingresa los datos del nuevo producto para agregarlo a tu inventario:</p>
-    <div class="fila-form">
-        <div class="col-md-6">
-            <label for="nombre" class="form-label">Nombre del Producto</label>
-            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingresa un nombre" [(ngModel)]="producto.nombre">
-        </div>
-        <div class="col-md-4">
-            <label for="codigo" class="form-label">Código</label>
-            <input type="text" id="codigo" name="codigo" class="form-control" placeholder="Ingresa el código del producto (único)" [(ngModel)]="producto.codigo">
-        </div>
+  <h3 class="mb-4 alta">Alta de Productos</h3>
+  <p>Ingresa los datos del nuevo producto para agregar al inventario:</p>
+
+  <div class="form-grid-responsive fila-form row">
+    <div class="col-md-7 mb-3">
+      <label for="nombre" class="form-label">Nombre del Producto</label>
+      <input type="text" id="nombre" formControlName="nombre" class="form-control"
+        placeholder="Ingresa nombre del producto">
+      @if (erroresBackend?.nombre) {
+      <small class="text-danger d-block mt-1">{{ erroresBackend.nombre[0] }}</small>
+      }
+      @if (productoForm.get('nombre')?.invalid && productoForm.get('nombre')?.touched) {
+        <small class="text-danger d-block mt-1">El nombre es obligatorio</small>
+      }
     </div>
-<div class="fila-form">
 
-  <div class="col-md-5">
-    <label for="precioVenta" class="form-label">
-      Precio de Venta <span class="text-muted">(Opcional)</span>
-    </label>
-    <div class="input-group">
-      <span class="input-group-text">$</span>
-      <input type="number" id="precioVenta" name="precioVenta" class="form-control" placeholder="0.00" min="0" [(ngModel)]="producto.precio_venta">
+    <div class="col-md-5 mb-3">
+      <label for="codigo" class="form-label">Código</label>
+      <input type="text" id="codigo" formControlName="codigo" class="form-control"
+        placeholder="Ingresa el código del producto">@if (erroresBackend?.codigo) {
+      <small class="text-danger d-block mt-1">{{ erroresBackend.codigo[0] }}</small>
+      }
+      @if (productoForm.get('codigo')?.invalid && productoForm.get('codigo')?.touched) {
+        <small class="text-danger d-block mt-1">El codigo es obligatorio</small>
+      }
     </div>
   </div>
 
-  <div class="col-md-5">
-    <label for="categoria" class="form-label">Categoría</label>
-    <select id="categoria" name="categoria" class="form-select" [(ngModel)]="producto.id_cat">
-      <option value="">Seleccione una opción...</option>
-       @for (cat of categorias; track cat) {
-<option [value]="cat.id_cat">{{ cat.nombre }}</option>
-}
-    </select>
+  <div class="fila-form row">
+    <div class="col-md-6 mb-3">
+      <label for="precioVenta" class="form-label">Precio de Venta (Requerido)</label>
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input type="number" id="precioVenta" formControlName="precio_venta" class="form-control" placeholder="0.00">
+      </div>
+      @if (erroresBackend?.precio_venta) {
+      <small class="text-danger d-block mt-1">{{ erroresBackend.precio_venta[0] }}</small>
+      }
+      @if (productoForm.get('precio_venta')?.invalid && productoForm.get('precio_venta')?.touched) {
+        <small class="text-danger d-block mt-1">El precio es obligatorio</small>
+      }
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="categoria" class="form-label">Categoría</label>
+      <select id="categoria" formControlName="id_cat" class="form-select">
+        <option value="">Seleccione una opción...</option>
+        @for (cat of categorias; track cat.id_cat) {
+        <option [value]="cat.id_cat">{{ cat.nombre }}</option>
+        }
+      </select>
+      @if (erroresBackend?.id_cat) {
+      <small class="text-danger d-block mt-1">{{ erroresBackend.id_cat[0] }}</small>
+      }
+      @if (productoForm.get('id_cat')?.invalid && productoForm.get('id_cat')?.touched) {
+        <small class="text-danger d-block mt-1">Debe seleccionar una categoria</small>
+      }
+    </div>
   </div>
 
-</div>
-    <div class="fila-form">
-    <div class="col-md-10">
-            <label for="descripcion" class="form-label">Descripción <span class="text-muted">(Opcional)</span></label>
-             <textarea id="descripcion" name="descripcion" class="form-control" rows="3" placeholder="Ingresa una descripción..." [(ngModel)]="producto.descripcion"></textarea>
-        </div>
+  <div class="fila-form row">
+    <div class="col-md-12 mb-3">
+      <label for="descripcion" class="form-label">Descripción <span class="text-muted">(Opcional)</span></label>
+      <textarea id="descripcion" formControlName="descripcion" class="form-control" rows="3"
+        placeholder="Ingresa descripción del producto"></textarea>@if (erroresBackend?.descripcion) {
+      <small class="text-danger d-block mt-1">{{ erroresBackend.descripcion[0] }}</small>
+      }
     </div>
-    <div class="d-flex justify-content-end mt-4">
-        <button type="button" class="btn btn-primary px-4" (click)="guardar()">Guardar</button>
-    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-4">
+    <button type="submit" class="btn btn-primary px-4">Guardar</button>
+  </div>
 
 </form>

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http'; // ← agregás HttpParams
 import { Observable } from 'rxjs';
 import { Producto } from '../models/producto.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductoService {
-  private apiUrl = 'http://localhost:8000/api/productos/';
+  private apiUrl = 'http://localhost:8000/api/inventario/productos/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.apiUrl);
@@ -15,6 +15,14 @@ export class ProductoService {
 
   getById(id: number): Observable<Producto> {
     return this.http.get<Producto>(`${this.apiUrl}${id}/`);
+  }
+
+  buscarProductos(search: string): Observable<Producto[]> {
+    if (!search || !search.trim()) {
+      return this.http.get<Producto[]>(this.apiUrl);
+    }
+    const params = new HttpParams().set('search', search.trim());
+    return this.http.get<Producto[]>(this.apiUrl, { params });
   }
 
   create(producto: Producto): Observable<Producto> {

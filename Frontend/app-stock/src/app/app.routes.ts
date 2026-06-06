@@ -9,11 +9,14 @@ import { FormProductoComponent } from './features/productos/form-producto.compon
 import { ListaProveedoresComponent } from './features/proveedores/lista-proveedores.component';
 import { FormProveedorComponent } from './features/proveedores/form-proveedor.component';
 import { StockSucursalComponent } from './features/stock/stock-sucursal.component';
-import { ListaMovimientosComponent } from './features/movimientos/lista-movimientos.component';
-import { FormMovimientoComponent } from './features/movimientos/form-movimiento.component';
+import { ListaMovimientosComponent } from './features/vendedor/movimientos/lista-movimientos.component';
+import { FormMovimientoComponent } from './features/vendedor/movimientos/form-movimiento.component';
 import { FormStockComponent } from './features/stock/form-stock/form-stock.component';
 import { VendedorComponent } from './features/vendedor/vendedor.component';
 import { CatalogoComponent } from './features/vendedor/catalogo/catalogo.component';
+import { authGuard } from './core/guards/auth.guard';
+import { ListaUsuariosComponent } from './features/lista-usuarios/lista-usuarios.component';
+import { FormUsuariosComponent } from './features/form-usuarios/form-usuarios.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -24,6 +27,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'stock', pathMatch: 'full' },
       { path: 'stock', component: StockSucursalComponent },
@@ -36,14 +40,19 @@ export const routes: Routes = [
       { path: 'movimientos', component: ListaMovimientosComponent },
       { path: 'movimientos/nuevo', component: FormMovimientoComponent },
       { path: 'stock/editar/:id', component: FormStockComponent },
+      { path: 'lista-usuarios', component: ListaUsuariosComponent },
+      { path: 'form-usuarios/nuevo', component: FormUsuariosComponent },
+      { path: 'form-usuarios/editar/:id', component: FormUsuariosComponent }
     ],
   },
   {
-  path: 'vendedor',
-  component: VendedorComponent,
-  children: [
-    { path: 'catalogo', component: CatalogoComponent },
-  ]
-},
+    path: 'vendedor',
+    component: VendedorComponent,
+    children: [
+      { path: 'catalogo', component: CatalogoComponent },
+      { path: 'movimientos', component: ListaMovimientosComponent, canActivate:[authGuard] },
+      { path: 'movimientos/nuevo', component: FormMovimientoComponent, canActivate:[authGuard] },
+    ]
+  },
   { path: '**', redirectTo: 'home' },
 ];

@@ -5,9 +5,9 @@ import { Proveedor } from '../models/proveedor.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProveedorService {
-  private apiUrl = 'http://localhost:8000/api/proveedores/';
+  private apiUrl = 'http://localhost:8000/api/inventario/proveedores/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<Proveedor[]> {
     return this.http.get<Proveedor[]>(this.apiUrl);

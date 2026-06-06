@@ -118,7 +118,7 @@ pip install -r requirements.txt
 CREATE DATABASE nombre_db;
 ```
 
-**d.** Crear el archivo de variables de entorno copiando el modelo:
+**c.** Crear el archivo de variables de entorno copiando el modelo:
 
 ```bash
 cp .env_modelo .env
@@ -126,13 +126,39 @@ cp .env_modelo .env
 
 **e.** Completar `.env` con tus credenciales de MySQL.
 
-**f.** Ejecutar migraciones:
+**f.** Inicializar la base de datos:
+
+#### Opción A — Script automatizado (recomendado)
+
+Con el entorno virtual activado, desde la carpeta `Backend/`:
 
 ```bash
-python manage.py migrate
+python setup_db.py
 ```
 
-**g.** Iniciar el servidor:
+Esto crea la base de datos, ejecuta las migraciones y carga los datos de prueba automáticamente.
+
+> [!TIP]
+> Esta opción carga más datos de prueba que la opción manual.
+
+#### Opción B — Manual
+
+1. Correr `scripts/todostock_db.sql` en SQL Workbench
+2. `python manage.py migrate`
+3. Volver a correr `scripts/todostock_db.sql`
+
+---
+
+**g.** Crear superusuario para gestión de roles:
+
+```bash
+python manage.py createsuperuser
+```
+
+> [!NOTE]
+> El superusuario permite acceder al panel de administración en `http://127.0.0.1:8000/admin/` o desde la sección de administración del frontend para asignar roles de **Administrador** o **Empleado** a los usuarios registrados.
+
+**h.** Iniciar el servidor:
 
 ```bash
 python manage.py runserver
@@ -143,7 +169,10 @@ python manage.py runserver
 ## 3. Uso básico
 
 - Backend corre en <http://127.0.0.1:8000/>
-- Api disponible en <http://127.0.0.1:8000/api/>
+- API de inventario en <http://127.0.0.1:8000/api/inventario/>
+- API de vendedor en <http://127.0.0.1:8000/api/vendedor/>
+- API de usuarios en <http://127.0.0.1:8000/api/usuarios/>
+- Panel de administración en <http://127.0.0.1:8000/admin/>
 - Frontend corre en <http://localhost:4200/>
 
 - Vista previa de la página: [CodeLab](https://ispc-web-2025.github.io/CodeLab/)
@@ -174,7 +203,7 @@ python manage.py runserver
 
 ## 5. Tecnologías utilizadas
 
-- **Frontend:** Angular
+- **Frontend:** Angular 21
 - **Backend:** Python y Django Rest Framework
 - **Base de Datos:** MySQL
-- **Estilos:** CSS3 y Bootstrap
+- **Estilos:** CSS3 y Bootstrap (modales y notificaciones toast)

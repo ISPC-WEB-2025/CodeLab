@@ -1,27 +1,69 @@
 import { Injectable } from '@angular/core';
-import { TempUsersService } from './temp-users.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 
-// Este servicio es completamente inseguro, está acá unicamente para pruebas de frontend. 
-// Lo más seguro es que debas realizar la conexión a una base de datos real para sacar los datos que necesites.
-// NO UTILIZAR ESTE SERVICIO SI ESTAS DE ACUERDO CON ESTO.
 export class UserAuthService {
-  private listaUsuarios:any;
-  
-  constructor(private TempUsersService:TempUsersService) {
-    this.listaUsuarios = TempUsersService.obtenerTodos;
+  private loginURL = 'http://localhost:8000/api/usuarios/login/';
+  private registroURL = 'http://localhost:8000/api/usuarios/registro/'; 
+
+  constructor(private http: HttpClient, private router: Router) { }
+
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<any>(this.loginURL, { email, password }).pipe(
+      tap(response => {
+        if (response.token) {
+          localStorage.setItem('nombre_usuario', response.nombre);
+          localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('es_admin', response.es_admin.toString());
+          localStorage.setItem('es_empleado', response.es_empleado.toString());
+        }
+      })
+    );
   }
 
-  public autenticar(email:string, password:string) {
-    console.warn("Atención!: Se está utilizando un autenticador inseguro, por lo que deberás cambiarlo antes de llevar a producción este sitio web.");
-    for(const user of this.listaUsuarios) {
-      if(email === user.email && password === user.password) {
-        return user;
-      }
-    }
-    return null;
+  // TODO: ¿Esta bien que Fecha De Nacimiento(fdn) sea de tipo any? Averiguar de que tipo se necesita
+  registrar(nombre: string, email: string, dni: number, fdn: any, password: string): Observable<any> {
+    return this.http.post<any>(this.registroURL, {
+      nombre, 
+      email, 
+      dni, 
+      fdn, 
+      password
+    }).pipe(
+      tap(response => {
+        console.log('Usuario registrado con exito.', response);
+      })
+    );
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
+
+  getUsername(): string | null {
+    return localStorage.getItem('nombre_usuario');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken(); 
+  }
+
+  isAdmin(): boolean {
+    return localStorage.getItem('es_admin') === 'true';
+  }
+
+  logout(): void {
+    localStorage.clear(); // Borramos los datos de sesion y localStorage
+    sessionStorage.clear();
+
+    // Recargamos la pagina y redirigimos al login, tambien para evitar problemas a priori
+    this.router.navigate(['/login']).then(() => {
+      window.location.reload(); 
+    });
   }
 }

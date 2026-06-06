@@ -5,9 +5,9 @@ import { Sucursal } from '../models/sucursal.model';
 
 @Injectable({ providedIn: 'root' })
 export class SucursalService {
-  private apiUrl = 'http://localhost:8000/api/sucursales/';
+  private apiUrl = 'http://localhost:8000/api/inventario/sucursales/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<Sucursal[]> {
     return this.http.get<Sucursal[]>(this.apiUrl);

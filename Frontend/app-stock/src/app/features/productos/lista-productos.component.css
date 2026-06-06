@@ -1,0 +1,26 @@
+/* TK38 — buscador */
+.buscador {
+  max-width: 400px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.buscador:focus {
+  border-color: #0d6efd;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* TK41 — mensaje sin resultados */
+.sin-resultados {
+  color: #6c757d;
+  font-style: italic;
+  margin: 1rem 0;
+}
+.contador {
+  font-weight: 500;
+  margin-bottom: 1rem;
+}

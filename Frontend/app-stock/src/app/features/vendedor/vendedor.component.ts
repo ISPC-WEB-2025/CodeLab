@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { UserAuthService } from '../../core/services/user-auth.service';
 
 @Component({
   selector: 'app-vendedor',
@@ -8,5 +9,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './vendedor.component.css'
 })
 export class VendedorComponent {
-
+  private userAuthService: UserAuthService = inject(UserAuthService);
+  protected readonly estaLogeado: boolean = this.userAuthService.isLoggedIn();
+  protected readonly esAdmin: boolean = this.userAuthService.isAdmin(); 
 }

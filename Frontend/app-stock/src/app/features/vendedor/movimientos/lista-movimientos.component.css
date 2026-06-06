@@ -1,0 +1,26 @@
+.movimientos-contenedor {
+  padding: 1rem;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.contador {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.sin-resultados {
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
