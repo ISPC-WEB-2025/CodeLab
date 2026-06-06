@@ -48,10 +48,11 @@ export const routes: Routes = [
   {
     path: 'vendedor',
     component: VendedorComponent,
+    canActivate: [authGuard],
     children: [
       { path: 'catalogo', component: CatalogoComponent },
-      { path: 'movimientos', component: ListaMovimientosComponent, canActivate:[authGuard] },
-      { path: 'movimientos/nuevo', component: FormMovimientoComponent, canActivate:[authGuard] },
+      { path: 'movimientos', component: ListaMovimientosComponent },
+      { path: 'movimientos/nuevo', component: FormMovimientoComponent },
     ]
   },
   { path: '**', redirectTo: 'home' },
