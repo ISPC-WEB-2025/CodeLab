@@ -25,7 +25,7 @@ export class StockSucursalComponent implements OnInit {
     private modalService: ModalService
   ) { }
   async eliminar(id: number): Promise<void> {
-    if (await this.modalService.confirmar('¿Estás seguro que querés eliminar este registro?')) {
+    if (await this.modalService.confirmar('¿Eliminar este registro? Esta acción no se puede deshacer.')) {
       this.stockService.delete(id).subscribe({
         next: () => {
           this.stockLista = this.stockLista.filter(
