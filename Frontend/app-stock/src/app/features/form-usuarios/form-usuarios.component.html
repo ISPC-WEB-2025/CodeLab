@@ -20,12 +20,17 @@
             }
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-bold">Apellido *</label>
+            <label class="form-label fw-bold">Apellido</label>
+            <input type="text" class="form-control" disabled>
+            <!-- Desactivar este campo, ya que no se lleva control desde el backend
+             --- Asi evitamos que angular tire error en la consola -->
+            <!-- 
             <input type="text" class="form-control" formControlName="apellido"
               [class.is-invalid]="usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched">
               @if (usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched) {
                 <div class="invalid-feedback">El apellido es obligatorio.</div>
               }
+            -->
           </div>
         </div>
 
