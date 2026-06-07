@@ -28,8 +28,8 @@ export class FormUsuariosComponent implements OnInit {
     nombre: ['', Validators.required],
     dni: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
     email: ['', [Validators.required, Validators.email]],
-    fecha_nacimiento: ['', Validators.required], 
-    password: ['', Validators.required],         
+    fecha_nacimiento: ['', Validators.required],
+    password: ['', Validators.required],
     rol: ['', Validators.required]
   });
 
@@ -41,9 +41,11 @@ export class FormUsuariosComponent implements OnInit {
         this.esEdicion = true;
         // 1. Convertimos el ID de la URL (que viene como texto) a Número
         this.usuarioId = Number(params['id']);
-        
+        this.usuarioForm.get('password')?.clearValidators();
+        this.usuarioForm.get('password')?.updateValueAndValidity();  // Hacemos que el password no sea obligatorio en edición
+
         // 2. Le agregamos el ! para jurarle a TS que no es nulo
-        this.cargarUsuario(this.usuarioId!); 
+        this.cargarUsuario(this.usuarioId!);
       }
     });
   }
@@ -69,16 +71,19 @@ export class FormUsuariosComponent implements OnInit {
   guardarUsuario() {
     if (this.usuarioForm.valid) {
       const datosForm = this.usuarioForm.value;
-      
+
       // Preparamos los datos empaquetados para el backend
       const datosParaEnviar: any = {
         nombre: datosForm.nombre,
         dni: datosForm.dni,
         email: datosForm.email,
         fecha_nacimiento: datosForm.fecha_nacimiento,
-        rol: Number(datosForm.rol),
-        password: datosForm.password
+        rol_id: Number(datosForm.rol),
+        // password: datosForm.password
       };
+      if (datosForm.password) {
+        datosParaEnviar.password = datosForm.password;  // Solo incluimos la contraseña en el envío si el campo no está vacío
+      }
 
 
       if (this.esEdicion && this.usuarioId) {
