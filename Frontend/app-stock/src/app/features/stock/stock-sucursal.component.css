@@ -59,13 +59,13 @@ tbody tr:hover {
 }
 
 /* ===== FILA STOCK BAJO ===== */
-.fila-stock-bajo {
-  background-color: #fde8e8 !important;
+.fila-stock-bajo td {
+  background-color: #fde8e8;
   color: #8b2020;
 }
 
-.fila-stock-bajo:hover {
-  background-color: #fad4d4 !important;
+.fila-stock-bajo:hover td {
+  background-color: #fad4d4;
 }
 
 /* ===== ACCIONES ===== */

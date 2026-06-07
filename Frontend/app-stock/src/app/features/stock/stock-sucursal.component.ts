@@ -45,7 +45,11 @@ export class StockSucursalComponent implements OnInit {
     // TODO: configurar CORS en Django si se despliega en producción
     this.stockService.getAll().subscribe({
       next: (data) => {
-        this.stockLista = data;
+        this.stockLista = data.map(item => ({
+          ...item,  // Spread operator para mantener el resto de las propiedades
+          cantidad_stock: Number(item.cantidad_stock),
+          stock_min: Number(item.stock_min),
+        }));
         this.cargando = false;
       },
       error: () => {
