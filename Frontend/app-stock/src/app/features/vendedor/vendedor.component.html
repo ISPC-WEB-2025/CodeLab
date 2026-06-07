@@ -4,11 +4,13 @@
         <div class="sidebar-header">
             <h2>ToDo Stock</h2>
             <span>Panel vendedor</span>
+            <br>
+            <div><span class="sidebar-nav-name">{{ nombreUsuario }}</span></div>
         </div>
         <nav class="sidebar-nav">
             <a routerLink="catalogo" routerLinkActive="active">Catalogo</a>
             @if( estaLogeado ) {
-                <a routerLink="movimientos" routerLinkActive="active">Movimientos</a>
+            <a routerLink="movimientos" routerLinkActive="active">Movimientos</a>
             }
         </nav>
         <div class="sidebar-footer">

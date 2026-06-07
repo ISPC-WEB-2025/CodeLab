@@ -4,13 +4,15 @@
         <div class="sidebar-header">
             <h2>ToDo Stock</h2>
             <span>Panel Admin</span>
+            <br>
+            <div><span class="sidebar-nav-name">{{ nombreUsuario }}</span></div>
         </div>
         <nav class="sidebar-nav">
             <a routerLink="stock" routerLinkActive="active">Stock</a>
             <a routerLink="productos" routerLinkActive="active">Productos</a>
             <!-- <a routerLink="movimientos" routerLinkActive="active">Movimientos</a> -->
             @if(estaLogeado && esAdmin) {
-                <a routerLink="lista-usuarios" routerLinkActive="active">Usuarios</a>
+            <a routerLink="lista-usuarios" routerLinkActive="active">Usuarios</a>
             }
             <a routerLink="proveedores" routerLinkActive="active">Proveedores</a>
         </nav>
