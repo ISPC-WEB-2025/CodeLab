@@ -11,5 +11,6 @@ import { UserAuthService } from '../../core/services/user-auth.service';
 export class VendedorComponent {
   private userAuthService: UserAuthService = inject(UserAuthService);
   protected readonly estaLogeado: boolean = this.userAuthService.isLoggedIn();
-  protected readonly esAdmin: boolean = this.userAuthService.isAdmin(); 
+  protected readonly esAdmin: boolean = this.userAuthService.isAdmin();
+  protected readonly nombreUsuario: string = localStorage.getItem('nombre_usuario') ?? '';
 }

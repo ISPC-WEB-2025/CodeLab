@@ -14,5 +14,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 export class DashboardComponent {
   private userAuthService: UserAuthService = inject(UserAuthService);
   protected readonly estaLogeado: boolean = this.userAuthService.isLoggedIn();
-  protected readonly esAdmin: boolean = this.userAuthService.isAdmin(); 
+  protected readonly esAdmin: boolean = this.userAuthService.isAdmin();
+  protected readonly nombreUsuario: string = localStorage.getItem('nombre_usuario') ?? '';
 }
