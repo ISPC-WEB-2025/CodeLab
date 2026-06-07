@@ -30,6 +30,7 @@ export class LoginComponent {
   readonly passwordNoExiste: string = 'Por favor ingresá  tu contraseña';
   readonly passwordInvalido: string = 'La contraseña tiene que tener 8 o más caracteres';
   readonly datosIncorrectos: string = 'El nombre o contraseña ingresados son incorrectos';
+  readonly cuentaPendiente: string = 'Tu cuenta está pendiente de aprobación. Contactá al administrador.';
 
   // URI de imagenes
   readonly imagenURI: string = 'assets/deposito.png';
@@ -81,7 +82,8 @@ export class LoginComponent {
             this.router.navigate(['/vendedor']); // Mantenemos la ruta a vendedor
           } else {
             // Fallback por si el usuario no tiene ningún rol asignado
-            localStorage.clear(); // limpiamos el token que guardó el el backend por seguridad         
+            localStorage.clear(); // limpiamos el token que guardó el el backend por seguridad       
+            this.loginError = true;  
             this.pendienteAprobacion = true;
           }
         },
