@@ -91,4 +91,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     @property
     def es_empleado(self):
         """Devuelve True si el usuario tiene asignado el rol de Empleado."""
-        return self.rol is not None and self.rol.nombre.lower() == "empleado"
+        return self.rol is not None and self.rol.nombre.lower() in [
+            "empleado",
+            "ventas",
+            "deposito",
+        ]
