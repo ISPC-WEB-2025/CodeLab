@@ -36,8 +36,8 @@ export class RegisterComponent {
   readonly passwordCorto: string =
     'La contraseña tiene que tener 8 o más caracteres.';
   readonly passwordNoCoincide: string = 'Las contraseñas no coinciden.';
-  readonly dniInvalido:string = 'El número de documento tiene que ser único y tener entre 7 u 8 dígitos.';
-  readonly fdnInvalido:string = 'Ingresá una fecha de nacimiento.';
+  readonly dniInvalido: string = 'El número de documento tiene que ser único y tener entre 7 u 8 dígitos.';
+  readonly fdnInvalido: string = 'Ingresá una fecha de nacimiento.';
   // URI de imagenes
   readonly imagenURI: string = 'assets/deposito.png';
   readonly cajaURI: string = 'assets/ToDoLogosf.png';
@@ -51,7 +51,7 @@ export class RegisterComponent {
     this.registerForm = this.formBuilder.group(
       {
         nombre: ['', [Validators.required, Validators.minLength(6)], []],
-        email: ['', [Validators.required, Validators.email], []],
+        email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)], []],
         dni: ['', [Validators.required, Validators.pattern(/^\d{7,8}$/)], []],
         fdn: ['', [Validators.required], []],
         password: ['', [Validators.required, Validators.minLength(8)], []],
@@ -90,7 +90,7 @@ export class RegisterComponent {
 
   get fdn() {
     return this.registerForm.get('fdn');  // Fecha De Nacimiento
-  } 
+  }
 
   // Manejo de formulario
   public onEnviar(event: Event) {
@@ -98,7 +98,7 @@ export class RegisterComponent {
 
     if (this.registerForm.valid) {
       const registerData = this.registerForm.value;
-      
+
       const nombre: string = registerData.nombre;
       const email: string = registerData.email;
       const dni: number = registerData.dni;

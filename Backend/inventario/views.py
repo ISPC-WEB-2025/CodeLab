@@ -95,8 +95,12 @@ class MovimientoViewSet(viewsets.ModelViewSet):
             # Guardar stock antes del movimiento
             serializer.validated_data["stock_previo"] = stock_obj.cantidad_stock
 
-            if tipo == "Entrada":
-                stock_obj.cantidad_stock += cantidad
+            # Validar que vendedores no puedan registrar entradas
+            if tipo == "Entrada" and not request.user.es_admin:
+                return Response(
+                    {"error": "Los vendedores no pueden registrar entradas de stock."},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
             elif tipo == "Salida":
                 stock_obj.cantidad_stock -= cantidad
             # Traslado no modifica stock_sucursal (requeriría origen y destino)

@@ -15,6 +15,7 @@ import { FormStockComponent } from './features/stock/form-stock/form-stock.compo
 import { VendedorComponent } from './features/vendedor/vendedor.component';
 import { CatalogoComponent } from './features/vendedor/catalogo/catalogo.component';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 import { ListaUsuariosComponent } from './features/lista-usuarios/lista-usuarios.component';
 import { FormUsuariosComponent } from './features/form-usuarios/form-usuarios.component';
 
@@ -27,7 +28,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
     children: [
       { path: '', redirectTo: 'stock', pathMatch: 'full' },
       { path: 'stock', component: StockSucursalComponent },
