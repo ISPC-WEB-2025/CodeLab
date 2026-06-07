@@ -41,6 +41,7 @@ export const routes: Routes = [
       { path: 'movimientos', component: ListaMovimientosComponent },
       { path: 'movimientos/nuevo', component: FormMovimientoComponent },
       { path: 'stock/editar/:id', component: FormStockComponent },
+      { path: 'stock/nuevo', component: FormStockComponent },
       { path: 'lista-usuarios', component: ListaUsuariosComponent },
       { path: 'form-usuarios/nuevo', component: FormUsuariosComponent },
       { path: 'form-usuarios/editar/:id', component: FormUsuariosComponent }

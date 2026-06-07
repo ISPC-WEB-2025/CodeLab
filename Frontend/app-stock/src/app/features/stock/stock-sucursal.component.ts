@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ModalService } from '../../core/services/modal.service';
 
 import { StockSucursalService } from '../../core/services/stock-sucursal.service';
@@ -7,7 +7,7 @@ import { StockSucursal } from '../../core/models/stock-sucursal.model';
 
 @Component({
   selector: 'app-stock-sucursal',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './stock-sucursal.component.html',
   styleUrl: './stock-sucursal.component.css',
 })
