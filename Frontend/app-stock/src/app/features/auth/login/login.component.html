@@ -12,29 +12,38 @@
                     <!-- Inputs -->
                     <form [formGroup]="loginForm" (ngSubmit)="onEnviar($event)">
                         @if (loginErrored === true) {
-                            <div class="form-control form-control-lg error-message text-muted login-error-danger my-2">{{datosIncorrectos}}</div>
+                            @if (pendienteAprobacion) {
+                                <div class="form-control form-control-lg login-warning my-2 text-muted text-center">{{cuentaPendiente}}</div>
+                            }
+                            @else {
+                            <div class="form-control form-control-lg error-message text-muted login-error-danger my-2 text-center">
+                                {{datosIncorrectos}}</div>
+                            }
                         }
                         <div class="mb-3">
-                            <label for="email" class="form-label" aria-placeholder="Ingresá tu correo electrónico"></label>
-                            <input type="email" class="form-control form-control-lg" formControlName="email" id="email" placeholder="Ingresá tu correo electrónico">
+                            <label for="email" class="form-label"></label>
+                            <input type="email" class="form-control form-control-lg" formControlName="email" id="email"
+                                placeholder="Ingresá tu correo electrónico">
                             @if (email?.errors && email?.touched) {
-                                <div class="text-danger">{{emailInvalido}}</div>
+                            <div class="text-danger">{{emailInvalido}}</div>
                             }
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label" aria-placeholder="Tu contraseña"></label>
-                            <input type="password" class="form-control form-control-lg" formControlName="password" id="password" placeholder="********">
+                            <label for="password" class="form-label"></label>
+                            <input type="password" class="form-control form-control-lg" formControlName="password"
+                                id="password" placeholder="********">
                             @if (password?.errors && password?.touched) {
-                                @if (password?.hasError("required")) {
-                                    <div class="text-danger">{{passwordNoExiste}}</div>
-                                }
-                                @else if (password?.hasError("minlength") && !password?.hasError("required")) {}
-                                    <div class="text-danger">{{passwordInvalido}}</div>
+                            @if (password?.hasError("required")) {
+                            <div class="text-danger">{{passwordNoExiste}}</div>
+                            }
+                            @else if (password?.hasError("minlength") && !password?.hasError("required")) {}
+                            <div class="text-danger">{{passwordInvalido}}</div>
                             }
                         </div>
                         <div class="mb-3 d-flex justify-content-center align-items-center">
                             <label for="recordar" class="form-check-label me-3">Recordarme</label>
-                            <input type="checkbox" class="form-check-input" name="recordar" formControlName="recordar" id="recordar">
+                            <input type="checkbox" class="form-check-input" name="recordar" formControlName="recordar"
+                                id="recordar">
                         </div>
                         <!-- Boton para iniciar sesion -->
                         <div class="d-grid gap-2 mt-4">
@@ -44,9 +53,10 @@
                 </div>
                 <!-- Boton para registrarse -->
                 <div class="row">
-                    <p class="text-center mt-3 text-muted small">¿No tenés cuenta? <a routerLink="/registro">Registrate</a> </p>
+                    <p class="text-center mt-3 text-muted small">¿No tenés cuenta? <a
+                            routerLink="/registro">Registrate</a> </p>
                 </div>
-            </div> 
+            </div>
         </main>
     </div>
-</div> 
+</div>

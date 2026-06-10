@@ -8,9 +8,14 @@
         <p>ToDo Stock te permite gestionar tu inventario en tiempo real, desde cualquier dispositivo. Sin planillas, sin
           errores, sin sorpresas.</p>
 
-      <div class="d-flex flex-wrap gap-3 mt-4 justify-content-center justify-content-md-start">
-        <a routerLink="/dashboard" class="botones btn-primary">Comenzar ahora</a>
-        <a routerLink="/vendedor/catalogo" class="botones btn-primary">Catalogo</a>
+      <div class="d-flex flex-nowrap gap-3 mt-4 justify-content-center justify-content-md-center">
+        @if(!estaLogeado) {
+          <a routerLink="/login" class="botones btn-primary">Comenzar ahora</a>
+        }
+        @else {
+          <a routerLink="/dashboard" class="botones btn-primary">Ver panel de control</a>
+          <a routerLink="/vendedor/catalogo" class="botones btn-primary">Ver catalogo</a>
+        }
      </div> 
     </div>
 

@@ -5,7 +5,7 @@ export interface Usuario {
   apellido: string;
   dni: string;
   fecha_nacimiento: string; // Angular maneja las fechas que vienen del backend como strings 'YYYY-MM-DD'
-  rol: number;              // mandamos y recibimos el ID del rol
+  rol: any;              // mandamos y recibimos el ID del rol
   password?: string;        // Opcional porque la mostramos solo al crear/editar, pero el backend no la devuelve al listar
 }
 

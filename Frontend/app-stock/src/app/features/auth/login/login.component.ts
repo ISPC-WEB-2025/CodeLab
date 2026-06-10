@@ -22,7 +22,7 @@ export class LoginComponent {
   private userAuthService = inject(UserAuthService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
-  
+
   // Texto localizable
   // TODO(TMF): AGREGAR MAS STRINGS QUE SE PUEDAN LOCALIZAR/SEAN TRADUCIBLES
   readonly mensajeBienvenida: string = '¡Bienvenido a ToDo Stock!';
@@ -30,13 +30,15 @@ export class LoginComponent {
   readonly passwordNoExiste: string = 'Por favor ingresá  tu contraseña';
   readonly passwordInvalido: string = 'La contraseña tiene que tener 8 o más caracteres';
   readonly datosIncorrectos: string = 'El nombre o contraseña ingresados son incorrectos';
-  
+  readonly cuentaPendiente: string = 'Tu cuenta está pendiente de aprobación. Contactá al administrador.';
+
   // URI de imagenes
   readonly imagenURI: string = 'assets/deposito.png';
-  
+
   // LoginForms, para detectar datos cuando se clickea el boton de iniciar sesion, y su estado
   public loginForm!: FormGroup;
   public loginError: Boolean = false;
+  public pendienteAprobacion: Boolean = false; // Nuevo estado para usuarios sin rol asignado
 
   constructor() {
     this.loginForm = this.formBuilder.group({
@@ -80,8 +82,9 @@ export class LoginComponent {
             this.router.navigate(['/vendedor']); // Mantenemos la ruta a vendedor
           } else {
             // Fallback por si el usuario no tiene ningún rol asignado
-            console.warn('Usuario sin rol definido');
-            this.router.navigate(['/']);
+            localStorage.clear(); // limpiamos el token que guardó el el backend por seguridad       
+            this.loginError = true;  
+            this.pendienteAprobacion = true;
           }
         },
         error: (err) => {

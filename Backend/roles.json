@@ -1,0 +1,26 @@
+[
+  {
+    "model": "usuarios.role",
+    "pk": 1,
+    "fields": {
+      "nombre": "ADMINISTRADOR",
+      "descripcion": ""
+    }
+  },
+  {
+    "model": "usuarios.role",
+    "pk": 2,
+    "fields": {
+      "nombre": "VENTAS",
+      "descripcion": ""
+    }
+  },
+  {
+    "model": "usuarios.role",
+    "pk": 3,
+    "fields": {
+      "nombre": "DEPOSITO",
+      "descripcion": ""
+    }
+  }
+]

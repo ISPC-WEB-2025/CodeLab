@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ModalService } from '../../core/services/modal.service';
 
 import { StockSucursalService } from '../../core/services/stock-sucursal.service';
@@ -7,7 +7,7 @@ import { StockSucursal } from '../../core/models/stock-sucursal.model';
 
 @Component({
   selector: 'app-stock-sucursal',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './stock-sucursal.component.html',
   styleUrl: './stock-sucursal.component.css',
 })
@@ -45,7 +45,11 @@ export class StockSucursalComponent implements OnInit {
     // TODO: configurar CORS en Django si se despliega en producción
     this.stockService.getAll().subscribe({
       next: (data) => {
-        this.stockLista = data;
+        this.stockLista = data.map(item => ({
+          ...item,  // Spread operator para mantener el resto de las propiedades
+          cantidad_stock: Number(item.cantidad_stock),
+          stock_min: Number(item.stock_min),
+        }));
         this.cargando = false;
       },
       error: () => {

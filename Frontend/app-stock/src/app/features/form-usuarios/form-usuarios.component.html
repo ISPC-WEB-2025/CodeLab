@@ -1,31 +1,36 @@
 <div class="container mt-4 mb-5">
   <div class="card shadow-sm col-md-8 offset-md-2">
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">Registrar Nuevo Usuario</h4>
+      <h4 class="mb-0">{{ esEdicion ? 'Editar Usuario' : 'Registrar Nuevo Usuario' }}</h4>
       <button class="btn btn-sm btn-outline-light" routerLink="/dashboard/form-usuarios/nuevo">
         <i class="bi bi-arrow-left"></i> Volver a la lista
       </button>
     </div>
-    
+
     <div class="form-grid-responsive card-body p-4">
       <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
-        
+
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label fw-bold">Nombre *</label>
-            <input type="text" class="form-control" formControlName="nombre" 
+            <input type="text" class="form-control" formControlName="nombre"
               [class.is-invalid]="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
             @if (usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched) {
-              <div class="invalid-feedback">El nombre es obligatorio.</div>
+            <div class="invalid-feedback">El nombre es obligatorio.</div>
             }
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-bold">Apellido *</label>
+            <label class="form-label fw-bold">Apellido</label>
+            <input type="text" class="form-control" disabled>
+            <!-- Desactivar este campo, ya que no se lleva control desde el backend
+             --- Asi evitamos que angular tire error en la consola -->
+            <!-- 
             <input type="text" class="form-control" formControlName="apellido"
               [class.is-invalid]="usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched">
               @if (usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched) {
                 <div class="invalid-feedback">El apellido es obligatorio.</div>
               }
+            -->
           </div>
         </div>
 
@@ -34,17 +39,17 @@
             <label class="form-label fw-bold">DNI *</label>
             <input type="text" class="form-control" formControlName="dni" placeholder="Sin puntos ni espacios"
               [class.is-invalid]="usuarioForm.get('dni')?.invalid && usuarioForm.get('dni')?.touched">
-              @if (usuarioForm.get('dni')?.invalid && usuarioForm.get('dni')?.touched) {
-                <div class="invalid-feedback">Ingresá un DNI válido (solo números).</div>
-              }
+            @if (usuarioForm.get('dni')?.invalid && usuarioForm.get('dni')?.touched) {
+            <div class="invalid-feedback">Ingresá un DNI válido (solo números).</div>
+            }
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Email *</label>
             <input type="email" class="form-control" formControlName="email" placeholder="ejemplo@correo.com"
               [class.is-invalid]="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
-              @if (usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched) {
-                <div class="invalid-feedback">Ingresá un correo electrónico válido.</div>
-              }
+            @if (usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched) {
+            <div class="invalid-feedback">Ingresá un correo electrónico válido.</div>
+            }
           </div>
         </div>
         <div class="row mb-3">
@@ -70,14 +75,15 @@
             <option value="3">Depósito</option>
           </select>
           @if (usuarioForm.get('rol')?.invalid && usuarioForm.get('rol')?.touched) {
-            <div class="invalid-feedback">Debe asignar un rol al usuario.</div>
+          <div class="invalid-feedback">Debe asignar un rol al usuario.</div>
           }
         </div>
 
         <hr class="my-4">
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <button type="button" class="btn btn-secondary me-md-2" routerLink="/dashboard/lista-usuarios">Cancelar</button>
+          <button type="button" class="btn btn-secondary me-md-2"
+            routerLink="/dashboard/lista-usuarios">Cancelar</button>
           <button type="submit" class="btn btn-success">
             <i class="bi bi-save"></i> Guardar Usuario
           </button>

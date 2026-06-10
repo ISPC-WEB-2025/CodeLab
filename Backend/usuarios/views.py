@@ -9,9 +9,10 @@ from rest_framework import (
     status,
 )  # Nos da códigos de estado HTTP para usar en las respuestas (200, 400, 401, etc)
 from django.contrib.auth import (
-    authenticate
+    authenticate,
 )  # va a la base de datos, busca el usuario y verifica si la contraseña desencriptada coincide.
-#from django.contrib.auth.models import (User, Group) 
+
+# from django.contrib.auth.models import (User, Group)
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Usuario
@@ -67,8 +68,9 @@ class LoginUsuarioView(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
+
 class RegistroUsuarioView(APIView):
-    permission_classes = [AllowAny] # Permite acceso sin hacer login
+    permission_classes = [AllowAny]  # Permite acceso sin hacer login
 
     def post(self, request):
         nombre = request.data.get("nombre")
@@ -77,35 +79,35 @@ class RegistroUsuarioView(APIView):
         fdn = request.data.get("fdn")
         password = request.data.get("password")
 
-        # Validaciones 
+        # Validaciones
         if not nombre or not email or not password:
             return Response(
-                {"error": "Falta datos de nombre, email o contraseña."}, status = status.HTTP_400_BAD_REQUEST
-            )   
-        
+                {"error": "Falta datos de nombre, email o contraseña."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         if Usuario.objects.filter(email=email).exists():
             return Response(
-                {"error": "Este email ya existe."}, status = status.HTTP_400_BAD_REQUEST
+                {"error": "Este email ya existe."}, status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         # Crear el usuario
         usuario = Usuario.objects.create_user(
-            nombre = nombre,
-            email = email,
-            dni = dni,
-            fecha_nacimiento = fdn,
-            password = password
+            nombre=nombre, email=email, dni=dni, fecha_nacimiento=fdn, password=password
         )
 
         return Response(
-            {"mensaje": "Usuario creado exitosamente."}, status = status.HTTP_201_CREATED
+            {"mensaje": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED
         )
+
 
 # --- VISTA DEL CRUD DE USUARIOS (TK58) ---
 class UserViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        EsAdminParaModificar
+    ]  # Solo los admins pueden modificar, pero todos los usuarios logueados pueden ver la lista de usuarios
 
     # Sobreescribimos solo destroy para no borrar sino desactivar
     def destroy(self, request, *args, **kwargs):
