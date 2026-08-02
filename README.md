@@ -77,8 +77,11 @@ cd Frontend/app-stock
 **e.** Instalar dependencias:
 
 ```bash
-npm install
+npm ci
 ```
+
+> [!NOTE]
+> Usamos `npm ci` en vez de `npm install` para asegurar que todos instalen exactamente las mismas versiones del `package-lock.json` > commiteado, evitando diffs innecesarios en ese archivo. Si necesitás agregar o actualizar una dependencia, usá `npm install <paquete>`> y commiteá el `package-lock.json` resultante de forma explícita.
 
 **f.** Iniciar el servidor de desarrollo:
 
@@ -87,13 +90,19 @@ ng serve
 ```
 
 > [!NOTE]
-> Al ejecutar `npm install` pueden aparecer advertencias de dependencias deprecadas. Estas corresponden a dependencias internas de Angular v19 y no afectan el funcionamiento de la aplicación. **No ejecutar** `npm audit fix --force` ya que puede romper la compatibilidad del proyecto.
+> Al ejecutar `npm ci` pueden aparecer advertencias de dependencias deprecadas. Estas corresponden a dependencias internas de >Angular v21 y no afectan el funcionamiento de la aplicación. **No ejecutar** `npm audit fix --force` ya que puede romper la >compatibilidad del proyecto.
 
 ---
 
 ### 3. Backend (Django)
 
-**a.** Crear y activar el entorno virtual:
+**a.** Navegar a la carpeta del proyecto backend:
+
+```bash
+cd Backend
+```
+
+**b.** Crear y activar el entorno virtual:
 
 ```bash
 # Crear
@@ -106,27 +115,30 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-**b.** Instalar dependencias:
+**c.** Instalar dependencias:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**c.** Crear la base de datos en MySQL:
+**d.** Crear la base de datos en MySQL:
 
 ```sql
 CREATE DATABASE nombre_db;
 ```
 
-**c.** Crear el archivo de variables de entorno copiando el modelo:
+**e.** Crear el archivo de variables de entorno copiando el modelo:
 
 ```bash
 cp .env_modelo .env
 ```
 
-**e.** Completar `.env` con tus credenciales de MySQL.
+**f.** Completar `.env` con tus credenciales de MySQL.
 
-**f.** Inicializar la base de datos:
+El nombre de la database es `todostock`si eliges otro debes modificar los scripts de creación de la base de datos.
+
+Si es necesario generar una SECRET KEY, puedes usar el comando:
+`python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
 
 #### Opción A — Script automatizado (recomendado)
 
@@ -168,12 +180,6 @@ python manage.py loaddata roles.json
 > Este comando carga los tres roles base del sistema (ADMINISTRADOR, VENTAS, DEPOSITO). Si los roles ya existen, el comando los sobreescribe usando el `pk` sin duplicar.
 
 **i.** Iniciar el servidor:
-
-```bash
-python manage.py runserver
-```
-
-**h.** Iniciar el servidor:
 
 ```bash
 python manage.py runserver
