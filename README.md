@@ -156,7 +156,22 @@ python manage.py createsuperuser
 ```
 
 > [!NOTE]
-> El superusuario permite acceder al panel de administración en `http://127.0.0.1:8000/admin/` o desde la sección de administración del frontend para asignar roles de **Administrador** o **Empleado** a los usuarios registrados.
+> El superusuario permite acceder al panel de administración en `http://127.0.0.1:8000/admin/` o desde la sección de administración del frontend para asignar roles a los usuarios registrados. Los roles disponibles son **ADMINISTRADOR**, **VENTAS** y **DEPOSITO**. Los usuarios que se registran desde el login público quedan sin rol asignado hasta que un administrador se los asigne; mientras tanto ven un mensaje de "cuenta pendiente de aprobación".
+
+**h.** Cargar los roles iniciales (fixture):
+
+```bash
+python manage.py loaddata roles.json
+```
+
+> [!NOTE]
+> Este comando carga los tres roles base del sistema (ADMINISTRADOR, VENTAS, DEPOSITO). Si los roles ya existen, el comando los sobreescribe usando el `pk` sin duplicar.
+
+**i.** Iniciar el servidor:
+
+```bash
+python manage.py runserver
+```
 
 **h.** Iniciar el servidor:
 
