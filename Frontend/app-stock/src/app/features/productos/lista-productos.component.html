@@ -60,7 +60,13 @@
               <td>{{ producto.descripcion || "-" }}</td>
               <td class="celda-acciones">
                 <button
-                  class="btn btn-danger"
+                  class="btn btn-sm btn-outline-primary me-2"
+                  (click)="irEditarProducto(producto.id_art!)"
+                >
+                  Editar
+                </button>
+                <button
+                  class="btn btn-sm btn-danger"
                   (click)="eliminar(producto.id_art!)"
                 >
                   Eliminar
