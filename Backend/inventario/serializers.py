@@ -101,7 +101,8 @@ class ProductoSerializer(serializers.ModelSerializer):
 
 class SucursalSerializer(serializers.ModelSerializer):
     total_articulos = serializers.SerializerMethodField()
-    total_stock = serializers.SerializerMethodField()
+    articulos_con_stock = serializers.SerializerMethodField()
+    articulos_sin_stock = serializers.SerializerMethodField()
     articulos_alerta = serializers.SerializerMethodField()
 
     class Meta:
@@ -111,18 +112,19 @@ class SucursalSerializer(serializers.ModelSerializer):
             "nombre",
             "direccion",
             "total_articulos",
-            "total_stock",
+            "articulos_con_stock",
+            "articulos_sin_stock",
             "articulos_alerta",
         ]
 
     def get_total_articulos(self, obj):
         return StockSucursal.objects.filter(id_suc=obj).count()
 
-    def get_total_stock(self, obj):
-        total = StockSucursal.objects.filter(id_suc=obj).aggregate(
-            total=models.Sum("cantidad_stock")
-        )["total"]
-        return total if total is not None else 0
+    def get_articulos_con_stock(self, obj):
+        return StockSucursal.objects.filter(id_suc=obj, cantidad_stock__gt=0).count()
+
+    def get_articulos_sin_stock(self, obj):
+        return StockSucursal.objects.filter(id_suc=obj, cantidad_stock=0).count()
 
     def get_articulos_alerta(self, obj):
         return StockSucursal.objects.filter(

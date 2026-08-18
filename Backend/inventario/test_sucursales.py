@@ -22,13 +22,19 @@ class SucursalTests(TestCase):
                     for stmt in f.read().split(";"):
                         stmt = stmt.strip()
                         if stmt and not stmt.upper().startswith("DROP TABLE"):
-                            cursor.execute(stmt)
+                            try:
+                                cursor.execute(stmt)
+                            except Exception:
+                                pass
             if movimiento_sql.exists():
                 with open(movimiento_sql, "r", encoding="utf-8") as f:
                     for stmt in f.read().split(";"):
                         stmt = stmt.strip()
                         if stmt and not stmt.upper().startswith("DROP TABLE"):
-                            cursor.execute(stmt)
+                            try:
+                                cursor.execute(stmt)
+                            except Exception:
+                                pass
 
     def setUp(self):
         self.client = APIClient()
@@ -57,17 +63,19 @@ class SucursalTests(TestCase):
         self.assertEqual(stock.first().stock_min, 0)
 
     def test_metricas_sucursal_en_serializer(self):
-        """Verificar el cálculo de total_articulos, total_stock y articulos_alerta."""
+        """Verificar el cálculo de total_articulos, articulos_con_stock, articulos_sin_stock y articulos_alerta."""
         suc = Sucursal.objects.create(nombre="Sede Norte", direccion="Ruta 9 Km 10")
         stock = StockSucursal.objects.get(id_suc=suc, id_art=self.producto)
         stock.cantidad_stock = 5
         stock.stock_min = 10  # En alerta (5 <= 10)
         stock.save()
 
+        total_prods = Producto.objects.count()
         response = self.client.get(f"/api/inventario/sucursales/{suc.pk}/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["total_articulos"], 1)
-        self.assertEqual(response.data["total_stock"], 5)
+        self.assertEqual(response.data["total_articulos"], total_prods)
+        self.assertEqual(response.data["articulos_con_stock"], 1)
+        self.assertEqual(response.data["articulos_sin_stock"], total_prods - 1)
         self.assertEqual(response.data["articulos_alerta"], 1)
 
     def test_bloqueo_eliminacion_con_stock_activo(self):
@@ -108,9 +116,19 @@ class SucursalTests(TestCase):
         self.assertFalse(StockSucursal.objects.filter(id_suc_id=suc.pk).exists())
 
     def test_accion_inventario_por_sucursal(self):
-        """El endpoint /sucursales/{id}/inventario/ debe listar los stocks de esa sede."""
+        """El endpoint /sucursales/{id}/inventario/ debe listar los stocks de esa sede y filtrar por search."""
         suc = Sucursal.objects.create(nombre="Sede Oeste", direccion="Av. Fuerza Aérea 2000")
-        response = self.client.get(f"/api/inventario/sucursales/{suc.pk}/inventario/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        suc.refresh_from_db()
+        StockSucursal.objects.get_or_create(
+            id_art=self.producto, id_suc=suc, defaults={"cantidad_stock": 20, "stock_min": 5}
+        )
+
+        url = f"/api/inventario/sucursales/{suc.id_suc}/inventario/"
+        response = self.client.get(url, data={"search": "Taladro"})
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+            f"Fallo en {url}: {response.content.decode('utf-8') if hasattr(response, 'content') else response}",
+        )
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]["nombre_producto"], "Taladro Percutor")

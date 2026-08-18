@@ -17,7 +17,7 @@ router.register(
     r"productos", ProductoViewSet, basename="producto"
 )  # basename es opcional pero recomendado para evitar conflictos de nombres en rutas con múltiples ViewSets
 router.register(r"categorias", CategoriaViewSet)
-router.register(r"sucursales", SucursalViewSet)
+router.register(r"sucursales", SucursalViewSet, basename="sucursal")
 router.register(r"proveedores", ProveedorViewSet)
 router.register(r"producto-proveedor", ProductoProveedorViewSet, basename="producto-proveedor")
 router.register(r"stock", StockSucursalViewSet, basename="stock")

@@ -74,9 +74,9 @@ class SucursalViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=["get"])
+    @action(detail=True, methods=["get"], url_path="inventario", filter_backends=[])
     def inventario(self, request, pk=None):
-        sucursal = self.get_object()
+        sucursal = self.get_queryset().get(pk=pk)
         stock_qs = StockSucursal.objects.select_related("id_art", "id_suc").filter(
             id_suc=sucursal
         )
