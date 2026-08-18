@@ -1,0 +1,19 @@
+.form-card {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8e5;
+}
+
+.card-header {
+  background-color: #1e3a2f !important;
+}
+
+.form-label {
+  color: #2b3b33;
+  font-size: 0.92rem;
+}
+
+.form-control:focus {
+  border-color: #2d5132;
+  box-shadow: 0 0 0 0.2rem rgba(45, 81, 50, 0.15);
+}

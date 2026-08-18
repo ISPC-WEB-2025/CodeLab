@@ -1,1 +1,162 @@
-<h4 class="titulo-p">Próximamente podrás consultar tu listado de proveedores</h4>
+<div class="proveedores-contenedor">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h2>Gestión de Proveedores</h2>
+      <p class="subtitulo-prov text-muted mb-0">Administrá los proveedores registrados y sus datos de contacto.</p>
+    </div>
+    <button class="btn btn-success" routerLink="/dashboard/proveedores/nuevo">
+      + Agregar Proveedor
+    </button>
+  </div>
+
+  <div class="row mb-3 align-items-center g-2">
+    <div class="col-12 col-md-6 col-lg-5">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="bi bi-search text-muted">🔍</i>
+        </span>
+        <input
+          type="text"
+          class="form-control border-start-0 ps-0 buscador"
+          placeholder="Buscar por nombre, CUIT o email..."
+          [(ngModel)]="terminoBusqueda"
+          (input)="onBusqueda()"
+        />
+        @if (terminoBusqueda) {
+        <button class="btn btn-outline-secondary" type="button" (click)="limpiarBusqueda()">
+          ✕
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (error) {
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    ⚠️ {{ error }}
+    <button type="button" class="btn-close" (click)="error = ''" aria-label="Close"></button>
+  </div>
+  }
+
+  @if (cargando && proveedores.length === 0) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="mt-2 text-muted">Cargando proveedores desde el servidor...</p>
+  </div>
+  } @else {
+  <div class="card shadow-sm tabla-card">
+    <div class="card-body p-0">
+      <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+        <span class="contador-prov text-muted">
+          Total de proveedores: <strong>{{ proveedores.length }}</strong>
+        </span>
+        @if (cargando) {
+        <span class="badge bg-secondary">Actualizando...</span>
+        }
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="thead-proveedores">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Razón Social / Nombre</th>
+              <th scope="col">CUIT</th>
+              <th scope="col">Teléfono</th>
+              <th scope="col">Email</th>
+              <th scope="col">Dirección</th>
+              <th scope="col" class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (proveedor of proveedores; track proveedor.id_prov) {
+            <tr>
+              <td class="fw-bold text-muted">{{ proveedor.id_prov }}</td>
+              <td class="fw-semibold text-dark">{{ proveedor.nombre }}</td>
+              <td>
+                <span class="badge bg-light text-dark border">{{ proveedor.cuit }}</span>
+              </td>
+              <td>{{ proveedor.telefono || '-' }}</td>
+              <td>
+                @if (proveedor.email) {
+                <a [href]="'mailto:' + proveedor.email" class="text-decoration-none">{{ proveedor.email }}</a>
+                } @else {
+                -
+                }
+              </td>
+              <td>{{ proveedor.direccion || '-' }}</td>
+              <td class="text-center celda-acciones">
+                <div class="d-flex justify-content-center gap-2">
+                  <button
+                    class="btn btn-sm btn-success"
+                    [routerLink]="['/dashboard/proveedores/editar', proveedor.id_prov]"
+                    title="Editar Proveedor"
+                  >
+                    ✏️ Editar
+                  </button>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalEliminarProveedor"
+                    (click)="prepararEliminacion(proveedor.id_prov)"
+                    title="Eliminar Proveedor"
+                  >
+                    🗑️ Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                @if (terminoBusqueda) {
+                <p class="mb-0">No se encontraron proveedores que coincidan con "<em>{{ terminoBusqueda }}</em>".</p>
+                <button class="btn btn-sm btn-outline-primary mt-2" (click)="limpiarBusqueda()">Limpiar filtro</button>
+                } @else {
+                <p class="mb-2">No hay proveedores registrados en el sistema.</p>
+                <button class="btn btn-sm btn-success" routerLink="/dashboard/proveedores/nuevo">
+                  + Registrar primer proveedor
+                </button>
+                }
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Modal Confirmación Eliminación -->
+  <div
+    class="modal fade"
+    id="modalEliminarProveedor"
+    tabindex="-1"
+    aria-labelledby="modalEliminarLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ¿Estás seguro de que deseás eliminar este proveedor? Si posee productos o movimientos de stock vinculados, el sistema no permitirá su eliminación.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-bs-dismiss="modal"
+            (click)="confirmarEliminacion()"
+          >
+            Sí, eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

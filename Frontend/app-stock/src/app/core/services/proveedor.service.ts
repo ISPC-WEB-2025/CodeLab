@@ -28,4 +28,10 @@ export class ProveedorService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
+
+  buscarProveedores(termino: string): Observable<Proveedor[]> {
+    return this.http.get<Proveedor[]>(this.apiUrl, {
+      params: { search: termino },
+    });
+  }
 }
