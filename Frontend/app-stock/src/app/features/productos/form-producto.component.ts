@@ -54,6 +54,7 @@ export class FormProductoComponent implements OnInit {
       nombre: ['', [Validators.required]],
       codigo: ['', [Validators.required]],
       precio_venta: [null, [Validators.required, Validators.min(0)]],
+      stock_min_global: [0, [Validators.required, Validators.min(0)]],
       id_cat: ['', [Validators.required]],
       descripcion: ['']
     });
@@ -75,6 +76,7 @@ export class FormProductoComponent implements OnInit {
           nombre: prod.nombre,
           codigo: prod.codigo,
           precio_venta: prod.precio_venta,
+          stock_min_global: prod.stock_min_global ?? 0,
           id_cat: prod.id_cat,
           descripcion: prod.descripcion || ''
         });

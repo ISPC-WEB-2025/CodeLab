@@ -34,10 +34,13 @@ export class SucursalService {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
 
-  getInventario(id: number, search?: string): Observable<StockSucursal[]> {
+  getInventario(id: number, search?: string, soloConStock?: boolean): Observable<StockSucursal[]> {
     let params = new HttpParams();
     if (search && search.trim()) {
       params = params.set('search', search.trim());
+    }
+    if (soloConStock) {
+      params = params.set('solo_con_stock', 'true');
     }
     return this.http.get<StockSucursal[]>(`${this.apiUrl}${id}/inventario/`, { params });
   }

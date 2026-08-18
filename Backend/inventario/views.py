@@ -28,6 +28,15 @@ class ProductoViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ["nombre", "codigo"]
 
+    @action(detail=True, methods=["get"], url_path="stock", filter_backends=[])
+    def stock(self, request, pk=None):
+        producto = self.get_object()
+        stock_qs = StockSucursal.objects.select_related("id_art", "id_suc").filter(
+            id_art=producto
+        )
+        serializer = StockSucursalSerializer(stock_qs, many=True)
+        return Response(serializer.data)
+
 
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
@@ -109,6 +118,10 @@ class SucursalViewSet(viewsets.ModelViewSet):
             id_suc=sucursal
         )
 
+        solo_con_stock = request.query_params.get("solo_con_stock", None)
+        if solo_con_stock and solo_con_stock.lower() in ["true", "1", "yes"]:
+            stock_qs = stock_qs.filter(cantidad_stock__gt=0)
+
         query = request.query_params.get("search", None)
         if query:
             stock_qs = stock_qs.filter(
@@ -136,8 +149,17 @@ class ProductoProveedorViewSet(viewsets.ModelViewSet):
 
 
 class StockSucursalViewSet(viewsets.ModelViewSet):
-    queryset = StockSucursal.objects.select_related("id_art", "id_suc").all()
     serializer_class = StockSucursalSerializer
+
+    def get_queryset(self):
+        queryset = StockSucursal.objects.select_related("id_art", "id_suc").all()
+        id_art = self.request.query_params.get("id_art")
+        if id_art:
+            queryset = queryset.filter(id_art_id=id_art)
+        id_suc = self.request.query_params.get("id_suc")
+        if id_suc:
+            queryset = queryset.filter(id_suc_id=id_suc)
+        return queryset
 
     # REMOVIDO: update()
     # Justificación: Redundante. El método update() nativo de ModelViewSet ya procesa
