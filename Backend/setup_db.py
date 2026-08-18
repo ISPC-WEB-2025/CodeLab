@@ -2,6 +2,11 @@ import subprocess
 import sys
 import os
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 import django

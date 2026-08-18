@@ -62,53 +62,107 @@ class MovimientoViewSet(viewsets.ModelViewSet):
         cantidad = serializer.validated_data["cantidad"]
         producto = serializer.validated_data["id_art"]
         sucursal = serializer.validated_data["id_suc"]
+        sucursal_destino = serializer.validated_data.get("id_suc_destino")
 
-        # TK44: verificar que existe registro de stock para ese producto+sucursal
-        try:
-            stock_obj = StockSucursal.objects.get(id_art=producto, id_suc=sucursal)
-        except StockSucursal.DoesNotExist:
-            return Response(
-                {
-                    "error": "No existe registro de stock para ese producto en esa sucursal."
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        # Asignar usuario autenticado si no fue provisto
+        if request.user and request.user.is_authenticated and not serializer.validated_data.get("id_usuario"):
+            serializer.validated_data["id_usuario"] = request.user
 
-        # TK44: validar stock suficiente si es Salida
-        if tipo == "Salida" and stock_obj.cantidad_stock < cantidad:
-            return Response(
-                {
-                    "error": "Stock insuficiente.",
-                    "stock_disponible": stock_obj.cantidad_stock,
-                    "cantidad_solicitada": cantidad,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        """ # # TK43: aplicar el movimiento y actualizar stock en una transacción atómica
-        Con atomic(), si cualquiera de las dos operaciones lanza una excepción, Django hace un rollback 
-        automático y ninguna de las dos se persiste en la base de datos. Las dos se guardan juntas o ninguna. 
-        Es especialmente importante en operaciones financieras/de inventario como la tuya, donde stock y movimiento 
-        tienen que estar siempre sincronizados."""
-
-        with transaction.atomic():
-            # Guardar stock antes del movimiento
-            serializer.validated_data["stock_previo"] = stock_obj.cantidad_stock
-
-            # Validar que vendedores no puedan registrar entradas
-            if tipo == "Entrada" and not request.user.es_admin:
+        # Validar permisos para Entradas
+        if tipo == "Entrada":
+            es_admin = getattr(request.user, "es_admin", False) or getattr(request.user, "is_superuser", False)
+            if request.user.is_authenticated and not es_admin:
                 return Response(
                     {"error": "Los vendedores no pueden registrar entradas de stock."},
                     status=status.HTTP_403_FORBIDDEN,
                 )
-            elif tipo == "Salida":
-                stock_obj.cantidad_stock -= cantidad
-            # Traslado no modifica stock_sucursal (requeriría origen y destino)
 
-            stock_obj.save()
+        # Validaciones para Traslados
+        if tipo == "Traslado":
+            if not sucursal_destino:
+                return Response(
+                    {"error": "Debe especificar la sucursal de destino para el traslado."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if sucursal_destino.pk == sucursal.pk:
+                return Response(
+                    {"error": "La sucursal de origen y destino no pueden ser la misma."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        with transaction.atomic():
+            if tipo == "Entrada":
+                stock_obj, _ = StockSucursal.objects.select_for_update().get_or_create(
+                    id_art=producto,
+                    id_suc=sucursal,
+                    defaults={"cantidad_stock": 0, "stock_min": producto.stock_min_global},
+                )
+                serializer.validated_data["stock_previo"] = stock_obj.cantidad_stock
+                stock_obj.cantidad_stock += cantidad
+                stock_obj.save()
+
+            elif tipo == "Salida":
+                stock_obj = (
+                    StockSucursal.objects.select_for_update()
+                    .filter(id_art=producto, id_suc=sucursal)
+                    .first()
+                )
+                if not stock_obj:
+                    return Response(
+                        {"error": "No existe registro de stock para ese producto en esa sucursal."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                if stock_obj.cantidad_stock < cantidad:
+                    return Response(
+                        {
+                            "error": "Stock insuficiente.",
+                            "stock_disponible": stock_obj.cantidad_stock,
+                            "cantidad_solicitada": cantidad,
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                serializer.validated_data["stock_previo"] = stock_obj.cantidad_stock
+                stock_obj.cantidad_stock -= cantidad
+                stock_obj.save()
+
+            elif tipo == "Traslado":
+                stock_origen = (
+                    StockSucursal.objects.select_for_update()
+                    .filter(id_art=producto, id_suc=sucursal)
+                    .first()
+                )
+                if not stock_origen:
+                    return Response(
+                        {"error": "No existe registro de stock en la sucursal de origen."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                if stock_origen.cantidad_stock < cantidad:
+                    return Response(
+                        {
+                            "error": "Stock insuficiente en la sucursal de origen.",
+                            "stock_disponible": stock_origen.cantidad_stock,
+                            "cantidad_solicitada": cantidad,
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+                stock_destino, _ = StockSucursal.objects.select_for_update().get_or_create(
+                    id_art=producto,
+                    id_suc=sucursal_destino,
+                    defaults={"cantidad_stock": 0, "stock_min": producto.stock_min_global},
+                )
+
+                serializer.validated_data["stock_previo"] = stock_origen.cantidad_stock
+                stock_origen.cantidad_stock -= cantidad
+                stock_destino.cantidad_stock += cantidad
+
+                stock_origen.save()
+                stock_destino.save()
+
+                if not serializer.validated_data.get("motivo"):
+                    serializer.validated_data["motivo"] = f"Traslado hacia {sucursal_destino.nombre}"
+
             self.perform_create(serializer)
 
         headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal, Movimiento
 from django.utils import timezone
+from django.db.models import Sum
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
@@ -14,6 +15,7 @@ class ProductoSerializer(serializers.ModelSerializer):
     categoria = CategoriaSerializer(source="id_cat", read_only=True)
     nombre = serializers.CharField(allow_blank=True)
     codigo = serializers.CharField(allow_blank=True)
+    stock_total = serializers.SerializerMethodField()
 
     class Meta:
         model = Producto
@@ -23,9 +25,17 @@ class ProductoSerializer(serializers.ModelSerializer):
             "descripcion",
             "codigo",
             "precio_venta",
+            "stock_min_global",
+            "stock_total",
             "id_cat",
             "categoria",
         ]
+
+    def get_stock_total(self, obj):
+        total = StockSucursal.objects.filter(id_art=obj).aggregate(
+            total=Sum("cantidad_stock")
+        )["total"]
+        return total or 0
 
     def validate_nombre(self, value):
         if not value or not value.strip():
@@ -80,6 +90,12 @@ class StockSucursalSerializer(serializers.ModelSerializer):
 class MovimientoSerializer(serializers.ModelSerializer):
     nombre_producto = serializers.CharField(source="id_art.nombre", read_only=True)
     nombre_sucursal = serializers.CharField(source="id_suc.nombre", read_only=True)
+    id_suc_destino = serializers.PrimaryKeyRelatedField(
+        queryset=Sucursal.objects.all(),
+        required=False,
+        allow_null=True,
+        write_only=True,
+    )
 
     class Meta:
         model = Movimiento
@@ -92,6 +108,7 @@ class MovimientoSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        validated_data.pop("id_suc_destino", None)
         if not validated_data.get("fecha_hora"):
             validated_data["fecha_hora"] = timezone.now()
         return super().create(validated_data)
