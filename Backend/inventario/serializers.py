@@ -1,5 +1,13 @@
 from rest_framework import serializers
-from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal, Movimiento
+from .models import (
+    Producto,
+    Categoria,
+    Sucursal,
+    Proveedor,
+    ProductoProveedor,
+    StockSucursal,
+    Movimiento,
+)
 from django.utils import timezone
 from django.db.models import Sum
 
@@ -10,12 +18,31 @@ class CategoriaSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ProductoProveedorSerializer(serializers.ModelSerializer):
+    nombre_producto = serializers.CharField(source="id_art.nombre", read_only=True)
+    nombre_proveedor = serializers.CharField(source="id_prov.nombre", read_only=True)
+    cuit_proveedor = serializers.CharField(source="id_prov.cuit", read_only=True)
+
+    class Meta:
+        model = ProductoProveedor
+        fields = [
+            "id_enlace",
+            "id_art",
+            "id_prov",
+            "precio_costo",
+            "nombre_producto",
+            "nombre_proveedor",
+            "cuit_proveedor",
+        ]
+
+
 class ProductoSerializer(serializers.ModelSerializer):
 
     categoria = CategoriaSerializer(source="id_cat", read_only=True)
     nombre = serializers.CharField(allow_blank=True)
     codigo = serializers.CharField(allow_blank=True)
     stock_total = serializers.SerializerMethodField()
+    proveedores = serializers.SerializerMethodField()
 
     class Meta:
         model = Producto
@@ -27,6 +54,7 @@ class ProductoSerializer(serializers.ModelSerializer):
             "precio_venta",
             "stock_min_global",
             "stock_total",
+            "proveedores",
             "id_cat",
             "categoria",
         ]
@@ -36,6 +64,18 @@ class ProductoSerializer(serializers.ModelSerializer):
             total=Sum("cantidad_stock")
         )["total"]
         return total or 0
+
+    def get_proveedores(self, obj):
+        enlaces = ProductoProveedor.objects.filter(id_art=obj).select_related("id_prov")
+        return [
+            {
+                "id_prov": e.id_prov.id_prov,
+                "nombre": e.id_prov.nombre,
+                "cuit": e.id_prov.cuit,
+                "precio_costo": float(e.precio_costo),
+            }
+            for e in enlaces
+        ]
 
     def validate_nombre(self, value):
         if not value or not value.strip():
