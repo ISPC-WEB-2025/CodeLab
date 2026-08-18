@@ -21,6 +21,7 @@ export class UserAuthService {
           localStorage.setItem('auth_token', response.token);
           localStorage.setItem('es_admin', response.es_admin.toString());
           localStorage.setItem('es_empleado', response.es_empleado.toString());
+          localStorage.setItem('login_timestamp', Date.now().toString());
         }
       })
     );
@@ -50,7 +51,20 @@ export class UserAuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken(); 
+    const token = this.getToken();
+    if (!token) return false;
+
+    const loginTimestamp = localStorage.getItem('login_timestamp');
+    if (loginTimestamp) {
+      const now = Date.now();
+      const expirationMs = 5 * 24 * 60 * 60 * 1000; // 5 días en milisegundos
+      if (now - parseInt(loginTimestamp, 10) > expirationMs) {
+        this.logout();
+        return false;
+      }
+    }
+    
+    return true; 
   }
 
   isAdmin(): boolean {
