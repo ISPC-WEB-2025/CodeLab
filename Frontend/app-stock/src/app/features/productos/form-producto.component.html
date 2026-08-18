@@ -1,7 +1,7 @@
 <form [formGroup]="productoForm" (ngSubmit)="guardar()" class="p-4 border rounded shadow-sm bg-white">
 
-  <h3 class="mb-4 alta">Alta de Productos</h3>
-  <p>Ingresa los datos del nuevo producto para agregar al inventario:</p>
+  <h3 class="mb-2 alta">{{ esEdicion ? 'Editar Producto' : 'Alta de Productos' }}</h3>
+  <p class="text-muted mb-4">{{ esEdicion ? 'Modifica los datos del producto seleccionado:' : 'Ingresa los datos del nuevo producto para agregar al inventario:' }}</p>
 
   <div class="form-grid-responsive fila-form row">
     <div class="col-md-7 mb-3">
@@ -70,8 +70,11 @@
     </div>
   </div>
 
-  <div class="d-flex justify-content-end mt-4">
-    <button type="submit" class="btn btn-primary px-4">Guardar</button>
+  <div class="d-flex justify-content-end gap-2 mt-4">
+    <button type="button" class="btn btn-secondary px-4" (click)="cancelar()">Cancelar</button>
+    <button type="submit" class="btn btn-success px-4" [disabled]="cargando">
+      {{ esEdicion ? 'Actualizar Producto' : 'Guardar Producto' }}
+    </button>
   </div>
 
 </form>
