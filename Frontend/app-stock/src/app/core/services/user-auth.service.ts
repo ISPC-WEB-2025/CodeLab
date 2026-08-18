@@ -13,14 +13,23 @@ export class UserAuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  login(email: string, password: string): Observable<any> {
+  login(email: string, password: string, recordar: boolean = false): Observable<any> {
     return this.http.post<any>(this.loginURL, { email, password }).pipe(
       tap(response => {
         if (response.token) {
-          localStorage.setItem('nombre_usuario', response.nombre);
-          localStorage.setItem('auth_token', response.token);
-          localStorage.setItem('es_admin', response.es_admin.toString());
-          localStorage.setItem('es_empleado', response.es_empleado.toString());
+          // Limpiar ambos para evitar colisiones de sesiones previas
+          localStorage.clear();
+          sessionStorage.clear();
+
+          const storage = recordar ? localStorage : sessionStorage;
+          storage.setItem('nombre_usuario', response.nombre);
+          storage.setItem('auth_token', response.token);
+          storage.setItem('es_admin', response.es_admin.toString());
+          storage.setItem('es_empleado', response.es_empleado.toString());
+
+          if (recordar) {
+            localStorage.setItem('login_timestamp', Date.now().toString());
+          }
         }
       })
     );
@@ -42,19 +51,32 @@ export class UserAuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
   }
 
   getUsername(): string | null {
-    return localStorage.getItem('nombre_usuario');
+    return localStorage.getItem('nombre_usuario') || sessionStorage.getItem('nombre_usuario');
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken(); 
+    const token = this.getToken();
+    if (!token) return false;
+
+    const loginTimestamp = localStorage.getItem('login_timestamp');
+    if (loginTimestamp) {
+      const now = Date.now();
+      const expirationMs = 5 * 24 * 60 * 60 * 1000; // 5 días en milisegundos
+      if (now - parseInt(loginTimestamp, 10) > expirationMs) {
+        this.logout();
+        return false;
+      }
+    }
+    
+    return true; 
   }
 
   isAdmin(): boolean {
-    return localStorage.getItem('es_admin') === 'true';
+    return (localStorage.getItem('es_admin') || sessionStorage.getItem('es_admin')) === 'true';
   }
 
   logout(): void {

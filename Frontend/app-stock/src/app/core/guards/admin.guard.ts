@@ -1,11 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { UserAuthService } from '../services/user-auth.service';
 
 export const adminGuard: CanActivateFn = () => {
+    const authService = inject(UserAuthService);
     const router = inject(Router);
-    const esAdmin = localStorage.getItem('es_admin') === 'true';
 
-    if (esAdmin) {
+    if (authService.isAdmin()) {
         return true;
     }
 
