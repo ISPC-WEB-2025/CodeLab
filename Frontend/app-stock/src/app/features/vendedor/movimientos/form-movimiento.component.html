@@ -1,95 +1,190 @@
-<div class="stock-contenedor">
-  <h2>Registrar Movimiento</h2>
+<div class="container mt-4 mb-5">
+  <div class="card shadow-sm col-md-10 col-lg-8 mx-auto form-card">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+      <h4 class="mb-0 fs-5">📦 Registrar Movimiento de Stock</h4>
+      <button class="btn btn-sm btn-outline-light" (click)="cancelar()">
+        ← Volver al listado
+      </button>
+    </div>
 
-  @if (exitoso) {
-  <div class="alert alert-success">
-    Movimiento registrado correctamente. El stock fue actualizado.
+    <div class="card-body p-4">
+      @if (exitoso) {
+      <div class="alert alert-success d-flex align-items-center" role="alert">
+        <span class="me-2">✅</span>
+        <div>Movimiento registrado correctamente. El stock fue actualizado en tiempo real.</div>
+      </div>
+      }
+
+      @if (errorMsg) {
+      <div class="alert alert-danger" role="alert">
+        ⚠️ {{ errorMsg }}
+      </div>
+      }
+
+      <form [formGroup]="formulario" (ngSubmit)="guardar()">
+        <!-- Tipo de Movimiento -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Tipo de movimiento *</label>
+          <select class="form-select" formControlName="tipo" [class.is-invalid]="formulario.get('tipo')?.invalid && formulario.get('tipo')?.touched">
+            <option value="">-- Seleccioná un tipo --</option>
+            @if (esAdmin) {
+            <option value="Entrada">📥 Entrada (Ingreso de mercadería)</option>
+            }
+            <option value="Salida">📤 Salida (Venta / Egreso)</option>
+            @if (esAdmin) {
+            <option value="Traslado">🔄 Traslado entre sucursales</option>
+            }
+          </select>
+          @if (formulario.get('tipo')?.invalid && formulario.get('tipo')?.touched) {
+          <div class="invalid-feedback">El tipo de movimiento es obligatorio.</div>
+          }
+        </div>
+
+        <!-- Sucursal Origen -->
+        <div class="row mb-3">
+          <div class="col-12" [class.col-md-6]="formulario.get('tipo')?.value === 'Traslado'">
+            <label class="form-label fw-bold">
+              {{ formulario.get('tipo')?.value === 'Traslado' ? 'Sucursal Origen *' : 'Sucursal *' }}
+            </label>
+            <select class="form-select" formControlName="id_suc" [class.is-invalid]="formulario.get('id_suc')?.invalid && formulario.get('id_suc')?.touched">
+              <option value="">-- Seleccioná una sucursal --</option>
+              @for (s of sucursales; track s.id) {
+              <option [value]="s.id">{{ s.nombre }}</option>
+              }
+            </select>
+            @if (formulario.get('id_suc')?.invalid && formulario.get('id_suc')?.touched) {
+            <div class="invalid-feedback">La sucursal es obligatoria.</div>
+            }
+          </div>
+
+          <!-- Sucursal Destino (solo en Traslado) -->
+          @if (formulario.get('tipo')?.value === 'Traslado') {
+          <div class="col-12 col-md-6 mt-3 mt-md-0">
+            <label class="form-label fw-bold">Sucursal Destino *</label>
+            <select class="form-select" formControlName="id_suc_destino" [class.is-invalid]="formulario.get('id_suc_destino')?.invalid && formulario.get('id_suc_destino')?.touched">
+              <option value="">-- Seleccioná sucursal destino --</option>
+              @for (s of sucursalesDestino; track s.id) {
+              <option [value]="s.id">{{ s.nombre }}</option>
+              }
+            </select>
+            @if (formulario.get('id_suc_destino')?.invalid && formulario.get('id_suc_destino')?.touched) {
+            <div class="invalid-feedback">Debés indicar la sucursal de destino.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Producto (Ubicado ARRIBA de Proveedor) -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Producto *</label>
+          <select
+            class="form-select"
+            formControlName="id_art"
+            [class.is-invalid]="formulario.get('id_art')?.invalid && formulario.get('id_art')?.touched"
+            [attr.disabled]="!formulario.get('id_suc')?.value ? true : null"
+          >
+            <option value="">
+              {{ formulario.get('id_suc')?.value ? '-- Seleccioná un producto --' : '-- Primero seleccioná una sucursal --' }}
+            </option>
+            @for (p of productosFiltrados; track p.id_art) {
+            <option [value]="p.id_art">{{ p.nombre }} (Código: {{ p.codigo }})</option>
+            }
+          </select>
+          @if (formulario.get('id_art')?.invalid && formulario.get('id_art')?.touched) {
+          <div class="invalid-feedback">El producto es obligatorio.</div>
+          }
+        </div>
+
+        <!-- Proveedor (Ubicado ABAJO de Producto, visible en Entradas) -->
+        @if (formulario.get('tipo')?.value === 'Entrada') {
+        <div class="mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="form-label fw-bold mb-0">Proveedor de Origen (Opcional)</label>
+            @if (tieneProveedoresAsociados) {
+            <button
+              type="button"
+              class="btn btn-link btn-sm p-0 text-decoration-none"
+              (click)="toggleMostrarTodosProveedores()"
+            >
+              {{ mostrarTodosLosProveedores ? '🔍 Ver solo habituales del producto' : '🌐 Ver todos los proveedores' }}
+            </button>
+            }
+          </div>
+          <select class="form-select" formControlName="id_prov">
+            <option value="">-- Seleccioná un proveedor remitente (opcional) --</option>
+            @for (p of proveedoresFiltrados; track p.id_prov) {
+            <option [value]="p.id_prov">{{ p.nombre }} (CUIT: {{ p.cuit }})</option>
+            }
+          </select>
+          <div class="form-text text-muted">
+            @if (tieneProveedoresAsociados && !mostrarTodosLosProveedores) {
+            <span class="text-success">✓ Mostrando proveedores asociados a este producto.</span>
+            } @else {
+            <span>Podés asociar el proveedor que abasteció la mercadería según el remito de entrega.</span>
+            }
+          </div>
+        </div>
+        }
+
+        <!-- Indicador de Stock Actual -->
+        @if (stockDisponible !== null && formulario.get('tipo')?.value !== 'Entrada') {
+        <div
+          class="alert mb-3 py-2"
+          [class.alert-info]="stockDisponible > 0"
+          [class.alert-warning]="stockDisponible === 0"
+        >
+          Existencia actual en sucursal: <strong>{{ stockDisponible }} unidades</strong>
+        </div>
+        }
+
+        <div class="row mb-3">
+          <!-- Cantidad -->
+          <div class="col-12 col-md-5">
+            <label class="form-label fw-bold">Cantidad *</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="cantidad"
+              min="1"
+              placeholder="Ej: 10"
+              [class.is-invalid]="formulario.get('cantidad')?.invalid && formulario.get('cantidad')?.touched"
+            />
+            @if (formulario.get('cantidad')?.invalid && formulario.get('cantidad')?.touched) {
+            <div class="invalid-feedback">La cantidad debe ser un número mayor o igual a 1.</div>
+            }
+          </div>
+
+          <!-- Motivo / Remito -->
+          <div class="col-12 col-md-7 mt-3 mt-md-0">
+            <label class="form-label fw-bold">
+              {{ formulario.get('tipo')?.value === 'Entrada' ? 'N° Remito / Comprobante' : 'Motivo / Observaciones' }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="motivo"
+              maxlength="255"
+              [placeholder]="formulario.get('tipo')?.value === 'Entrada' ? 'Ej: Remito R-0001-0004523' : 'Ej: Venta de mostrador / Reposición'"
+            />
+          </div>
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-secondary" (click)="cancelar()" [disabled]="guardando">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success" [disabled]="formulario.invalid || guardando">
+            @if (guardando) {
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            Guardando...
+            } @else {
+            💾 Registrar Movimiento
+            }
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
-  }
-
-  @if (errorMsg) {
-  <div class="alert alert-danger">⚠️ {{ errorMsg }}</div>
-  }
-
-  <form [formGroup]="formulario" (ngSubmit)="guardar()">
-    <div class="mb-3">
-      <label class="form-label">Tipo de movimiento *</label>
-      <select class="form-select" formControlName="tipo">
-        <option value="">-- Seleccioná un tipo --</option>
-        <!-- <option value="Entrada">Entrada</option> # Entrada no está definida para vendedor -->
-        <option value="Salida">Salida</option>
-        <!-- <option value="Traslado">Traslado</option> # Traslado lo gestionaría administrador -->
-      </select>
-      @if (formulario.get("tipo")?.invalid && formulario.get("tipo")?.touched) {
-      <small class="text-danger">El tipo es obligatorio.</small>
-      }
-    </div>
-
-    <!-- Sucursal primero -->
-    <div class="mb-3">
-      <label class="form-label">Sucursal *</label>
-      <select class="form-select" formControlName="id_suc">
-        <option value="">-- Seleccioná una sucursal --</option>
-        @for (s of sucursales; track s.id) {
-        <option [value]="s.id">{{ s.nombre }}</option>
-        }
-      </select>
-      @if (formulario.get('id_suc')?.invalid && formulario.get('id_suc')?.touched) {
-      <small class="text-danger">La sucursal es obligatoria.</small>
-      }
-    </div>
-
-    <!-- Producto segundo, filtrado por sucursal -->
-    <div class="mb-3">
-      <label class="form-label">Producto *</label>
-
-      <!-- deshabilita el select de producto hasta que se elija una sucursal -->
-      <select class="form-select" formControlName="id_art"
-        [attr.disabled]="!formulario.get('id_suc')?.value ? true : null">
-        <option value="">
-          {{ formulario.get('id_suc')?.value ? '-- Selecciona un producto --' : '-- Selecciona una sucursal primero --'
-          }}
-        </option>
-        @for (p of productosFiltrados; track p.id_art) {
-        <option [value]="p.id_art">{{ p.nombre }} ({{ p.codigo }})</option>
-        }
-      </select>
-      <!-- muestra el mensaje de error solo si el campo es inválido y el usuario ya interactuó con él -->
-      @if (formulario.get('id_art')?.invalid && formulario.get('id_art')?.touched) {
-      <small class="text-danger">El producto es obligatorio.</small>
-      }
-    </div>
-
-    <!-- Indicador de stock -->
-    @if (stockDisponible !== null) {
-    <div class="alert mb-3" [class.alert-info]="stockDisponible > 0" [class.alert-warning]="stockDisponible === 0">
-      Stock disponible: <strong>{{ stockDisponible }} unidades</strong>
-    </div>
-    }
-
-    <div class="mb-3">
-      <label class="form-label">Cantidad *</label>
-      <input type="number" class="form-control" formControlName="cantidad" min="1" placeholder="Ej: 10" />
-      @if (
-      formulario.get("cantidad")?.invalid &&
-      formulario.get("cantidad")?.touched
-      ) {
-      <small class="text-danger">La cantidad debe ser mayor a 0.</small>
-      }
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Motivo (opcional)</label>
-      <input type="text" class="form-control" formControlName="motivo" placeholder="Ej: Reposición mensual" />
-    </div>
-
-    <div class="d-flex gap-2">
-      <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid || guardando">
-        {{ guardando ? "Guardando..." : "Registrar movimiento" }}
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="cancelar()">
-        Cancelar
-      </button>
-    </div>
-  </form>
 </div>

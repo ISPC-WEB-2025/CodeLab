@@ -6,18 +6,21 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { MovimientoService } from '../../../core/services/movimiento.service';
 import { ProductoService } from '../../../core/services/producto.service';
 import { StockSucursalService } from '../../../core/services/stock-sucursal.service';
+import { ProveedorService } from '../../../core/services/proveedor.service';
+import { UserAuthService } from '../../../core/services/user-auth.service';
 import { Producto } from '../../../core/models/producto.model';
 import { StockSucursal } from '../../../core/models/stock-sucursal.model';
+import { Proveedor } from '../../../core/models/proveedor.model';
 
 @Component({
   selector: 'app-form-movimiento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './form-movimiento.component.html',
   styleUrl: './form-movimiento.component.css',
 })
@@ -25,103 +28,235 @@ export class FormMovimientoComponent implements OnInit {
   formulario: FormGroup;
   todosLosProductos: Producto[] = [];
   todoElStock: StockSucursal[] = [];
-  sucursales: { id: number, nombre: string }[] = [];  // ← sucursales únicas
-  productosFiltrados: Producto[] = [];                // ← productos de la sucursal elegida
+  sucursales: { id: number; nombre: string }[] = [];
+  sucursalesDestino: { id: number; nombre: string }[] = [];
+  todosLosProveedores: Proveedor[] = [];
+  proveedoresFiltrados: Proveedor[] = [];
+  tieneProveedoresAsociados = false;
+  mostrarTodosLosProveedores = false;
+  productosFiltrados: Producto[] = [];
   stockDisponible: number | null = null;
   guardando = false;
   errorMsg = '';
   exitoso = false;
+  esAdmin = false;
 
   constructor(
     private fb: FormBuilder,
     private movimientoService: MovimientoService,
     private productoService: ProductoService,
     private stockService: StockSucursalService,
-    private router: Router,
+    private proveedorService: ProveedorService,
+    private userAuthService: UserAuthService,
+    private router: Router
   ) {
     this.formulario = this.fb.group({
       tipo: ['', Validators.required],
-      id_suc: ['', Validators.required],   // ← sucursal primero
-      id_art: ['', Validators.required],   // ← producto segundo
+      id_suc: ['', Validators.required],
+      id_suc_destino: [''],
+      id_art: ['', Validators.required],
+      id_prov: [''],
       cantidad: ['', [Validators.required, Validators.min(1)]],
-      motivo: [''],
+      motivo: ['', [Validators.maxLength(255)]],
     });
   }
 
   ngOnInit(): void {
+    this.esAdmin = this.userAuthService.isAdmin();
+
     this.productoService.getAll().subscribe({
       next: (data) => (this.todosLosProductos = data),
       error: () => (this.errorMsg = 'No se pudieron cargar los productos.'),
     });
 
     this.stockService.getAll().subscribe({
-      next: data => {
+      next: (data) => {
         this.todoElStock = data;
-        // Extraer sucursales únicas
         const mapa = new Map<number, string>();
-        data.forEach(s => mapa.set(s.id_suc, s.nombre_sucursal ?? ''));
-        this.sucursales = Array.from(mapa.entries()).map(([id, nombre]) => ({ id, nombre }));
+        data.forEach((s) => mapa.set(s.id_suc, s.nombre_sucursal ?? ''));
+        this.sucursales = Array.from(mapa.entries()).map(([id, nombre]) => ({
+          id,
+          nombre,
+        }));
       },
       error: () => (this.errorMsg = 'No se pudo cargar el stock.'),
-
     });
 
-    // Cuando cambia la sucursal, filtrar productos disponibles en esa sucursal
-    this.formulario.get('id_suc')?.valueChanges.subscribe(idSucursal => {
-      this.formulario.get('id_art')?.reset('');  // Resetear sucursal al cambiar producto y limpia el estado
+    if (this.esAdmin) {
+      this.proveedorService.getAll().subscribe({
+        next: (data) => {
+          this.todosLosProveedores = data;
+          this.proveedoresFiltrados = [...data];
+        },
+        error: (err) => console.error('Error cargando proveedores:', err),
+      });
+    }
+
+    // Al cambiar tipo de movimiento
+    this.formulario.get('tipo')?.valueChanges.subscribe((tipo) => {
+      this.actualizarValidacionesPorTipo(tipo);
+      this.actualizarProductosDisponibles();
+    });
+
+    // Al cambiar la sucursal origen
+    this.formulario.get('id_suc')?.valueChanges.subscribe((idSucursal) => {
+      this.formulario.get('id_art')?.reset('');
+      this.formulario.get('id_prov')?.reset('');
       this.stockDisponible = null;
-
-      if (idSucursal) {
-        const idsProductos = this.todoElStock
-          .filter(s => s.id_suc == idSucursal)
-          .map(s => s.id_art);
-        this.productosFiltrados = this.todosLosProductos.filter(
-          p => p.id_art !== undefined && idsProductos.includes(p.id_art)
-        );
-      } else {
-        this.productosFiltrados = [];
-      }
+      this.actualizarSucursalesDestino(idSucursal);
+      this.actualizarProductosDisponibles();
     });
 
-    // Cuando cambia el producto → mostrar stock disponible
-    this.formulario.get('id_art')?.valueChanges.subscribe(idProducto => {
-      const idSucursal = this.formulario.get('id_suc')?.value;
-      if (idProducto && idSucursal) {
-        const registro = this.todoElStock.find(
-          s => s.id_art == idProducto && s.id_suc == idSucursal
-        );
-        this.stockDisponible = registro ? registro.cantidad_stock : null;
-      } else {
-        this.stockDisponible = null;
-      }
+    // Al cambiar el producto seleccionado
+    this.formulario.get('id_art')?.valueChanges.subscribe((idProducto) => {
+      this.actualizarStockDisponible();
+      this.actualizarProveedoresPorProducto(idProducto);
     });
+  }
 
+  private actualizarValidacionesPorTipo(tipo: string): void {
+    const destinoControl = this.formulario.get('id_suc_destino');
+    if (tipo === 'Traslado') {
+      destinoControl?.setValidators([Validators.required]);
+    } else {
+      destinoControl?.clearValidators();
+      destinoControl?.reset('');
+    }
+    destinoControl?.updateValueAndValidity();
+
+    if (tipo !== 'Entrada') {
+      this.formulario.get('id_prov')?.reset('');
+    }
+  }
+
+  private actualizarSucursalesDestino(idOrigen: any): void {
+    if (!idOrigen) {
+      this.sucursalesDestino = [];
+      return;
+    }
+    const origenNum = Number(idOrigen);
+    this.sucursalesDestino = this.sucursales.filter((s) => s.id !== origenNum);
+  }
+
+  private actualizarProductosDisponibles(): void {
+    const tipo = this.formulario.get('tipo')?.value;
+    const idSucursal = this.formulario.get('id_suc')?.value;
+
+    if (!idSucursal) {
+      this.productosFiltrados = [];
+      return;
+    }
+
+    if (tipo === 'Entrada') {
+      // En una entrada se puede ingresar cualquier producto del catálogo
+      this.productosFiltrados = [...this.todosLosProductos];
+    } else {
+      // Para Salida o Traslado, filtramos los que tengan registro de stock
+      const idsProductos = this.todoElStock
+        .filter((s) => s.id_suc == idSucursal)
+        .map((s) => s.id_art);
+      this.productosFiltrados = this.todosLosProductos.filter(
+        (p) => p.id_art !== undefined && idsProductos.includes(p.id_art)
+      );
+    }
+  }
+
+  private actualizarStockDisponible(): void {
+    const idProducto = this.formulario.get('id_art')?.value;
+    const idSucursal = this.formulario.get('id_suc')?.value;
+
+    if (idProducto && idSucursal) {
+      const registro = this.todoElStock.find(
+        (s) => s.id_art == idProducto && s.id_suc == idSucursal
+      );
+      this.stockDisponible = registro ? registro.cantidad_stock : 0;
+    } else {
+      this.stockDisponible = null;
+    }
+  }
+
+  private actualizarProveedoresPorProducto(idProducto: any): void {
+    this.mostrarTodosLosProveedores = false;
+
+    if (!idProducto) {
+      this.tieneProveedoresAsociados = false;
+      this.proveedoresFiltrados = [...this.todosLosProveedores];
+      this.formulario.get('id_prov')?.reset('');
+      return;
+    }
+
+    const prod = this.todosLosProductos.find((p) => p.id_art == idProducto);
+
+    if (prod && prod.proveedores && prod.proveedores.length > 0) {
+      this.tieneProveedoresAsociados = true;
+      const idsHabituales = prod.proveedores.map((p) => p.id_prov);
+      this.proveedoresFiltrados = this.todosLosProveedores.filter((p) =>
+        idsHabituales.includes(p.id_prov)
+      );
+
+      // Si tiene exactamente 1 proveedor habitual registrado, lo pre-seleccionamos automáticamente
+      if (this.proveedoresFiltrados.length === 1) {
+        this.formulario.get('id_prov')?.setValue(this.proveedoresFiltrados[0].id_prov);
+      } else {
+        this.formulario.get('id_prov')?.reset('');
+      }
+    } else {
+      this.tieneProveedoresAsociados = false;
+      this.proveedoresFiltrados = [...this.todosLosProveedores];
+      this.formulario.get('id_prov')?.reset('');
+    }
+  }
+
+  toggleMostrarTodosProveedores(): void {
+    this.mostrarTodosLosProveedores = !this.mostrarTodosLosProveedores;
+    if (this.mostrarTodosLosProveedores) {
+      this.proveedoresFiltrados = [...this.todosLosProveedores];
+    } else {
+      const idProducto = this.formulario.get('id_art')?.value;
+      this.actualizarProveedoresPorProducto(idProducto);
+    }
   }
 
   guardar(): void {
-    if (this.formulario.invalid) return;
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+      return;
+    }
 
     this.guardando = true;
     this.errorMsg = '';
 
-    const payload = {
-      ...this.formulario.value,
-      fecha_hora: new Date().toISOString(),
-      id_prov: null,
-      id_usuario: null,
+    const formVal = this.formulario.value;
+    const payload: any = {
+      tipo: formVal.tipo,
+      id_suc: Number(formVal.id_suc),
+      id_art: Number(formVal.id_art),
+      cantidad: Number(formVal.cantidad),
+      motivo: formVal.motivo ? formVal.motivo.trim() : null,
+      id_prov:
+        formVal.tipo === 'Entrada' && formVal.id_prov
+          ? Number(formVal.id_prov)
+          : null,
+      id_suc_destino:
+        formVal.tipo === 'Traslado' && formVal.id_suc_destino
+          ? Number(formVal.id_suc_destino)
+          : null,
     };
 
     this.movimientoService.create(payload).subscribe({
       next: () => {
         this.exitoso = true;
         this.guardando = false;
-        setTimeout(
-          () => this.router.navigate(['/vendedor/movimientos']),
-          1500,
-        );
+        const returnUrl = this.router.url.startsWith('/dashboard')
+          ? '/dashboard/movimientos'
+          : '/vendedor/movimientos';
+        setTimeout(() => this.router.navigate([returnUrl]), 1200);
       },
       error: (err) => {
-        this.errorMsg = err.error?.error || 'Error al registrar el movimiento.';
+        this.errorMsg =
+          err.error?.error ||
+          err.error?.detail ||
+          'Error al registrar el movimiento.';
         if (err.error?.stock_disponible !== undefined) {
           this.errorMsg += ` Stock disponible: ${err.error.stock_disponible} unidades.`;
         }
@@ -131,6 +266,9 @@ export class FormMovimientoComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.router.navigate(['/vendedor/movimientos']);
+    const returnUrl = this.router.url.startsWith('/dashboard')
+      ? '/dashboard/movimientos'
+      : '/vendedor/movimientos';
+    this.router.navigate([returnUrl]);
   }
 }

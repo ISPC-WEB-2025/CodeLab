@@ -58,7 +58,11 @@ export class ListaMovimientosComponent implements OnInit {
   }
 
   irNuevoMovimiento(): void {
-    this.router.navigate(['/vendedor/movimientos/nuevo']);
+    if (this.router.url.startsWith('/dashboard')) {
+      this.router.navigate(['/dashboard/movimientos/nuevo']);
+    } else {
+      this.router.navigate(['/vendedor/movimientos/nuevo']);
+    }
   }
 
   // Método para obtener el stock de un producto en la sucursal seleccionada

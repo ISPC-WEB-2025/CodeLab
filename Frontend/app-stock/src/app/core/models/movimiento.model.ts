@@ -21,5 +21,7 @@ export interface Movimiento {
   nombre_producto?: string;
   nombre_sucursal?: string;
   stock_previo?: number;
-
+  nombre_proveedor?: string;
+  cuit_proveedor?: string;
+  id_suc_destino?: number;
 }

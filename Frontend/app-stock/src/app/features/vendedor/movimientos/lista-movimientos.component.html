@@ -1,21 +1,31 @@
-<div class="d-flex justify-content-end mb-3">
-  <button class="btn btn-primary" (click)="irNuevoMovimiento()">
-    + Registrar Movimiento
-  </button>
-</div>
-
-<select class="form-select mb-3" style="max-width: 300px" [(ngModel)]="sucursalSeleccionada">
-  <option [ngValue]="null">-- Todas las sucursales --</option>
-  @for (s of sucursales; track s.id) {
-  <option [ngValue]="s.id">{{ s.nombre }}</option>
-  }
-</select>
-
 <div class="movimientos-contenedor">
-  <h2>Movimientos de Stock</h2>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h2 class="titulo-seccion">Trazabilidad de Movimientos</h2>
+      <p class="text-muted mb-0">Historial completo de entradas, salidas y traslados de mercadería.</p>
+    </div>
+    <button class="btn btn-success" (click)="irNuevoMovimiento()">
+      + Registrar Movimiento
+    </button>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12 col-md-5 col-lg-4">
+      <label class="form-label fw-semibold text-muted small mb-1">Filtrar por sucursal:</label>
+      <select class="form-select shadow-sm" [(ngModel)]="sucursalSeleccionada">
+        <option [ngValue]="null">-- Todas las sucursales --</option>
+        @for (s of sucursales; track s.id) {
+        <option [ngValue]="s.id">{{ s.nombre }}</option>
+        }
+      </select>
+    </div>
+  </div>
 
   @if (cargando) {
-  <p>Cargando datos...</p>
+  <div class="text-center py-5">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="mt-2 text-muted">Cargando movimientos...</p>
+  </div>
   }
 
   @if (error) {
@@ -24,47 +34,74 @@
 
   @if (!cargando && !error) {
   @if (movimientosFiltrados.length === 0) {
-  <p class="sin-resultados">
-    {{ sucursalSeleccionada ? 'No hay movimientos para esta sucursal.' : 'Todavía no hay movimientos registrados.' }}
-  </p>
+  <div class="card shadow-sm p-4 text-center text-muted">
+    <p class="mb-0">
+      {{ sucursalSeleccionada ? 'No hay movimientos registrados para la sucursal seleccionada.' : 'Todavía no hay movimientos registrados en el sistema.' }}
+    </p>
+  </div>
   } @else {
-  <!-- para mostrar el total de movimientos filtrada por sucursal -->
-  <p class="contador">Total de movimientos: {{ movimientosFiltrados.length }}</p>
+  <div class="card shadow-sm tabla-card">
+    <div class="card-body p-0">
+      <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+        <span class="contador text-muted">
+          Total de movimientos: <strong>{{ movimientosFiltrados.length }}</strong>
+        </span>
+      </div>
 
-  <div class="table-responsive">
-    <table class="table border-bottom border-success-subtle">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Producto</th>
-          <th>Sucursal</th>
-          <th>Stock Previo</th>
-          <th>Cantidad</th>
-          <th>Tipo</th>
-          <th>Motivo</th>
-          <th>Fecha y hora</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (mov of movimientosFiltrados; track mov.id_mov) {
-        <tr>
-          <td>{{ mov.id_mov }}</td>
-          <td>{{ mov.nombre_producto }}</td>
-          <td>{{ mov.nombre_sucursal }}</td>
-          <td>{{ mov.stock_previo ?? '-' }}</td>
-          <td>{{ mov.cantidad }}</td>
-          <td>
-            <span class="badge" [class.bg-success]="mov.tipo === 'Entrada'" [class.bg-danger]="mov.tipo === 'Salida'"
-              [class.bg-warning]="mov.tipo === 'Traslado'">
-              {{ mov.tipo }}
-            </span>
-          </td>
-          <td>{{ mov.motivo || "-" }}</td>
-          <td>{{ mov.fecha_hora | date: "dd/MM/yyyy HH:mm" }}</td>
-        </tr>
-        }
-      </tbody>
-    </table>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="thead-movimientos">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Producto</th>
+              <th scope="col">Sucursal</th>
+              <th scope="col" class="text-center">Stock Previo</th>
+              <th scope="col" class="text-center">Cantidad</th>
+              <th scope="col" class="text-center">Tipo</th>
+              <th scope="col">Proveedor / Remitente</th>
+              <th scope="col">Motivo / Remito</th>
+              <th scope="col">Fecha y hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (mov of movimientosFiltrados; track mov.id_mov) {
+            <tr>
+              <td class="fw-bold text-muted">{{ mov.id_mov }}</td>
+              <td class="fw-semibold text-dark">{{ mov.nombre_producto }}</td>
+              <td>{{ mov.nombre_sucursal }}</td>
+              <td class="text-center">{{ mov.stock_previo !== null && mov.stock_previo !== undefined ? mov.stock_previo : '-' }}</td>
+              <td class="text-center fw-bold">
+                <span [class.text-success]="mov.tipo === 'Entrada'" [class.text-danger]="mov.tipo === 'Salida'" [class.text-warning]="mov.tipo === 'Traslado'">
+                  {{ mov.tipo === 'Entrada' ? '+' : (mov.tipo === 'Salida' ? '-' : '±') }}{{ mov.cantidad }}
+                </span>
+              </td>
+              <td class="text-center">
+                <span
+                  class="badge"
+                  [class.bg-success]="mov.tipo === 'Entrada'"
+                  [class.bg-danger]="mov.tipo === 'Salida'"
+                  [class.bg-warning]="mov.tipo === 'Traslado'"
+                >
+                  {{ mov.tipo }}
+                </span>
+              </td>
+              <td>
+                @if (mov.nombre_proveedor) {
+                <span class="badge bg-light text-dark border">
+                  🏢 {{ mov.nombre_proveedor }}
+                </span>
+                } @else {
+                <span class="text-muted">-</span>
+                }
+              </td>
+              <td class="celda-motivo" [title]="mov.motivo || ''">{{ mov.motivo || '-' }}</td>
+              <td class="text-muted small">{{ mov.fecha_hora | date: "dd/MM/yyyy HH:mm" }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
   }
   }
