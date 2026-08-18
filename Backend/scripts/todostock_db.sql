@@ -53,6 +53,7 @@ CREATE TABLE PRODUCTO (
     descripcion TEXT           NULL,
     codigo      VARCHAR(50)    NOT NULL,
     precio_venta DECIMAL(10,2) NOT NULL,
+    stock_min_global INT       NOT NULL DEFAULT 0,
     id_cat      INT            NOT NULL,
     PRIMARY KEY (id_art),
     UNIQUE KEY uq_producto_codigo (codigo),

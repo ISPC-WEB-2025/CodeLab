@@ -44,6 +44,20 @@ class UsuarioManager(BaseUserManager):
     ):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
+
+        if extra_fields.get("rol") is None:
+            rol_admin, _ = Role.objects.get_or_create(
+                nombre="ADMINISTRADOR",
+                defaults={"descripcion": "Rol con control total del sistema"},
+            )
+            extra_fields["rol"] = rol_admin
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser debe tener is_staff=True")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser debe tener is_superuser=True")
+
         return self.create_user(
             email, nombre, dni, fecha_nacimiento, password, **extra_fields
         )
@@ -79,6 +93,15 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return (
             f"{self.nombre} ({self.email}), Rol: {self.rol}, Activo: {self.is_active}"
         )
+
+    def save(self, *args, **kwargs):
+        if self.is_superuser and self.rol is None:
+            rol_admin, _ = Role.objects.get_or_create(
+                nombre="ADMINISTRADOR",
+                defaults={"descripcion": "Rol con control total del sistema"},
+            )
+            self.rol = rol_admin
+        super().save(*args, **kwargs)
 
     # Lógica de roles
     @property

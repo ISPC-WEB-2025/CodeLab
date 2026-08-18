@@ -212,4 +212,8 @@ package-lock.json
 # Local AI agent rules and custom skills documentation
 .agents/
 skills/
+GEMINI.md
+
+
+
 

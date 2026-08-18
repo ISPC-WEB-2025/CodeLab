@@ -52,13 +52,14 @@ export class FormUsuariosComponent implements OnInit {
   cargarUsuario(id: number) {
     this.usuarioService.getUsuario(id).subscribe({
       next: (usuario) => {
+        const rolId = usuario.rol && typeof usuario.rol === 'object' ? usuario.rol.id : usuario.rol;
         // Rellenamos el form con los datos que vienen de Django
         this.usuarioForm.patchValue({
           nombre: usuario.nombre,
           dni: usuario.dni,
           email: usuario.email,
           fecha_nacimiento: usuario.fecha_nacimiento,
-          rol: usuario.rol
+          rol: rolId ? String(rolId) : ''
         });
       },
       error: (err) => {
