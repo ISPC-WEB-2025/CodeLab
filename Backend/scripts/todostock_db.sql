@@ -131,7 +131,10 @@ INSERT INTO CATEGORIA (nombre) VALUES
 
 INSERT INTO PROVEEDOR (nombre, cuit, telefono, email, direccion) VALUES
 ('Aluminios Cba SRL', '30-12345678-9', '351-1234567', 'ventas@aluminioscba.com', 'Av. Fuerza Aérea 1234'),
-('Motores Automatizados SA', '30-98765432-1', '351-7654321', 'contacto@motoresauto.com', 'Bv. Los Granaderos 555');
+('Motores Automatizados SA', '30-98765432-1', '351-7654321', 'contacto@motoresauto.com', 'Bv. Los Granaderos 555'),
+('Portones & Aberturas del Centro SRL', '30-11223344-5', '351-4445566', 'ventas@portonescentro.com', 'Ruta 9 Km 12'),
+('Herrajes & Accesorios Industriales SA', '30-33445566-7', '351-8889900', 'info@herrajesindustriales.com.ar', 'Av. Juan B. Justo 4100'),
+('Distribuidora Metalúrgica del Norte', '30-55667788-9', '351-2223344', 'pedidos@metalurgicanorte.com', 'Av. La Voz del Interior 6200');
 
 INSERT INTO SUCURSAL (nombre, direccion) VALUES
 ('Fábrica Principal', 'Calle Industrial 100'),

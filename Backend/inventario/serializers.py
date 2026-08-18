@@ -69,6 +69,17 @@ class ProveedorSerializer(serializers.ModelSerializer):
         model = Proveedor
         fields = "__all__"
 
+    def validate_cuit(self, value):
+        cuit_limpio = value.strip()
+        qs = Proveedor.objects.filter(cuit__iexact=cuit_limpio)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError(
+                f"Ya existe un proveedor registrado con el CUIT '{cuit_limpio}'."
+            )
+        return cuit_limpio
+
 
 class StockSucursalSerializer(serializers.ModelSerializer):
     nombre_producto = serializers.CharField(source="id_art.nombre", read_only=True)
@@ -90,6 +101,12 @@ class StockSucursalSerializer(serializers.ModelSerializer):
 class MovimientoSerializer(serializers.ModelSerializer):
     nombre_producto = serializers.CharField(source="id_art.nombre", read_only=True)
     nombre_sucursal = serializers.CharField(source="id_suc.nombre", read_only=True)
+    nombre_proveedor = serializers.CharField(
+        source="id_prov.nombre", read_only=True, default=None
+    )
+    cuit_proveedor = serializers.CharField(
+        source="id_prov.cuit", read_only=True, default=None
+    )
     id_suc_destino = serializers.PrimaryKeyRelatedField(
         queryset=Sucursal.objects.all(),
         required=False,
@@ -112,3 +129,4 @@ class MovimientoSerializer(serializers.ModelSerializer):
         if not validated_data.get("fecha_hora"):
             validated_data["fecha_hora"] = timezone.now()
         return super().create(validated_data)
+
