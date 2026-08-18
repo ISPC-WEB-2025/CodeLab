@@ -1,0 +1,51 @@
+.sucursales-contenedor {
+  padding: 0;
+}
+
+.table th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #495057;
+}
+
+.fila-sucursal {
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.fila-sucursal td:first-child {
+  border-left: 4px solid transparent;
+  transition: border-left-color 0.15s ease-in-out;
+}
+
+.fila-sucursal:hover {
+  background-color: #f8fafc !important;
+}
+
+.fila-activa {
+  background-color: #f0fdf4 !important; /* Verde menta suave consistente */
+}
+
+.fila-activa td:first-child {
+  border-left-color: #198754;
+}
+
+.lista-inventario-wrapper {
+  min-height: 280px;
+  max-height: 320px;
+}
+
+.lista-inventario-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-inventario-scroll::-webkit-scrollbar-thumb {
+  background-color: #ced4da;
+  border-radius: 4px;
+}
+
+.lista-inventario-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}

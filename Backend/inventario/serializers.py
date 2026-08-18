@@ -9,6 +9,7 @@ from .models import (
     Movimiento,
 )
 from django.utils import timezone
+from django.db import models
 from django.db.models import Sum
 
 
@@ -99,9 +100,51 @@ class ProductoSerializer(serializers.ModelSerializer):
 
 
 class SucursalSerializer(serializers.ModelSerializer):
+    total_articulos = serializers.SerializerMethodField()
+    articulos_con_stock = serializers.SerializerMethodField()
+    articulos_sin_stock = serializers.SerializerMethodField()
+    articulos_alerta = serializers.SerializerMethodField()
+
     class Meta:
         model = Sucursal
-        fields = "__all__"
+        fields = [
+            "id_suc",
+            "nombre",
+            "direccion",
+            "total_articulos",
+            "articulos_con_stock",
+            "articulos_sin_stock",
+            "articulos_alerta",
+        ]
+
+    def get_total_articulos(self, obj):
+        return StockSucursal.objects.filter(id_suc=obj).count()
+
+    def get_articulos_con_stock(self, obj):
+        return StockSucursal.objects.filter(id_suc=obj, cantidad_stock__gt=0).count()
+
+    def get_articulos_sin_stock(self, obj):
+        return StockSucursal.objects.filter(id_suc=obj, cantidad_stock=0).count()
+
+    def get_articulos_alerta(self, obj):
+        return StockSucursal.objects.filter(
+            id_suc=obj,
+            stock_min__gt=0,
+            cantidad_stock__lte=models.F("stock_min"),
+        ).count()
+
+    def validate_nombre(self, value):
+        nombre_limpio = value.strip()
+        if not nombre_limpio:
+            raise serializers.ValidationError("El nombre de la sucursal no puede estar vacío.")
+        qs = Sucursal.objects.filter(nombre__iexact=nombre_limpio)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError(
+                f"Ya existe una sucursal con el nombre '{nombre_limpio}'."
+            )
+        return nombre_limpio
 
 
 class ProveedorSerializer(serializers.ModelSerializer):
