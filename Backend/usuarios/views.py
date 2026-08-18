@@ -12,6 +12,7 @@ from django.contrib.auth import (
 
 # from django.contrib.auth.models import (User, Group)
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Usuario
 from .serializers import UsuarioSerializer
@@ -119,3 +120,12 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(
             {"mensaje": "Usuario desactivado correctamente."}, status=status.HTTP_200_OK
         )
+
+    @action(detail=False, methods=["get"], url_path="me", permission_classes=[IsAuthenticated])
+    def me(self, request):
+        """Retorna el perfil completo del usuario autenticado vía JWT/Token."""
+        serializer = self.get_serializer(request.user)
+        data = dict(serializer.data)
+        data["es_admin"] = getattr(request.user, "es_admin", False)
+        data["es_empleado"] = getattr(request.user, "es_empleado", False)
+        return Response(data, status=status.HTTP_200_OK)

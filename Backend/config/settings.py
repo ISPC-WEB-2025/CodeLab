@@ -15,7 +15,8 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS configurables o abiertas para desarrollo y acceso desde red local / emuladores móviles
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -119,9 +120,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
-# CORS
+# CORS - Permitir orígenes de desarrollo web y conexiones desde apps móviles
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
+    "http://127.0.0.1:4200",
 ]
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'inventario.exceptions.custom_exception_handler',

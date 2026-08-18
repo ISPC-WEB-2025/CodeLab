@@ -25,8 +25,19 @@ from .serializers import (
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["nombre", "codigo"]
+    ordering_fields = ["id_art", "nombre", "codigo", "precio_venta", "stock_min_global"]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        codigo = self.request.query_params.get("codigo")
+        if codigo:
+            queryset = queryset.filter(codigo__iexact=codigo.strip())
+        id_cat = self.request.query_params.get("id_cat") or self.request.query_params.get("categoria")
+        if id_cat:
+            queryset = queryset.filter(id_cat_id=id_cat)
+        return queryset
 
     @action(detail=True, methods=["get"], url_path="stock", filter_backends=[])
     def stock(self, request, pk=None):
@@ -173,8 +184,22 @@ class StockSucursalViewSet(viewsets.ModelViewSet):
 
 
 class MovimientoViewSet(viewsets.ModelViewSet):
-    queryset = Movimiento.objects.select_related("id_art", "id_suc", "id_prov").all()
     serializer_class = MovimientoSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ["id_mov", "fecha_hora", "cantidad"]
+
+    def get_queryset(self):
+        queryset = Movimiento.objects.select_related("id_art", "id_suc", "id_prov").all()
+        id_art = self.request.query_params.get("id_art")
+        if id_art:
+            queryset = queryset.filter(id_art_id=id_art)
+        id_suc = self.request.query_params.get("id_suc")
+        if id_suc:
+            queryset = queryset.filter(id_suc_id=id_suc)
+        tipo = self.request.query_params.get("tipo")
+        if tipo:
+            queryset = queryset.filter(tipo__iexact=tipo.strip())
+        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
