@@ -48,6 +48,9 @@ run_sql("scripts/01_estructura.sql")
 print("2. Ejecutando migraciones Django...")
 subprocess.run([sys.executable, "manage.py", "migrate"], check=True)
 
+print("2b. Cargando roles base desde roles.json...")
+subprocess.run([sys.executable, "manage.py", "loaddata", "roles.json"], check=True)
+
 print("3. Creando tabla MOVIMIENTO...")
 run_sql("scripts/02_movimiento.sql")
 
