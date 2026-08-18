@@ -6,24 +6,29 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-
 export class UserAuthService {
   private loginURL = 'http://localhost:8000/api/usuarios/login/';
-  private registroURL = 'http://localhost:8000/api/usuarios/registro/'; 
+  private registroURL = 'http://localhost:8000/api/usuarios/registro/';
+  private refreshURL = 'http://localhost:8000/api/usuarios/token/refresh/';
 
   constructor(private http: HttpClient, private router: Router) { }
 
   login(email: string, password: string, recordar: boolean = false): Observable<any> {
     return this.http.post<any>(this.loginURL, { email, password }).pipe(
       tap(response => {
-        if (response.token) {
+        const accessToken = response.access || response.token;
+        if (accessToken) {
           // Limpiar ambos para evitar colisiones de sesiones previas
           localStorage.clear();
           sessionStorage.clear();
 
           const storage = recordar ? localStorage : sessionStorage;
           storage.setItem('nombre_usuario', response.nombre);
-          storage.setItem('auth_token', response.token);
+          storage.setItem('access_token', accessToken);
+          storage.setItem('auth_token', accessToken); // Retrocompatibilidad
+          if (response.refresh) {
+            storage.setItem('refresh_token', response.refresh);
+          }
           storage.setItem('es_admin', response.es_admin.toString());
           storage.setItem('es_empleado', response.es_empleado.toString());
 
@@ -35,7 +40,6 @@ export class UserAuthService {
     );
   }
 
-  // TODO: ¿Esta bien que Fecha De Nacimiento(fdn) sea de tipo any? Averiguar de que tipo se necesita
   registrar(nombre: string, email: string, dni: number, fdn: any, password: string): Observable<any> {
     return this.http.post<any>(this.registroURL, {
       nombre, 
@@ -50,8 +54,42 @@ export class UserAuthService {
     );
   }
 
+  getAccessToken(): string | null {
+    return (
+      localStorage.getItem('access_token') ||
+      sessionStorage.getItem('access_token') ||
+      localStorage.getItem('auth_token') ||
+      sessionStorage.getItem('auth_token')
+    );
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
+  }
+
+  setAccessToken(token: string): void {
+    if (localStorage.getItem('refresh_token') || localStorage.getItem('access_token') || localStorage.getItem('auth_token')) {
+      localStorage.setItem('access_token', token);
+      localStorage.setItem('auth_token', token);
+    } else {
+      sessionStorage.setItem('access_token', token);
+      sessionStorage.setItem('auth_token', token);
+    }
+  }
+
+  refreshToken(): Observable<any> {
+    const refresh = this.getRefreshToken();
+    return this.http.post<any>(this.refreshURL, { refresh }).pipe(
+      tap(response => {
+        if (response && response.access) {
+          this.setAccessToken(response.access);
+        }
+      })
+    );
+  }
+
   getToken(): string | null {
-    return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+    return this.getAccessToken();
   }
 
   getUsername(): string | null {
@@ -59,7 +97,7 @@ export class UserAuthService {
   }
 
   isLoggedIn(): boolean {
-    const token = this.getToken();
+    const token = this.getAccessToken();
     if (!token) return false;
 
     const loginTimestamp = localStorage.getItem('login_timestamp');
