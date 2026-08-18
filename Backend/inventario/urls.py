@@ -5,6 +5,7 @@ from .views import (
     CategoriaViewSet,
     SucursalViewSet,
     ProveedorViewSet,
+    ProductoProveedorViewSet,
     StockSucursalViewSet,
     MovimientoViewSet,
 )
@@ -18,6 +19,7 @@ router.register(
 router.register(r"categorias", CategoriaViewSet)
 router.register(r"sucursales", SucursalViewSet)
 router.register(r"proveedores", ProveedorViewSet)
+router.register(r"producto-proveedor", ProductoProveedorViewSet, basename="producto-proveedor")
 router.register(r"stock", StockSucursalViewSet, basename="stock")
 router.register(r"movimientos", MovimientoViewSet, basename="movimiento")
 

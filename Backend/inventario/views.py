@@ -1,13 +1,22 @@
 # Backend/inventario/views.py
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
-from .models import Producto, Categoria, Sucursal, Proveedor, StockSucursal, Movimiento
+from .models import (
+    Producto,
+    Categoria,
+    Sucursal,
+    Proveedor,
+    ProductoProveedor,
+    StockSucursal,
+    Movimiento,
+)
 from django.db import transaction
 from .serializers import (
     ProductoSerializer,
     CategoriaSerializer,
     SucursalSerializer,
     ProveedorSerializer,
+    ProductoProveedorSerializer,
     StockSucursalSerializer,
     MovimientoSerializer,
 )
@@ -36,6 +45,13 @@ class ProveedorViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["nombre", "cuit", "email"]
     ordering_fields = ["id_prov", "nombre", "cuit"]
+
+
+class ProductoProveedorViewSet(viewsets.ModelViewSet):
+    queryset = ProductoProveedor.objects.select_related("id_art", "id_prov").all()
+    serializer_class = ProductoProveedorSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["id_art__nombre", "id_prov__nombre"]
 
 
 class StockSucursalViewSet(viewsets.ModelViewSet):

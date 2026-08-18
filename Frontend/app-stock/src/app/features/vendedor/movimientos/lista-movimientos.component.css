@@ -1,26 +1,47 @@
 .movimientos-contenedor {
-  padding: 1rem;
+  padding: 0.5rem 0;
 }
 
-h2 {
-  margin-bottom: 1.5rem;
-  color: #333;
+.titulo-seccion {
+  font-size: 1.8rem;
+  color: #1e3a2f;
+  margin-bottom: 0.2rem;
+  font-weight: 700;
 }
 
 .contador {
-  color: #6c757d;
   font-size: 0.9rem;
-  margin-bottom: 0.75rem;
 }
 
-.sin-resultados {
-  color: #6c757d;
-  font-style: italic;
-  margin-top: 1rem;
+.tabla-card {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e9e6;
 }
 
-.badge {
-  font-size: 0.85rem;
-  padding: 4px 10px;
-  border-radius: 12px;
+.thead-movimientos th {
+  background-color: #1e3a2f !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.9rem 1rem;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+table td {
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+  font-size: 0.92rem;
+}
+
+tbody tr:hover {
+  background-color: #f0f7f3;
+}
+
+.celda-motivo {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

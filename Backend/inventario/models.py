@@ -67,6 +67,30 @@ class Proveedor(models.Model):
         return self.nombre
 
 
+class ProductoProveedor(models.Model):
+    id_enlace = models.AutoField(primary_key=True)
+    id_art = models.ForeignKey(
+        Producto,
+        on_delete=models.PROTECT,
+        db_column="id_art",
+        related_name="proveedores_enlace",
+    )
+    id_prov = models.ForeignKey(
+        Proveedor,
+        on_delete=models.PROTECT,
+        db_column="id_prov",
+        related_name="productos_enlace",
+    )
+    precio_costo = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        managed = False
+        db_table = "PRODUCTO_PROVEEDOR"
+
+    def __str__(self):
+        return f"{self.id_art.nombre} - {self.id_prov.nombre}"
+
+
 class StockSucursal(models.Model):
     id_stock = models.AutoField(primary_key=True)
     cantidad_stock = models.IntegerField(default=0)
