@@ -42,19 +42,20 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
+import { UserAuthService } from './user-auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
   private http = inject(HttpClient);
+  private authService = inject(UserAuthService);
   private apiUrl = 'http://127.0.0.1:8000/api/usuarios/';
 
   // 0. Función ayudante para mostrar la "entrada VIP" (El Token)
   private getHeaders(): HttpHeaders {
-    // Busca el token en el almacenamiento del navegador
-    const token = localStorage.getItem('auth_token'); 
-   
+    // Busca el token en el almacenamiento del navegador (sessionStorage o localStorage)
+    const token = this.authService.getToken(); 
     
     if (token) {
       // IMPORTANTE: Si Django te sigue rebotando, cambiá la palabra 'Token' por 'Bearer'
