@@ -1,59 +1,49 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { ModalService } from '../../core/services/modal.service';
-
 import { StockSucursalService } from '../../core/services/stock-sucursal.service';
 import { StockSucursal } from '../../core/models/stock-sucursal.model';
+import { ModalMermaComponent } from './modal-merma/modal-merma.component';
 
 @Component({
   selector: 'app-stock-sucursal',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink, ModalMermaComponent],
   templateUrl: './stock-sucursal.component.html',
   styleUrl: './stock-sucursal.component.css',
 })
 export class StockSucursalComponent implements OnInit {
-  // Lista de stock del backend:
-  stockLista: StockSucursal[] = []; // creamos array vacío para llenar con los datos
+  stockLista: StockSucursal[] = [];
+  cargando: boolean = true;
+  error: string = '';
 
-  // Para manejar estados de carga y errores:
-  cargando: boolean = true; // inicialmente cargando
-  error: string = ''; // inicialmente sin error
+  // Estado para el Modal de Merma
+  mostrarModalMerma: boolean = false;
+  registroStockSeleccionado: StockSucursal | null = null;
 
   constructor(
     private stockService: StockSucursalService,
     private router: Router,
     private modalService: ModalService
   ) { }
-  async eliminar(id: number): Promise<void> {
-    if (await this.modalService.confirmar('¿Eliminar este registro? Esta acción no se puede deshacer.')) {
-      this.stockService.delete(id).subscribe({
-        next: () => {
-          this.stockLista = this.stockLista.filter(
-            (item) => item.id_stock !== id,
-          );
-        },
-        error: () => {
-          this.modalService.error('Error al eliminar. Verificá que el backend esté corriendo.');
-        },
-      });
-    }
-  }
-  editar(id: number): void {
-    this.router.navigate(['/dashboard/stock/editar', id]);
-  }
+
   ngOnInit(): void {
-    // TODO: configurar CORS en Django si se despliega en producción
+    this.cargarStock();
+  }
+
+  cargarStock(): void {
+    this.cargando = true;
     this.stockService.getAll().subscribe({
       next: (data) => {
         this.stockLista = data.map(item => ({
-          ...item,  // Spread operator para mantener el resto de las propiedades
+          ...item,
           cantidad_stock: Number(item.cantidad_stock),
           stock_min: Number(item.stock_min),
         }));
         this.cargando = false;
       },
       error: () => {
-        // Fallback: datos de prueba cuando el backend no está disponible
         this.stockLista = [
           { id_stock: 1, cantidad_stock: 150, stock_min: 50, id_art: 1, id_suc: 1, nombre_producto: 'Perfil de aluminio 45mm', nombre_sucursal: 'Fábrica Principal' },
           { id_stock: 2, cantidad_stock: 20, stock_min: 5, id_art: 2, id_suc: 1, nombre_producto: 'Motor Tubular 50Nm', nombre_sucursal: 'Fábrica Principal' },
@@ -63,5 +53,23 @@ export class StockSucursalComponent implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  editarUmbral(id: number): void {
+    this.router.navigate(['/dashboard/stock/editar', id]);
+  }
+
+  abrirModalMerma(item: StockSucursal): void {
+    this.registroStockSeleccionado = item;
+    this.mostrarModalMerma = true;
+  }
+
+  cerrarModalMerma(): void {
+    this.mostrarModalMerma = false;
+    this.registroStockSeleccionado = null;
+  }
+
+  onMermaCompletada(): void {
+    this.cargarStock();
   }
 }

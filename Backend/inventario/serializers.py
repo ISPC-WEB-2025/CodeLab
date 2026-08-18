@@ -136,6 +136,11 @@ class StockSucursalSerializer(serializers.ModelSerializer):
             "nombre_producto",
             "nombre_sucursal",
         ]
+        extra_kwargs = {
+            "cantidad_stock": {"read_only": True},
+            "id_art": {"read_only": True},
+            "id_suc": {"read_only": True},
+        }
 
 
 class MovimientoSerializer(serializers.ModelSerializer):

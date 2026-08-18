@@ -21,7 +21,7 @@ export class StockSucursalService {
     return this.http.post<StockSucursal>(this.apiUrl, stock);
   }
 
-  update(id: number, stock: StockSucursal): Observable<StockSucursal> {
+  update(id: number, stock: Partial<StockSucursal>): Observable<StockSucursal> {
     return this.http.put<StockSucursal>(`${this.apiUrl}${id}/`, stock);
   }
 
