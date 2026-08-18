@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductoService } from '../../core/services/producto.service';
 import { CategoriaService } from '../../core/services/categoria.service';
@@ -8,7 +9,7 @@ import { ModalService } from '../../core/services/modal.service';
 @Component({
   selector: 'app-form-producto',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './form-producto.component.html',
   styleUrls: ['./form-producto.component.css']
 })
@@ -20,6 +21,12 @@ export class FormProductoComponent implements OnInit {
   productoId: number | null = null;
   cargando: boolean = false;
   erroresBackend: any = null;
+
+  // Modal rápido de nueva categoría
+  mostrarModalCategoria: boolean = false;
+  nombreNuevaCategoria: string = '';
+  guardandoCategoria: boolean = false;
+  errorModalCategoria: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -123,6 +130,48 @@ export class FormProductoComponent implements OnInit {
 
   cancelar() {
     this.router.navigate(['/dashboard/productos']);
+  }
+
+  // --- Modal Rápido de Categoría ---
+  abrirModalCategoria(): void {
+    this.nombreNuevaCategoria = '';
+    this.errorModalCategoria = '';
+    this.mostrarModalCategoria = true;
+  }
+
+  cerrarModalCategoria(): void {
+    this.mostrarModalCategoria = false;
+    this.nombreNuevaCategoria = '';
+    this.errorModalCategoria = '';
+  }
+
+  guardarNuevaCategoria(): void {
+    const nombreLimpio = this.nombreNuevaCategoria.trim();
+    if (!nombreLimpio) {
+      this.errorModalCategoria = 'El nombre de la categoría es obligatorio.';
+      return;
+    }
+
+    this.guardandoCategoria = true;
+    this.errorModalCategoria = '';
+
+    this.categoriaService.create({ nombre: nombreLimpio }).subscribe({
+      next: (nuevaCat) => {
+        this.guardandoCategoria = false;
+        this.modalService.exito(`Categoría "${nuevaCat.nombre}" creada y seleccionada.`);
+        this.cargarCategorias();
+        this.productoForm.patchValue({ id_cat: nuevaCat.id_cat });
+        this.cerrarModalCategoria();
+      },
+      error: (err) => {
+        this.guardandoCategoria = false;
+        this.errorModalCategoria =
+          err.error?.nombre?.[0] ||
+          err.error?.detail ||
+          err.error?.error ||
+          'Error al crear la categoría.';
+      },
+    });
   }
 
   resetForm() {

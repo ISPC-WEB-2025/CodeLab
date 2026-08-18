@@ -44,7 +44,16 @@
     </div>
 
     <div class="col-md-6 mb-3">
-      <label for="categoria" class="form-label">Categoría</label>
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <label for="categoria" class="form-label mb-0">Categoría <span class="text-danger">*</span></label>
+        <button
+          type="button"
+          class="btn btn-link btn-sm p-0 text-decoration-none text-success fw-semibold"
+          (click)="abrirModalCategoria()"
+        >
+          + Nueva Categoría
+        </button>
+      </div>
       <select id="categoria" formControlName="id_cat" class="form-select">
         <option value="">Seleccione una opción...</option>
         @for (cat of categorias; track cat.id_cat) {
@@ -78,3 +87,64 @@
   </div>
 
 </form>
+
+<!-- Modal Rápido: Alta de Nueva Categoría -->
+@if (mostrarModalCategoria) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-success-subtle">
+        <h5 class="modal-title text-success-emphasis">
+          ➕ Nueva Categoría
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarModalCategoria()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <p class="text-muted small mb-3">
+          Ingresá el nombre de la nueva categoría para crearla y seleccionarla automáticamente:
+        </p>
+        <div class="mb-3">
+          <label for="modalNombreCategoria" class="form-label fw-semibold">Nombre de la Categoría</label>
+          <input
+            type="text"
+            id="modalNombreCategoria"
+            class="form-control"
+            placeholder="Ej: Pinturas, Iluminación, Aberturas..."
+            [(ngModel)]="nombreNuevaCategoria"
+            [ngModelOptions]="{standalone: true}"
+            [disabled]="guardandoCategoria"
+            (keyup.enter)="guardarNuevaCategoria()"
+            autofocus
+          />
+          @if (errorModalCategoria) {
+            <small class="text-danger d-block mt-2">
+              ⚠️ {{ errorModalCategoria }}
+            </small>
+          }
+        </div>
+      </div>
+      <div class="modal-footer bg-light">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cerrarModalCategoria()"
+          [disabled]="guardandoCategoria"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="guardarNuevaCategoria()"
+          [disabled]="guardandoCategoria || !nombreNuevaCategoria.trim()"
+        >
+          @if (guardandoCategoria) {
+            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+          }
+          Guardar y Seleccionar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}

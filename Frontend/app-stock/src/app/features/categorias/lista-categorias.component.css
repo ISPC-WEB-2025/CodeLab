@@ -1,0 +1,65 @@
+.categorias-contenedor {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fila-categoria {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fila-categoria:hover {
+  background-color: #f8fbf9;
+}
+
+.fila-activa {
+  background-color: #eaf6ee !important;
+  border-left: 4px solid #198754;
+}
+
+.fila-activa td {
+  background-color: transparent !important;
+}
+
+.lista-productos-scroll {
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.lista-productos-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-productos-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.lista-productos-scroll::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.lista-productos-scroll::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.hover-shadow {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-color: #198754 !important;
+}
