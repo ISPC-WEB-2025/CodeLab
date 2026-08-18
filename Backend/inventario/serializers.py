@@ -116,6 +116,11 @@ class ProductoSerializer(serializers.ModelSerializer):
 
         return value.strip()
 
+    def validate_stock_min_global(self, value):
+        if value is not None and value < 0:
+            raise serializers.ValidationError("El stock mínimo global no puede ser negativo.")
+        return value or 0
+
 
 class SucursalSerializer(serializers.ModelSerializer):
     total_articulos = serializers.SerializerMethodField()
