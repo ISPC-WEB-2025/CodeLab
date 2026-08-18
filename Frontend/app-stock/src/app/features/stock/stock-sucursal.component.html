@@ -1,11 +1,13 @@
 <div class="stock-contenedor">
-  <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-success" routerLink="/dashboard/stock/nuevo">
-      + Agregar Stock
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h2>Gestión de Stock por Sucursal</h2>
+      <p class="text-muted mb-0">Supervisión de existencias, configuración de umbrales mínimos y registro de bajas por merma.</p>
+    </div>
+    <button class="btn btn-success" routerLink="/dashboard/movimientos/nuevo">
+      + Registrar Entrada
     </button>
   </div>
-
-  <h2>Gestión de Stock</h2>
 
   @if (error === 'demo') {
   <p class="aviso-demo">
@@ -14,7 +16,10 @@
   }
 
   @if (cargando) {
-  <p>Cargando datos...</p>
+  <div class="text-center py-4">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="mt-2 text-muted">Cargando existencias...</p>
+  </div>
   }
 
   @if (!cargando && stockLista.length > 0) {
@@ -26,8 +31,8 @@
         <tr>
           <th>Producto</th>
           <th>Sucursal</th>
-          <th>Cantidad</th>
-          <th>Stock Mínimo</th>
+          <th>Cantidad en Stock</th>
+          <th>Stock Mínimo (Alerta)</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -36,12 +41,32 @@
         <tr [class.fila-stock-bajo]="item.cantidad_stock <= item.stock_min">
           <td>{{ item.nombre_producto }}</td>
           <td>{{ item.nombre_sucursal }}</td>
-          <td>{{ item.cantidad_stock }}</td>
-          <td>{{ item.stock_min }}</td>
           <td>
-            <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-success" (click)="editar(item.id_stock)">Editar</button>
-              <button class="btn btn-sm btn-danger" (click)="eliminar(item.id_stock)">Eliminar</button>
+            <span class="fw-bold" [ngClass]="item.cantidad_stock <= item.stock_min ? 'text-danger' : 'text-dark'">
+              {{ item.cantidad_stock }}
+            </span>
+            @if (item.cantidad_stock <= item.stock_min) {
+              <span class="badge bg-warning text-dark ms-2">Stock Bajo</span>
+            }
+          </td>
+          <td>{{ item.stock_min }}</td>
+          <td class="celda-acciones">
+            <div class="d-flex gap-2 align-items-center flex-nowrap">
+              <button
+                class="btn btn-sm btn-success text-nowrap"
+                (click)="editarUmbral(item.id_stock)"
+                title="Configurar Umbral Mínimo"
+              >
+                ✏️ Editar Umbral
+              </button>
+              <button
+                class="btn btn-sm btn-danger text-nowrap"
+                (click)="abrirModalMerma(item)"
+                [disabled]="item.cantidad_stock <= 0"
+                title="Registrar Baja por Merma"
+              >
+                ⚠️ Baja por Merma
+              </button>
             </div>
           </td>
         </tr>
@@ -51,3 +76,11 @@
   </div>
   }
 </div>
+
+<!-- Componente Standalone Modal de Merma -->
+<app-modal-merma
+  [registroStock]="registroStockSeleccionado"
+  [mostrar]="mostrarModalMerma"
+  (cerrar)="cerrarModalMerma()"
+  (mermaRegistrada)="onMermaCompletada()"
+></app-modal-merma>

@@ -1,0 +1,13 @@
+.modal-backdrop {
+  z-index: 1050;
+}
+
+.modal {
+  z-index: 1055;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.modal-content {
+  border-radius: 10px;
+  overflow: hidden;
+}
