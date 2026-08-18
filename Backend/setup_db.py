@@ -39,6 +39,7 @@ def run_sql(file):
             statement = statement.strip()
             if statement:
                 cursor.execute(statement)
+    connection.commit()
 
 
 print("1. Ejecutando estructura base...")
@@ -52,5 +53,9 @@ run_sql("scripts/02_movimiento.sql")
 
 print("4. Insertando datos de prueba...")
 run_sql("scripts/03_datos.sql")
+
+print("5. Creando usuario superadmin por defecto...")
+from scripts.crear_superadmin import crear_superadmin
+crear_superadmin()
 
 print("✅ Base de datos lista.")
