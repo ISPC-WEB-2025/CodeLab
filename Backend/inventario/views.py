@@ -1,6 +1,7 @@
-# Backend/inventario/views.py
 from rest_framework import viewsets, status, filters
+from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.db import models, transaction
 from .models import (
     Producto,
     Categoria,
@@ -10,7 +11,6 @@ from .models import (
     StockSucursal,
     Movimiento,
 )
-from django.db import transaction
 from .serializers import (
     ProductoSerializer,
     CategoriaSerializer,
@@ -37,6 +37,59 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 class SucursalViewSet(viewsets.ModelViewSet):
     queryset = Sucursal.objects.all()
     serializer_class = SucursalSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["nombre", "direccion"]
+    ordering_fields = ["id_suc", "nombre", "direccion"]
+
+    def destroy(self, request, *args, **kwargs):
+        sucursal = self.get_object()
+
+        # Validar si tiene stock físico activo mayor a 0
+        tiene_stock_activo = StockSucursal.objects.filter(
+            id_suc=sucursal, cantidad_stock__gt=0
+        ).exists()
+        if tiene_stock_activo:
+            return Response(
+                {
+                    "error": f"No se puede eliminar la sucursal '{sucursal.nombre}' porque posee artículos con existencias de stock activas."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Validar si tiene movimientos históricos registrados
+        tiene_movimientos = Movimiento.objects.filter(id_suc=sucursal).exists()
+        if tiene_movimientos:
+            return Response(
+                {
+                    "error": f"No se puede eliminar la sucursal '{sucursal.nombre}' porque cuenta con movimientos de inventario históricos registrados."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Si está limpia (solo tiene registros de stock en 0 y sin movimientos),
+        # eliminar registros vinculados de StockSucursal en bloque atómico y la sucursal
+        with transaction.atomic():
+            StockSucursal.objects.filter(id_suc=sucursal).delete()
+            sucursal.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["get"])
+    def inventario(self, request, pk=None):
+        sucursal = self.get_object()
+        stock_qs = StockSucursal.objects.select_related("id_art", "id_suc").filter(
+            id_suc=sucursal
+        )
+
+        query = request.query_params.get("search", None)
+        if query:
+            stock_qs = stock_qs.filter(
+                models.Q(id_art__nombre__icontains=query)
+                | models.Q(id_art__codigo__icontains=query)
+            )
+
+        serializer = StockSucursalSerializer(stock_qs, many=True)
+        return Response(serializer.data)
 
 
 class ProveedorViewSet(viewsets.ModelViewSet):
