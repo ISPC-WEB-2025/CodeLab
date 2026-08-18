@@ -29,8 +29,8 @@
   </div>
 
   <div class="fila-form row">
-    <div class="col-md-6 mb-3">
-      <label for="precioVenta" class="form-label">Precio de Venta (Requerido)</label>
+    <div class="col-md-4 mb-3">
+      <label for="precioVenta" class="form-label">Precio de Venta <span class="text-danger">*</span></label>
       <div class="input-group">
         <span class="input-group-text">$</span>
         <input type="number" id="precioVenta" formControlName="precio_venta" class="form-control" placeholder="0.00">
@@ -43,7 +43,19 @@
       }
     </div>
 
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
+      <label for="stockMinGlobal" class="form-label">Stock Mínimo Global <span class="text-danger">*</span></label>
+      <input type="number" id="stockMinGlobal" formControlName="stock_min_global" class="form-control" placeholder="0" min="0">
+      <small class="text-muted" style="font-size: 0.75rem;">Umbral inicial por defecto para sucursales</small>
+      @if (erroresBackend?.stock_min_global) {
+      <small class="text-danger d-block mt-1">{{ erroresBackend.stock_min_global[0] }}</small>
+      }
+      @if (productoForm.get('stock_min_global')?.invalid && productoForm.get('stock_min_global')?.touched) {
+        <small class="text-danger d-block mt-1">Debe ingresar un valor mayor o igual a 0</small>
+      }
+    </div>
+
+    <div class="col-md-4 mb-3">
       <div class="d-flex justify-content-between align-items-center mb-1">
         <label for="categoria" class="form-label mb-0">Categoría <span class="text-danger">*</span></label>
         <button

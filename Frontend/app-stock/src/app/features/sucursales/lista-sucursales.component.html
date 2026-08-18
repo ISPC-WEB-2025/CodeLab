@@ -228,19 +228,34 @@
             </div>
 
             @if (sucursalSeleccionada) {
-              <!-- Buscador de inventario interno -->
-              <div class="input-group input-group-sm mb-3">
-                <span class="input-group-text bg-white">🔍</span>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Filtrar artículos de esta sede..."
-                  [(ngModel)]="busquedaInventario"
-                  (input)="onBusquedaInventario()"
-                />
-                @if (busquedaInventario) {
-                  <button class="btn btn-outline-secondary" type="button" (click)="limpiarBusquedaInventario()">✕</button>
-                }
+              <!-- Buscador de inventario interno y filtro inteligente -->
+              <div class="d-flex flex-column gap-2 mb-3">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white">🔍</span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Filtrar artículos de esta sede..."
+                    [(ngModel)]="busquedaInventario"
+                    (input)="onBusquedaInventario()"
+                  />
+                  @if (busquedaInventario) {
+                    <button class="btn btn-outline-secondary" type="button" (click)="limpiarBusquedaInventario()">✕</button>
+                  }
+                </div>
+                <div class="form-check form-switch ps-4 small">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="switchSoloConStock"
+                    [(ngModel)]="soloConStock"
+                    (change)="onToggleSoloConStock()"
+                  />
+                  <label class="form-check-label text-muted" for="switchSoloConStock">
+                    Ocultar artículos sin existencias (stock = 0)
+                  </label>
+                </div>
               </div>
 
               <!-- Listado de Stock en Sede con transicion limpia -->

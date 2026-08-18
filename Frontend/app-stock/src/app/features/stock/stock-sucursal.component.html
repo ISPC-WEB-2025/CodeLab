@@ -1,86 +1,507 @@
 <div class="stock-contenedor">
-  <div class="d-flex justify-content-between align-items-center mb-3">
+  
+  <!-- Encabezado de Sección -->
+  <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
     <div>
-      <h2>Gestión de Stock por Sucursal</h2>
-      <p class="text-muted mb-0">Supervisión de existencias, configuración de umbrales mínimos y registro de bajas por merma.</p>
+      <h2 class="mb-1 fw-bold text-dark d-flex align-items-center gap-2">
+        <span>📦</span>
+        <span>Gestión de Stock Consolidado</span>
+      </h2>
+      <p class="text-muted mb-0">
+        Supervisión consolidada de inventario multi-sede, control de existencias globales y configuración ágil de umbrales.
+      </p>
     </div>
-    <button class="btn btn-success" routerLink="/dashboard/movimientos/nuevo">
-      + Registrar Entrada
-    </button>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary" (click)="cargarDatosConsolidados()" [disabled]="cargando" title="Actualizar datos">
+        🔄 Actualizar
+      </button>
+      <button class="btn btn-success" routerLink="/dashboard/movimientos/nuevo">
+        + Registrar Movimiento
+      </button>
+    </div>
   </div>
 
-  @if (error === 'demo') {
-  <p class="aviso-demo">
-    ⚠️ Backend no disponible en este entorno. Se muestran datos de prueba.
-  </p>
+  @if (error) {
+  <div class="alert alert-danger d-flex align-items-center gap-2 mb-4">
+    <span>⚠️</span>
+    <span>{{ error }}</span>
+  </div>
   }
+
+  <!-- Tarjetas de Métricas de Salud del Inventario Consolidado -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="card border-0 shadow-sm metric-card p-3 bg-white h-100">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <small class="text-muted fw-semibold d-block">Catálogo Total</small>
+            <strong class="fs-4 text-dark">{{ totalArticulos }}</strong>
+            <small class="text-muted d-block" style="font-size: 0.75rem;">SKUs registrados</small>
+          </div>
+          <div class="metric-icon bg-primary-subtle text-primary rounded-3 p-2">
+            📦
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="card border-0 shadow-sm metric-card p-3 bg-white h-100">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <small class="text-muted fw-semibold d-block">Existencias en Red</small>
+            <strong class="fs-4 text-primary">{{ totalUnidades }}</strong>
+            <small class="text-muted d-block" style="font-size: 0.75rem;">Unidades físicas</small>
+          </div>
+          <div class="metric-icon bg-info-subtle text-info rounded-3 p-2">
+            🏢
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="card border-0 shadow-sm metric-card p-3 bg-white h-100">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <small class="text-muted fw-semibold d-block">En Alerta / Bajo</small>
+            <strong class="fs-4" [ngClass]="articulosAlerta > 0 ? 'text-warning' : 'text-muted'">
+              {{ articulosAlerta }}
+            </strong>
+            <small class="text-muted d-block" style="font-size: 0.75rem;">≤ umbral mínimo</small>
+          </div>
+          <div class="metric-icon bg-warning-subtle text-warning rounded-3 p-2">
+            ⚠️
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="card border-0 shadow-sm metric-card p-3 bg-white h-100">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <small class="text-muted fw-semibold d-block">Agotados / Sin Stock</small>
+            <strong class="fs-4" [ngClass]="articulosSinStock > 0 ? 'text-danger' : 'text-muted'">
+              {{ articulosSinStock }}
+            </strong>
+            <small class="text-muted d-block" style="font-size: 0.75rem;">0 unidades en red</small>
+          </div>
+          <div class="metric-icon bg-danger-subtle text-danger rounded-3 p-2">
+            🚫
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de Filtros y Herramientas -->
+  <div class="card border-0 shadow-sm mb-4 bg-white">
+    <div class="card-body p-3">
+      <div class="row g-2 align-items-center">
+        <!-- Buscador por texto -->
+        <div class="col-12 col-lg-4">
+          <div class="input-group">
+            <span class="input-group-text bg-white">🔍</span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por nombre o código..."
+              [(ngModel)]="busqueda"
+            />
+            @if (busqueda) {
+              <button class="btn btn-outline-secondary" type="button" (click)="busqueda = ''">✕</button>
+            }
+          </div>
+        </div>
+
+        <!-- Filtro por Categoría -->
+        <div class="col-6 col-md-3 col-lg-2">
+          <select class="form-select" [(ngModel)]="categoriaFiltro">
+            <option [ngValue]="null">Todas las categorías</option>
+            @for (cat of categorias; track cat.id_cat) {
+              <option [ngValue]="cat.id_cat">{{ cat.nombre }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Filtro por Estado -->
+        <div class="col-6 col-md-3 col-lg-2">
+          <select class="form-select" [(ngModel)]="estadoFiltro">
+            <option value="todos">Todos los estados</option>
+            <option value="optimo">🟢 Normal / Óptimo</option>
+            <option value="alerta">⚠️ Stock Bajo / Alerta</option>
+            <option value="sin-stock">🔴 Sin Stock</option>
+          </select>
+        </div>
+
+        <!-- Filtro por Sucursal -->
+        <div class="col-6 col-md-3 col-lg-2">
+          <select class="form-select" [(ngModel)]="sucursalFiltro">
+            <option [ngValue]="null">Todas las sedes</option>
+            @for (suc of sucursales; track suc.id_suc) {
+              <option [ngValue]="suc.id_suc">{{ suc.nombre }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Acciones Rápidas de Acordeón -->
+        <div class="col-6 col-md-3 col-lg-2 d-flex justify-content-end gap-1">
+          <button class="btn btn-outline-secondary btn-sm flex-fill" (click)="expandirTodos()" title="Desplegar todas las sedes">
+            ▼ Expandir
+          </button>
+          <button class="btn btn-outline-secondary btn-sm flex-fill" (click)="colapsarTodos()" title="Plegar todas las sedes">
+            ▲ Plegar
+          </button>
+        </div>
+      </div>
+
+      @if (busqueda || categoriaFiltro !== null || estadoFiltro !== 'todos' || sucursalFiltro !== null) {
+        <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top small text-muted">
+          <span>Mostrando <strong>{{ productosFiltrados.length }}</strong> de {{ totalArticulos }} productos con filtros activos.</span>
+          <button class="btn btn-link btn-sm p-0 text-decoration-none" (click)="limpiarFiltros()">
+            Limpiar filtros ✕
+          </button>
+        </div>
+      }
+    </div>
+  </div>
 
   @if (cargando) {
-  <div class="text-center py-4">
+  <div class="text-center py-5">
     <div class="spinner-border text-success" role="status"></div>
-    <p class="mt-2 text-muted">Cargando existencias...</p>
+    <p class="mt-2 text-muted">Cargando inventario consolidado...</p>
   </div>
   }
 
-  @if (!cargando && stockLista.length > 0) {
-  <div>
-    <p class="contador">Total de registros: {{ stockLista.length }}</p>
+  <!-- Grilla / Tabla Consolidada con Acordeón -->
+  @if (!cargando && productosFiltrados.length > 0) {
+  <div class="card border-0 shadow-sm overflow-hidden bg-white">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="bg-light table-header">
+          <tr>
+            <th style="width: 40px;" class="text-center"></th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th class="text-center">Umbral Global</th>
+            <th class="text-center">Stock Consolidado</th>
+            <th class="text-center">Salud Global</th>
+            <th class="text-end pe-4">Desglose</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (prod of productosFiltrados; track prod.id_art) {
+            <!-- Fila Principal de Producto -->
+            <tr
+              class="fila-producto"
+              [class.table-active]="estaExpandido(prod.id_art)"
+              [class.fila-alerta]="prod.estado === 'alerta'"
+              [class.fila-sin-stock]="prod.estado === 'sin-stock'"
+              (click)="toggleExpandir(prod.id_art)"
+            >
+              <!-- Botón Chevron Acordeón -->
+              <td class="text-center" (click)="$event.stopPropagation(); toggleExpandir(prod.id_art)">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-icon rounded-circle border-0 text-muted"
+                  [title]="estaExpandido(prod.id_art) ? 'Ocultar sedes' : 'Ver sedes'"
+                >
+                  <span class="chevron-icono" [class.chevron-abierto]="estaExpandido(prod.id_art)">
+                    ▶
+                  </span>
+                </button>
+              </td>
 
-    <table class="table responsive">
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Sucursal</th>
-          <th>Cantidad en Stock</th>
-          <th>Stock Mínimo (Alerta)</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of stockLista; track item.id_stock) {
-        <tr [class.fila-stock-bajo]="item.cantidad_stock <= item.stock_min">
-          <td>{{ item.nombre_producto }}</td>
-          <td>{{ item.nombre_sucursal }}</td>
-          <td>
-            <span class="fw-bold" [ngClass]="item.cantidad_stock <= item.stock_min ? 'text-danger' : 'text-dark'">
-              {{ item.cantidad_stock }}
-            </span>
-            @if (item.cantidad_stock <= item.stock_min) {
-              <span class="badge bg-warning text-dark ms-2">Stock Bajo</span>
+              <!-- Nombre y Código -->
+              <td>
+                <div class="d-flex flex-column">
+                  <span class="fw-bold text-dark fs-6">{{ prod.nombre }}</span>
+                  <span class="text-muted font-monospace small" style="font-size: 0.8rem;">
+                    COD: {{ prod.codigo }}
+                  </span>
+                </div>
+              </td>
+
+              <!-- Categoría -->
+              <td>
+                <span class="badge bg-light text-secondary border px-2 py-1">
+                  {{ prod.categoriaNombre }}
+                </span>
+              </td>
+
+              <!-- Umbral Mínimo Global -->
+              <td class="text-center">
+                <span class="fw-semibold text-secondary">
+                  {{ prod.stock_min_global }} <small class="text-muted">unid.</small>
+                </span>
+              </td>
+
+              <!-- Stock Total Consolidado -->
+              <td class="text-center">
+                <span
+                  class="fw-bold fs-5"
+                  [ngClass]="{
+                    'text-danger': prod.estado === 'sin-stock',
+                    'text-warning-emphasis': prod.estado === 'alerta',
+                    'text-success': prod.estado === 'optimo'
+                  }"
+                >
+                  {{ prod.stock_total }}
+                </span>
+                <span class="text-muted small"> unid.</span>
+              </td>
+
+              <!-- Badge de Salud Global -->
+              <td class="text-center">
+                @if (prod.estado === 'sin-stock') {
+                  <span class="badge bg-danger px-2 py-1">
+                    🔴 Sin Stock
+                  </span>
+                } @else if (prod.estado === 'alerta') {
+                  <span class="badge bg-warning text-dark px-2 py-1">
+                    ⚠️ Stock Bajo
+                  </span>
+                } @else {
+                  <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                    🟢 Normal
+                  </span>
+                }
+              </td>
+
+              <!-- Conteo de Sedes y Botón Acción -->
+              <td class="text-end pe-4" (click)="$event.stopPropagation()">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary text-nowrap"
+                  (click)="toggleExpandir(prod.id_art)"
+                >
+                  🏢 {{ prod.sedes.length }} Sedes
+                  <span class="ms-1">{{ estaExpandido(prod.id_art) ? '▲' : '▼' }}</span>
+                </button>
+              </td>
+            </tr>
+
+            <!-- Fila Expandible de Desglose por Sucursales -->
+            @if (estaExpandido(prod.id_art)) {
+              <tr class="fila-desglose bg-light">
+                <td colspan="7" class="p-0 border-top-0">
+                  <div class="p-3 bg-light-subtle border-start border-4 border-success ms-3 me-3 my-2 rounded-3 shadow-inner">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h6 class="mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <span>🏢</span>
+                        <span>Desglose por Sucursal — {{ prod.nombre }}</span>
+                      </h6>
+                      <small class="text-muted">
+                        Total en Red: <strong>{{ prod.stock_total }}</strong> unid. | Umbral Global: <strong>{{ prod.stock_min_global }}</strong> unid.
+                      </small>
+                    </div>
+
+                    <div class="table-responsive rounded bg-white border">
+                      <table class="table table-sm table-borderless align-middle mb-0">
+                        <thead class="table-light border-bottom text-muted small">
+                          <tr>
+                            <th class="ps-3">Sucursal / Sede</th>
+                            <th class="text-center">Stock Físico</th>
+                            <th class="text-center">Umbral Mínimo Local</th>
+                            <th class="text-center">Estado en Sede</th>
+                            <th class="text-end pe-3">Acciones de Sede</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (sede of prod.sedes; track sede.id_stock) {
+                            <tr class="border-bottom">
+                              <!-- Sede -->
+                              <td class="ps-3 fw-semibold text-dark">
+                                🏢 {{ sede.nombre_sucursal || 'Sede #' + sede.id_suc }}
+                              </td>
+
+                              <!-- Stock Físico -->
+                              <td class="text-center">
+                                <span
+                                  class="fw-bold"
+                                  [ngClass]="{
+                                    'text-danger': sede.cantidad_stock === 0,
+                                    'text-warning-emphasis': sede.cantidad_stock > 0 && sede.cantidad_stock <= sede.stock_min,
+                                    'text-dark': sede.cantidad_stock > sede.stock_min
+                                  }"
+                                >
+                                  {{ sede.cantidad_stock }}
+                                </span>
+                                <small class="text-muted"> unid.</small>
+                              </td>
+
+                              <!-- Umbral Local -->
+                              <td class="text-center">
+                                <span class="badge bg-light text-dark border px-2 py-1">
+                                  {{ sede.stock_min }} unid.
+                                </span>
+                              </td>
+
+                              <!-- Estado Local -->
+                              <td class="text-center">
+                                @if (sede.cantidad_stock === 0) {
+                                  <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 small">
+                                    🔴 Sin Existencias
+                                  </span>
+                                } @else if (sede.stock_min > 0 && sede.cantidad_stock <= sede.stock_min) {
+                                  <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1 small">
+                                    ⚠️ Stock Bajo
+                                  </span>
+                                } @else {
+                                  <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 small">
+                                    🟢 Normal
+                                  </span>
+                                }
+                              </td>
+
+                              <!-- Acciones -->
+                              <td class="text-end pe-3">
+                                <div class="d-flex justify-content-end gap-1 flex-nowrap">
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-success px-2 py-1"
+                                    (click)="abrirModalUmbral(sede)"
+                                    title="Ajustar Umbral Mínimo de esta Sede"
+                                  >
+                                    ✏️ Ajustar Umbral
+                                  </button>
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger px-2 py-1"
+                                    (click)="abrirModalMerma(sede)"
+                                    [disabled]="sede.cantidad_stock <= 0"
+                                    title="Registrar Baja por Merma en esta Sede"
+                                  >
+                                    ⚠️ Baja por Merma
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          } @empty {
+                            <tr>
+                              <td colspan="5" class="text-center py-3 text-muted small">
+                                No se encontraron registros de sedes vinculadas para este artículo.
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
+                </td>
+              </tr>
             }
-          </td>
-          <td>{{ item.stock_min }}</td>
-          <td class="celda-acciones">
-            <div class="d-flex gap-2 align-items-center flex-nowrap">
-              <button
-                class="btn btn-sm btn-success text-nowrap"
-                (click)="editarUmbral(item.id_stock)"
-                title="Configurar Umbral Mínimo"
-              >
-                ✏️ Editar Umbral
-              </button>
-              <button
-                class="btn btn-sm btn-danger text-nowrap"
-                (click)="abrirModalMerma(item)"
-                [disabled]="item.cantidad_stock <= 0"
-                title="Registrar Baja por Merma"
-              >
-                ⚠️ Baja por Merma
-              </button>
-            </div>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  } @else if (!cargando && productosFiltrados.length === 0) {
+  <div class="card border-0 shadow-sm text-center py-5 p-4 bg-white">
+    <span class="fs-1 mb-2">🔍</span>
+    <h5 class="text-dark fw-bold">No se encontraron productos</h5>
+    <p class="text-muted mb-3">
+      No hay artículos que coincidan con los criterios de búsqueda o filtros seleccionados.
+    </p>
+    <div>
+      <button class="btn btn-outline-primary btn-sm" (click)="limpiarFiltros()">
+        Limpiar Filtros
+      </button>
+    </div>
   </div>
   }
+
 </div>
 
-<!-- Componente Standalone Modal de Merma -->
+<!-- Modal Rápido de Ajuste de Umbral In-situ -->
+@if (mostrarModalUmbral && registroUmbralSeleccionado) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-success-subtle">
+        <h5 class="modal-title text-success-emphasis d-flex align-items-center gap-2">
+          <span>✏️</span>
+          <span>Ajustar Umbral de Stock Mínimo</span>
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarModalUmbral()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4">
+        <div class="mb-3 p-3 bg-light rounded border">
+          <div class="d-flex justify-content-between mb-1">
+            <span class="text-muted small">Producto:</span>
+            <strong class="text-dark small text-end">{{ registroUmbralSeleccionado.nombre_producto }}</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <span class="text-muted small">Sucursal / Sede:</span>
+            <strong class="text-dark small">{{ registroUmbralSeleccionado.nombre_sucursal }}</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted small">Stock Físico Actual:</span>
+            <strong class="text-primary small">{{ registroUmbralSeleccionado.cantidad_stock }} unidades</strong>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="inputNuevoUmbral" class="form-label fw-semibold text-dark">
+            Nuevo Umbral Mínimo de Alerta
+          </label>
+          <div class="input-group input-group-lg">
+            <button class="btn btn-outline-secondary" type="button" (click)="ajustarPresetUmbral(-5)">-5</button>
+            <button class="btn btn-outline-secondary" type="button" (click)="ajustarPresetUmbral(-1)">-1</button>
+            <input
+              type="number"
+              id="inputNuevoUmbral"
+              class="form-control text-center fw-bold fs-4"
+              [(ngModel)]="nuevoUmbralValor"
+              min="0"
+            />
+            <button class="btn btn-outline-secondary" type="button" (click)="ajustarPresetUmbral(1)">+1</button>
+            <button class="btn btn-outline-secondary" type="button" (click)="ajustarPresetUmbral(5)">+5</button>
+          </div>
+          <small class="text-muted d-block mt-1">
+            El sistema generará alertas automáticas cuando las existencias en esta sede caigan por debajo de este valor.
+          </small>
+        </div>
+
+        <!-- Indicador de Alerta Predictiva -->
+        @if (registroUmbralSeleccionado.cantidad_stock <= nuevoUmbralValor && nuevoUmbralValor > 0) {
+          <div class="alert alert-warning py-2 px-3 small d-flex align-items-center gap-2 mb-0">
+            <span>⚠️</span>
+            <span>Con este umbral, el producto <strong>entrará inmediatamente en estado de alerta</strong> en esta sede.</span>
+          </div>
+        } @else {
+          <div class="alert alert-success py-2 px-3 small d-flex align-items-center gap-2 mb-0">
+            <span>🟢</span>
+            <span>El stock físico actual cubre satisfactoriamente el nuevo umbral mínimo de seguridad.</span>
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary px-3" (click)="cerrarModalUmbral()" [disabled]="guardandoUmbral">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-success px-4" (click)="guardarUmbral()" [disabled]="guardandoUmbral">
+          @if (guardandoUmbral) {
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            Guardando...
+          } @else {
+            Guardar Umbral
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Modal Standalone de Merma -->
 <app-modal-merma
   [registroStock]="registroStockSeleccionado"
   [mostrar]="mostrarModalMerma"
   (cerrar)="cerrarModalMerma()"
   (mermaRegistrada)="onMermaCompletada()"
-></app-modal-merma>
+></app-modal-merma>

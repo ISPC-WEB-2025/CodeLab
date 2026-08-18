@@ -30,6 +30,7 @@ export class ListaSucursalesComponent implements OnInit {
   inventarioSucursal: StockSucursal[] = [];
   cargandoInventario: boolean = false;
   busquedaInventario: string = '';
+  soloConStock: boolean = false;
 
   private busqueda$ = new Subject<string>();
 
@@ -98,37 +99,37 @@ export class ListaSucursalesComponent implements OnInit {
 
   seleccionarSucursal(sucursal: Sucursal): void {
     this.sucursalSeleccionada = sucursal;
+    this.cargarInventarioSede();
+  }
+
+  cargarInventarioSede(): void {
+    if (!this.sucursalSeleccionada) return;
     this.cargandoInventario = true;
-    this.sucursalService.getInventario(sucursal.id_suc, this.busquedaInventario).subscribe({
-      next: (stock) => {
-        this.inventarioSucursal = stock;
-        this.cargandoInventario = false;
-      },
-      error: () => {
-        this.inventarioSucursal = [];
-        this.cargandoInventario = false;
-      },
-    });
+    this.sucursalService
+      .getInventario(this.sucursalSeleccionada.id_suc, this.busquedaInventario, this.soloConStock)
+      .subscribe({
+        next: (stock) => {
+          this.inventarioSucursal = stock;
+          this.cargandoInventario = false;
+        },
+        error: () => {
+          this.inventarioSucursal = [];
+          this.cargandoInventario = false;
+        },
+      });
   }
 
   onBusquedaInventario(): void {
-    if (!this.sucursalSeleccionada) return;
-    this.cargandoInventario = true;
-    this.sucursalService.getInventario(this.sucursalSeleccionada.id_suc, this.busquedaInventario).subscribe({
-      next: (stock) => {
-        this.inventarioSucursal = stock;
-        this.cargandoInventario = false;
-      },
-      error: () => {
-        this.inventarioSucursal = [];
-        this.cargandoInventario = false;
-      },
-    });
+    this.cargarInventarioSede();
+  }
+
+  onToggleSoloConStock(): void {
+    this.cargarInventarioSede();
   }
 
   limpiarBusquedaInventario(): void {
     this.busquedaInventario = '';
-    this.onBusquedaInventario();
+    this.cargarInventarioSede();
   }
 
   prepararEliminacion(sucursal: Sucursal): void {
