@@ -33,6 +33,9 @@ class SucursalViewSet(viewsets.ModelViewSet):
 class ProveedorViewSet(viewsets.ModelViewSet):
     queryset = Proveedor.objects.all()
     serializer_class = ProveedorSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["nombre", "cuit", "email"]
+    ordering_fields = ["id_prov", "nombre", "cuit"]
 
 
 class StockSucursalViewSet(viewsets.ModelViewSet):
