@@ -14,9 +14,27 @@ from django.db.models import Sum
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
+    total_articulos = serializers.SerializerMethodField()
+
     class Meta:
         model = Categoria
-        fields = "__all__"
+        fields = ["id_cat", "nombre", "total_articulos"]
+
+    def get_total_articulos(self, obj):
+        return Producto.objects.filter(id_cat=obj).count()
+
+    def validate_nombre(self, value):
+        nombre_limpio = value.strip()
+        if not nombre_limpio:
+            raise serializers.ValidationError("El nombre de la categoría no puede estar vacío.")
+        qs = Categoria.objects.filter(nombre__iexact=nombre_limpio)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError(
+                f"Ya existe una categoría con el nombre '{nombre_limpio}'."
+            )
+        return nombre_limpio
 
 
 class ProductoProveedorSerializer(serializers.ModelSerializer):

@@ -32,6 +32,34 @@ class ProductoViewSet(viewsets.ModelViewSet):
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["nombre"]
+    ordering_fields = ["id_cat", "nombre"]
+
+    def destroy(self, request, *args, **kwargs):
+        categoria = self.get_object()
+        articulos_count = Producto.objects.filter(id_cat=categoria).count()
+        if articulos_count > 0:
+            return Response(
+                {
+                    "error": f"No se puede eliminar la categoría '{categoria.nombre}' porque posee {articulos_count} producto(s) asociado(s)."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        categoria.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["get"], url_path="productos", filter_backends=[])
+    def productos(self, request, pk=None):
+        categoria = self.get_object()
+        prods_qs = Producto.objects.filter(id_cat=categoria)
+        query = request.query_params.get("search", None)
+        if query:
+            prods_qs = prods_qs.filter(
+                models.Q(nombre__icontains=query) | models.Q(codigo__icontains=query)
+            )
+        serializer = ProductoSerializer(prods_qs, many=True)
+        return Response(serializer.data)
 
 
 class SucursalViewSet(viewsets.ModelViewSet):
