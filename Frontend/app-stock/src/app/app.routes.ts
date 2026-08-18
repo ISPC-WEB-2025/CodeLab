@@ -11,6 +11,7 @@ import { FormProveedorComponent } from './features/proveedores/form-proveedor.co
 import { StockSucursalComponent } from './features/stock/stock-sucursal.component';
 import { ListaSucursalesComponent } from './features/sucursales/lista-sucursales.component';
 import { FormSucursalComponent } from './features/sucursales/form-sucursal.component';
+import { ListaCategoriasComponent } from './features/categorias/lista-categorias.component';
 import { ListaMovimientosComponent } from './features/vendedor/movimientos/lista-movimientos.component';
 import { FormMovimientoComponent } from './features/vendedor/movimientos/form-movimiento.component';
 import { FormStockComponent } from './features/stock/form-stock/form-stock.component';
@@ -37,6 +38,7 @@ export const routes: Routes = [
       { path: 'productos', component: ListaProductosComponent },
       { path: 'productos/nuevo', component: FormProductoComponent },
       { path: 'productos/editar/:id', component: FormProductoComponent },
+      { path: 'categorias', component: ListaCategoriasComponent },
       { path: 'sucursales', component: ListaSucursalesComponent },
       { path: 'sucursales/nuevo', component: FormSucursalComponent },
       { path: 'sucursales/editar/:id', component: FormSucursalComponent },
