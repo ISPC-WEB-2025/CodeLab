@@ -45,7 +45,10 @@ def run_sql(file):
 print("1. Ejecutando estructura base...")
 run_sql("scripts/01_estructura.sql")
 
-print("2. Ejecutando migraciones Django...")
+print("2. Actualizando registros de migraciones...")
+subprocess.run([sys.executable, "manage.py", "makemigrations"], check=True)
+
+print("2a. Ejecutando migraciones Django...")
 subprocess.run([sys.executable, "manage.py", "migrate"], check=True)
 
 print("2b. Cargando roles base desde roles.json...")
