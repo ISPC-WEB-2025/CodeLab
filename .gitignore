@@ -213,6 +213,9 @@ package-lock.json
 .agents/
 skills/
 GEMINI.md
+CLAUDE.md
+specs/
+
 
 
 
