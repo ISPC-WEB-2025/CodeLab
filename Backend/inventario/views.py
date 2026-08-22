@@ -299,17 +299,42 @@ class MovimientoViewSet(viewsets.ModelViewSet):
                     defaults={"cantidad_stock": 0, "stock_min": producto.stock_min_global},
                 )
 
-                serializer.validated_data["stock_previo"] = stock_origen.cantidad_stock
+                stock_previo_origen = stock_origen.cantidad_stock
+                stock_previo_destino = stock_destino.cantidad_stock
+
                 stock_origen.cantidad_stock -= cantidad
                 stock_destino.cantidad_stock += cantidad
 
                 stock_origen.save()
                 stock_destino.save()
 
-                if not serializer.validated_data.get("motivo"):
+                motivo_custom = serializer.validated_data.get("motivo")
+                if motivo_custom and motivo_custom.strip():
+                    serializer.validated_data["motivo"] = (
+                        f"Traslado hacia {sucursal_destino.nombre} ({motivo_custom.strip()})"
+                    )
+                    motivo_destino = f"Recepción desde {sucursal.nombre} ({motivo_custom.strip()})"
+                else:
                     serializer.validated_data["motivo"] = f"Traslado hacia {sucursal_destino.nombre}"
+                    motivo_destino = f"Recepción desde {sucursal.nombre}"
 
-            self.perform_create(serializer)
+                serializer.validated_data["stock_previo"] = stock_previo_origen
+                self.perform_create(serializer)
+
+                # Registro dual: crear movimiento simétrico de recepción en destino
+                Movimiento.objects.create(
+                    tipo="Traslado",
+                    id_art=producto,
+                    id_suc=sucursal_destino,
+                    cantidad=cantidad,
+                    stock_previo=stock_previo_destino,
+                    motivo=motivo_destino,
+                    id_usuario=serializer.validated_data.get("id_usuario"),
+                    fecha_hora=serializer.instance.fecha_hora,
+                )
+
+            if tipo in ["Entrada", "Salida"]:
+                self.perform_create(serializer)
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

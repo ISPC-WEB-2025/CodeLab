@@ -71,8 +71,12 @@
               <td>{{ mov.nombre_sucursal }}</td>
               <td class="text-center">{{ mov.stock_previo !== null && mov.stock_previo !== undefined ? mov.stock_previo : '-' }}</td>
               <td class="text-center fw-bold">
-                <span [class.text-success]="mov.tipo === 'Entrada'" [class.text-danger]="mov.tipo === 'Salida'" [class.text-warning]="mov.tipo === 'Traslado'">
-                  {{ mov.tipo === 'Entrada' ? '+' : (mov.tipo === 'Salida' ? '-' : '±') }}{{ mov.cantidad }}
+                <span
+                  [class.text-success]="mov.tipo === 'Entrada' || esTrasladoIngreso(mov)"
+                  [class.text-danger]="mov.tipo === 'Salida' || esTrasladoEgreso(mov)"
+                  [class.text-warning]="mov.tipo === 'Traslado' && !esTrasladoIngreso(mov) && !esTrasladoEgreso(mov)"
+                >
+                  {{ (mov.tipo === 'Entrada' || esTrasladoIngreso(mov)) ? '+' : ((mov.tipo === 'Salida' || esTrasladoEgreso(mov)) ? '-' : '±') }}{{ mov.cantidad }}
                 </span>
               </td>
               <td class="text-center">
@@ -81,6 +85,7 @@
                   [class.bg-success]="mov.tipo === 'Entrada'"
                   [class.bg-danger]="mov.tipo === 'Salida'"
                   [class.bg-warning]="mov.tipo === 'Traslado'"
+                  [class.text-dark]="mov.tipo === 'Traslado'"
                 >
                   {{ mov.tipo }}
                 </span>
