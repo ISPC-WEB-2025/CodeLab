@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { throwError } from 'rxjs';
 import { authInterceptor } from './auth.interceptor';
 import { UserAuthService } from '../services/user-auth.service';
 
@@ -68,7 +69,6 @@ describe('authInterceptor', () => {
     authServiceSpy.getRefreshToken.and.returnValue('expired-refresh-token');
 
     // Retorna error 401 observable al invocar refreshToken
-    const { throwError } = require('rxjs');
     authServiceSpy.refreshToken.and.returnValue(
       throwError(() => ({ status: 401, statusText: 'Unauthorized' }))
     );
