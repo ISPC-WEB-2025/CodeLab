@@ -76,4 +76,20 @@ export class ListaMovimientosComponent implements OnInit {
       this.router.navigate(['/vendedor/movimientos/nuevo']);
     }
   }
+
+  esTrasladoIngreso(mov: Movimiento): boolean {
+    return (
+      mov.tipo === 'Traslado' &&
+      !!mov.motivo &&
+      (mov.motivo.startsWith('Recepción') || mov.motivo.includes('desde'))
+    );
+  }
+
+  esTrasladoEgreso(mov: Movimiento): boolean {
+    return (
+      mov.tipo === 'Traslado' &&
+      !!mov.motivo &&
+      (mov.motivo.startsWith('Traslado hacia') || mov.motivo.includes('hacia'))
+    );
+  }
 }
