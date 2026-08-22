@@ -33,6 +33,18 @@ class TrasladosRegistroDualAPITests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
+        from usuarios.models import Usuario
+        self.user, _ = Usuario.objects.get_or_create(
+            email="admin_tras@ejemplo.com",
+            defaults={
+                "nombre": "Admin Traslados",
+                "dni": 12345673,
+                "fecha_nacimiento": "1990-01-01",
+                "is_staff": True,
+                "is_superuser": True,
+            },
+        )
+        self.client.force_authenticate(user=self.user)
         from .models import Categoria
         self.cat, _ = Categoria.objects.get_or_create(nombre="Perfiles de aluminio")
         self.producto, _ = Producto.objects.get_or_create(

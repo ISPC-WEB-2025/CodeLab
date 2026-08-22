@@ -41,3 +41,4 @@ Los ADRs registran decisiones de arquitectura, no el progreso del backlog:
 | :--- | :--- | :--- | :--- |
 | **0001** | [Filtrado de movimientos: transición de cliente a servidor](./0001-filtrado-movimientos-servidor.md) | `Aceptado` | `feature/filtrado-server-side-movimientos` |
 | **0002** | [Registro dual atómico para movimientos de tipo Traslado](./0002-registro-dual-traslados.md) | `Aceptado` | `feature/traslados-registro-dual` |
+| **0004** | [Enforcement global de autenticación en la API REST](./0004-enforcement-global-autenticacion.md) | `Aceptado` | `feature/enforcement-autenticacion-api` |
