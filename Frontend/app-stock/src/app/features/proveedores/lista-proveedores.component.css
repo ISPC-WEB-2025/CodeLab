@@ -1,4 +1,52 @@
-.titulo-p{
-    text-align: center;
-    margin-top: 50px;
+.proveedores-contenedor {
+  padding: 0.5rem 0;
+}
+
+.proveedores-contenedor h2 {
+  font-size: 1.8rem;
+  color: #1e3a2f;
+  margin-bottom: 0.2rem;
+  font-weight: 700;
+}
+
+.subtitulo-prov {
+  font-size: 0.92rem;
+}
+
+.contador-prov {
+  font-size: 0.9rem;
+}
+
+.tabla-card {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e9e6;
+}
+
+.thead-proveedores th {
+  background-color: #1e3a2f !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.9rem 1rem;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+table td {
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+  font-size: 0.92rem;
+}
+
+tbody tr:hover {
+  background-color: #f0f7f3;
+}
+
+.buscador:focus {
+  box-shadow: none;
+}
+
+.celda-acciones {
+  white-space: nowrap;
 }

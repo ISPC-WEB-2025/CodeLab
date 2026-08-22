@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from decimal import Decimal
 
 
@@ -23,6 +25,7 @@ class Producto(models.Model):
     precio_venta = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )
+    stock_min_global = models.IntegerField(default=0)
     id_cat = models.ForeignKey(Categoria, on_delete=models.PROTECT, db_column="id_cat")
     # Agregamos db_column='id_cat' para que busque la columna exacta que creaste
     # sin db_column='id_cat', django agrega _id al final del nombre (despues no coincide con la BD)
@@ -62,6 +65,30 @@ class Proveedor(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class ProductoProveedor(models.Model):
+    id_enlace = models.AutoField(primary_key=True)
+    id_art = models.ForeignKey(
+        Producto,
+        on_delete=models.PROTECT,
+        db_column="id_art",
+        related_name="proveedores_enlace",
+    )
+    id_prov = models.ForeignKey(
+        Proveedor,
+        on_delete=models.PROTECT,
+        db_column="id_prov",
+        related_name="productos_enlace",
+    )
+    precio_costo = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        managed = False
+        db_table = "PRODUCTO_PROVEEDOR"
+
+    def __str__(self):
+        return f"{self.id_art.nombre} - {self.id_prov.nombre}"
 
 
 class StockSucursal(models.Model):
@@ -114,3 +141,28 @@ class Movimiento(models.Model):
 
     def __str__(self):
         return f"{self.tipo} - {self.cantidad} unid. de {self.id_art.nombre} ({self.fecha_hora.strftime('%d/%m/%Y')})"
+
+
+@receiver(post_save, sender=Producto)
+def auto_inicializar_stock_producto(sender, instance, created, **kwargs):
+    if created:
+        sucursales = Sucursal.objects.all()
+        for suc in sucursales:
+            StockSucursal.objects.get_or_create(
+                id_art=instance,
+                id_suc=suc,
+                defaults={"cantidad_stock": 0, "stock_min": instance.stock_min_global},
+            )
+
+
+@receiver(post_save, sender=Sucursal)
+def auto_inicializar_stock_sucursal(sender, instance, created, **kwargs):
+    if created:
+        productos = Producto.objects.all()
+        for prod in productos:
+            StockSucursal.objects.get_or_create(
+                id_art=prod,
+                id_suc=instance,
+                defaults={"cantidad_stock": 0, "stock_min": prod.stock_min_global},
+            )
+

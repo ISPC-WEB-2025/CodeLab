@@ -33,6 +33,10 @@ export class ListaProductosComponent implements OnInit {
     this.router.navigate(['/dashboard/productos/nuevo']);
   }
 
+  irEditarProducto(id: number) {
+    this.router.navigate(['/dashboard/productos/editar', id]);
+  }
+
   ngOnInit() {
     this.productoService.getAll().subscribe({
       next: (data) => {

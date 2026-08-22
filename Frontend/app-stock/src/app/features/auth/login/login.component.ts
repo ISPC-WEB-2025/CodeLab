@@ -68,9 +68,10 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const email = this.loginForm.value.email;
       const password = this.loginForm.value.password;
+      const recordar = !!this.loginForm.value.recordar;
 
       // Llamada asincrónica al backend usando .subscribe()
-      this.userAuthService.login(email, password).subscribe({
+      this.userAuthService.login(email, password, recordar).subscribe({
         next: (respuesta) => {
           // Si Django devuelve 200 OK, entramos acá
           this.loginError = false;

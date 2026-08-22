@@ -1,1 +1,143 @@
-<p>form-proveedor works!</p>
+<div class="container mt-4 mb-5">
+  <div class="card shadow-sm col-md-10 col-lg-8 mx-auto form-card">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+      <h4 class="mb-0 fs-5">
+        {{ esEdicion ? '✏️ Editar Proveedor' : '🏢 Registrar Nuevo Proveedor' }}
+      </h4>
+      <button class="btn btn-sm btn-outline-light" routerLink="/dashboard/proveedores">
+        ← Volver al listado
+      </button>
+    </div>
+
+    <div class="card-body p-4">
+      @if (cargando) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-success" role="status"></div>
+        <p class="mt-2 text-muted">Cargando datos del proveedor...</p>
+      </div>
+      } @else {
+
+      @if (erroresBackend) {
+      <div class="alert alert-danger" role="alert">
+        <h6 class="alert-heading fw-bold mb-1">⚠️ No se pudo guardar el proveedor:</h6>
+        <ul class="mb-0 ps-3">
+          @if (erroresBackend.cuit) {
+          <li><strong>CUIT:</strong> {{ erroresBackend.cuit }}</li>
+          }
+          @if (erroresBackend.nombre) {
+          <li><strong>Nombre / Razón Social:</strong> {{ erroresBackend.nombre }}</li>
+          }
+          @if (erroresBackend.email) {
+          <li><strong>Email:</strong> {{ erroresBackend.email }}</li>
+          }
+          @if (erroresBackend.telefono) {
+          <li><strong>Teléfono:</strong> {{ erroresBackend.telefono }}</li>
+          }
+          @if (erroresBackend.direccion) {
+          <li><strong>Dirección:</strong> {{ erroresBackend.direccion }}</li>
+          }
+          @if (erroresBackend.detail) {
+          <li>{{ erroresBackend.detail }}</li>
+          }
+          @if (erroresBackend.general) {
+          <li>{{ erroresBackend.general }}</li>
+          }
+        </ul>
+      </div>
+      }
+
+      <form [formGroup]="proveedorForm" (ngSubmit)="guardar()">
+        <div class="row mb-3">
+          <div class="col-12 col-md-7">
+            <label class="form-label fw-bold">Razón Social / Nombre Comercial *</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ej: Distribuidora Aluminios S.A."
+              formControlName="nombre"
+              [class.is-invalid]="proveedorForm.get('nombre')?.invalid && proveedorForm.get('nombre')?.touched"
+            />
+            @if (proveedorForm.get('nombre')?.invalid && proveedorForm.get('nombre')?.touched) {
+            <div class="invalid-feedback">El nombre o razón social es obligatorio.</div>
+            }
+          </div>
+
+          <div class="col-12 col-md-5 mt-3 mt-md-0">
+            <label class="form-label fw-bold">CUIT / Identificación Fiscal *</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ej: 30-11223344-5"
+              formControlName="cuit"
+              [class.is-invalid]="proveedorForm.get('cuit')?.invalid && proveedorForm.get('cuit')?.touched"
+            />
+            @if (proveedorForm.get('cuit')?.invalid && proveedorForm.get('cuit')?.touched) {
+            <div class="invalid-feedback">Ingresá un CUIT válido (10 a 20 caracteres numéricos).</div>
+            }
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-bold">Teléfono de Contacto *</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ej: 011-4567-8900"
+              formControlName="telefono"
+              [class.is-invalid]="proveedorForm.get('telefono')?.invalid && proveedorForm.get('telefono')?.touched"
+            />
+            @if (proveedorForm.get('telefono')?.invalid && proveedorForm.get('telefono')?.touched) {
+            <div class="invalid-feedback">El teléfono es obligatorio.</div>
+            }
+          </div>
+
+          <div class="col-12 col-md-6 mt-3 mt-md-0">
+            <label class="form-label fw-bold">Correo Electrónico *</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Ej: ventas@proveedor.com"
+              formControlName="email"
+              [class.is-invalid]="proveedorForm.get('email')?.invalid && proveedorForm.get('email')?.touched"
+            />
+            @if (proveedorForm.get('email')?.invalid && proveedorForm.get('email')?.touched) {
+            <div class="invalid-feedback">Ingresá una dirección de correo electrónico válida.</div>
+            }
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold">Dirección / Localización *</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Ej: Av. Córdoba 1234, CABA"
+            formControlName="direccion"
+            [class.is-invalid]="proveedorForm.get('direccion')?.invalid && proveedorForm.get('direccion')?.touched"
+          />
+          @if (proveedorForm.get('direccion')?.invalid && proveedorForm.get('direccion')?.touched) {
+          <div class="invalid-feedback">La dirección física es obligatoria.</div>
+          }
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-secondary" (click)="cancelar()" [disabled]="guardando">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success" [disabled]="guardando">
+            @if (guardando) {
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            Guardando...
+            } @else {
+            💾 {{ esEdicion ? 'Actualizar Proveedor' : 'Guardar Proveedor' }}
+            }
+          </button>
+        </div>
+      </form>
+      }
+    </div>
+  </div>
+</div>

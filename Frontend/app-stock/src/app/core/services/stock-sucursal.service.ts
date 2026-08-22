@@ -21,8 +21,12 @@ export class StockSucursalService {
     return this.http.post<StockSucursal>(this.apiUrl, stock);
   }
 
-  update(id: number, stock: StockSucursal): Observable<StockSucursal> {
+  update(id: number, stock: Partial<StockSucursal>): Observable<StockSucursal> {
     return this.http.put<StockSucursal>(`${this.apiUrl}${id}/`, stock);
+  }
+
+  actualizarUmbral(id: number, stock_min: number): Observable<StockSucursal> {
+    return this.http.patch<StockSucursal>(`${this.apiUrl}${id}/`, { stock_min });
   }
 
   delete(id: number): Observable<void> {

@@ -2,9 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import (
     Response,
 )  # Es el traductor. Agarra diccionarios de Python y los convierte en JSON
-from rest_framework.authtoken.models import (
-    Token,
-)  # El modelo de Token que viene con Django REST Framework
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import (
     status,
 )  # Nos da códigos de estado HTTP para usar en las respuestas (200, 400, 401, etc)
@@ -14,6 +12,7 @@ from django.contrib.auth import (
 
 # from django.contrib.auth.models import (User, Group)
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Usuario
 from .serializers import UsuarioSerializer
@@ -49,16 +48,20 @@ class LoginUsuarioView(APIView):
         user = authenticate(request, email=email, password=password)
 
         if user is not None:
-            # 3. Si todo está bien, buscamos su token (o le creamos uno nuevo si no tenía)
-            token, created = Token.objects.get_or_create(user=user)
+            # 3. Generamos el par de tokens JWT (Access + Refresh)
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
 
             return Response(
                 {
                     "nombre": user.nombre,
-                    "token": token.key,  # devuelve token para que Angular lo guarde y lo mande en cada petición
+                    "access": access_token,
+                    "refresh": refresh_token,
+                    "token": access_token,  # Retrocompatibilidad
                     "email": user.email,
                     "es_admin": user.es_admin,
-                    "es_empleado": user.es_empleado,  # booleanos para poder usar *ngIf en el html y mostrar/ocultar cosas según el rol del usuario
+                    "es_empleado": user.es_empleado,  # booleanos para control de UI según rol
                 },
                 status=status.HTTP_200_OK,
             )
@@ -117,3 +120,12 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(
             {"mensaje": "Usuario desactivado correctamente."}, status=status.HTTP_200_OK
         )
+
+    @action(detail=False, methods=["get"], url_path="me", permission_classes=[IsAuthenticated])
+    def me(self, request):
+        """Retorna el perfil completo del usuario autenticado vía JWT/Token."""
+        serializer = self.get_serializer(request.user)
+        data = dict(serializer.data)
+        data["es_admin"] = getattr(request.user, "es_admin", False)
+        data["es_empleado"] = getattr(request.user, "es_empleado", False)
+        return Response(data, status=status.HTTP_200_OK)

@@ -1,14 +1,4 @@
 from django.db import models
-from inventario.models import Categoria, Producto, Proveedor
+from inventario.models import Categoria, Producto, Proveedor, ProductoProveedor
 
-
-class ProductoProveedor(models.Model):
-    id_enlace = models.AutoField(primary_key=True)
-    id_art = models.ForeignKey(Producto, on_delete=models.PROTECT, db_column="id_art")
-    id_prov = models.ForeignKey(
-        Proveedor, on_delete=models.PROTECT, db_column="id_prov"
-    )
-
-    class Meta:
-        managed = False
-        db_table = "PRODUCTO_PROVEEDOR"
+__all__ = ["Categoria", "Producto", "Proveedor", "ProductoProveedor"]

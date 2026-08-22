@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http'; // ← agregás HttpParams
 import { Observable } from 'rxjs';
 import { Producto } from '../models/producto.model';
+import { StockSucursal } from '../models/stock-sucursal.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductoService {
@@ -35,5 +36,9 @@ export class ProductoService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
+  }
+
+  getStockPorProducto(id: number): Observable<StockSucursal[]> {
+    return this.http.get<StockSucursal[]>(`${this.apiUrl}${id}/stock/`);
   }
 }

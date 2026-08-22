@@ -118,7 +118,7 @@ pip install -r requirements.txt
 CREATE DATABASE nombre_db;
 ```
 
-**c.** Crear el archivo de variables de entorno copiando el modelo:
+**d.** Crear el archivo de variables de entorno copiando el modelo:
 
 ```bash
 cp .env_modelo .env
@@ -136,44 +136,42 @@ Con el entorno virtual activado, desde la carpeta `Backend/`:
 python setup_db.py
 ```
 
-Esto crea la base de datos, ejecuta las migraciones y carga los datos de prueba automáticamente.
-
-> [!TIP]
-> Esta opción carga más datos de prueba que la opción manual.
+Este script realiza de forma integral:
+1. Creación de la base de datos MySQL (si no existe).
+2. Ejecución de migraciones de Django.
+3. Carga automática de los roles base (`roles.json`: `ADMINISTRADOR`, `VENTAS`, `DEPOSITO`).
+4. Creación de la estructura de tablas y datos de prueba completos de inventario y stock.
+5. Creación automática del usuario superadmin por defecto (`admin@codelab.com` / `AdminPassword123!`).
 
 #### Opción B — Manual
 
-1. Correr `scripts/todostock_db.sql` en SQL Workbench
+1. Correr `scripts/todostock_db.sql` en SQL Workbench.
 2. `python manage.py migrate`
-3. Volver a correr `scripts/todostock_db.sql`
+3. `python manage.py loaddata roles.json`
+4. Crear usuario administrador con `python scripts/crear_superadmin.py` o `python manage.py createsuperuser`.
 
 ---
 
-**g.** Crear superusuario para gestión de roles:
+**g.** Gestión de superusuarios:
+
+El setup automatizado ya deja configurado el superadmin por defecto (`admin@codelab.com` / `AdminPassword123!`). Si deseas crear o resetear un superadmin en cualquier momento, puedes ejecutar:
+
+```bash
+python scripts/crear_superadmin.py
+```
+
+O crear un usuario personalizado mediante:
 
 ```bash
 python manage.py createsuperuser
 ```
 
 > [!NOTE]
-> El superusuario permite acceder al panel de administración en `http://127.0.0.1:8000/admin/` o desde la sección de administración del frontend para asignar roles a los usuarios registrados. Los roles disponibles son **ADMINISTRADOR**, **VENTAS** y **DEPOSITO**. Los usuarios que se registran desde el login público quedan sin rol asignado hasta que un administrador se los asigne; mientras tanto ven un mensaje de "cuenta pendiente de aprobación".
+> El superusuario permite acceder al panel de administración en `http://127.0.0.1:8000/admin/` o al dashboard del frontend para gestionar productos, stock, traslados y asignar roles a los usuarios registrados (**ADMINISTRADOR**, **VENTAS**, **DEPOSITO**).
 
-**h.** Cargar los roles iniciales (fixture):
+---
 
-```bash
-python manage.py loaddata roles.json
-```
-
-> [!NOTE]
-> Este comando carga los tres roles base del sistema (ADMINISTRADOR, VENTAS, DEPOSITO). Si los roles ya existen, el comando los sobreescribe usando el `pk` sin duplicar.
-
-**i.** Iniciar el servidor:
-
-```bash
-python manage.py runserver
-```
-
-**h.** Iniciar el servidor:
+**h.** Iniciar el servidor de desarrollo:
 
 ```bash
 python manage.py runserver

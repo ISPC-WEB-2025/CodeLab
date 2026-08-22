@@ -1,0 +1,347 @@
+<div class="sucursales-contenedor">
+  
+  <!-- Encabezado de Página -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h2>Gestión de Sucursales</h2>
+      <p class="text-muted mb-0">Supervisión de sedes, control de existencias físicas y configuración de puntos de distribución.</p>
+    </div>
+    <button class="btn btn-success" routerLink="/dashboard/sucursales/nuevo">
+      + Nueva Sucursal
+    </button>
+  </div>
+
+  @if (error) {
+  <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+    ⚠️ {{ error }}
+    <button type="button" class="btn-close" (click)="error = ''" aria-label="Close"></button>
+  </div>
+  }
+
+  @if (cargando && sucursales.length === 0) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="mt-2 text-muted">Cargando sucursales desde el servidor...</p>
+  </div>
+  } @else {
+  
+  <!-- Layout en 2 Columnas -->
+  <div class="row g-4">
+    
+    <!-- Columna Izquierda (7 cols): Listado y Gestión de Sedes -->
+    <div class="col-12 col-xl-7">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body p-3 p-md-4">
+          
+          <!-- Barra de Búsqueda y Contador -->
+          <div class="row mb-3 align-items-center g-2">
+            <div class="col-12 col-md-7">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                  <i class="bi bi-search text-muted">🔍</i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control border-start-0 ps-0"
+                  placeholder="Buscar sede por nombre o dirección..."
+                  [(ngModel)]="terminoBusqueda"
+                  (input)="onBusqueda()"
+                />
+                @if (terminoBusqueda) {
+                <button class="btn btn-outline-secondary" type="button" (click)="limpiarBusqueda()">
+                  ✕
+                </button>
+                }
+              </div>
+            </div>
+            <div class="col-12 col-md-5 text-md-end text-muted small">
+              Sedes registradas: <strong>{{ sucursales.length }}</strong>
+            </div>
+          </div>
+
+          <!-- Tabla de Sucursales -->
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Sede</th>
+                  <th>Dirección</th>
+                  <th class="text-center">Disponibilidad (SKUs)</th>
+                  <th class="text-center">Alertas</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (sucursal of sucursales; track sucursal.id_suc) {
+                <tr
+                  class="fila-sucursal"
+                  [class.fila-activa]="sucursalSeleccionada?.id_suc === sucursal.id_suc"
+                  (click)="seleccionarSucursal(sucursal)"
+                  title="Hacé click para ver el inventario de esta sede"
+                >
+                  <td class="ps-3">
+                    <div>
+                      <div class="fw-bold text-dark">{{ sucursal.nombre }}</div>
+                      <small class="text-muted d-block">{{ sucursal.total_articulos || 0 }} productos catalogados</small>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="text-secondary small">{{ sucursal.direccion }}</span>
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex flex-column align-items-center gap-1">
+                      <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                        {{ sucursal.articulos_con_stock || 0 }} / {{ sucursal.total_articulos || 0 }} activos
+                      </span>
+                      @if ((sucursal.articulos_sin_stock || 0) > 0) {
+                        <small class="text-muted" style="font-size: 0.75rem;">
+                          {{ sucursal.articulos_sin_stock }} sin existencias
+                        </small>
+                      }
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    @if ((sucursal.articulos_alerta || 0) > 0) {
+                      <span class="badge bg-warning text-dark px-2 py-1" title="Productos por debajo del stock mínimo">
+                        ⚠️ {{ sucursal.articulos_alerta }} en alerta
+                      </span>
+                    } @else {
+                      <span class="badge bg-success-subtle text-success px-2 py-1">
+                        🟢 Óptimo
+                      </span>
+                    }
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center gap-1 flex-nowrap">
+                      <button
+                        class="btn btn-sm text-nowrap px-2"
+                        [ngClass]="sucursalSeleccionada?.id_suc === sucursal.id_suc ? 'btn-success text-white' : 'btn-outline-secondary'"
+                        (click)="$event.stopPropagation(); seleccionarSucursal(sucursal)"
+                        title="Ver inventario de esta sede"
+                      >
+                        👁️ Stock
+                      </button>
+                      <button
+                        class="btn btn-sm btn-outline-primary px-2"
+                        [routerLink]="['/dashboard/sucursales/editar', sucursal.id_suc]"
+                        (click)="$event.stopPropagation()"
+                        title="Editar Sucursal"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        class="btn btn-sm btn-outline-danger px-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalEliminarSucursal"
+                        (click)="$event.stopPropagation(); prepararEliminacion(sucursal)"
+                        title="Eliminar Sucursal"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                } @empty {
+                <tr>
+                  <td colspan="5" class="text-center py-5 text-muted">
+                    @if (terminoBusqueda) {
+                      <p class="mb-1">No se encontraron sucursales para "<em>{{ terminoBusqueda }}</em>".</p>
+                      <button class="btn btn-sm btn-outline-primary" (click)="limpiarBusqueda()">Limpiar búsqueda</button>
+                    } @else {
+                      <p class="mb-2">No hay sucursales registradas.</p>
+                      <button class="btn btn-sm btn-success" routerLink="/dashboard/sucursales/nuevo">
+                        + Registrar primera sucursal
+                      </button>
+                    }
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna Derecha (5 cols): Salud de la Red y Visor de Inventario -->
+    <div class="col-12 col-xl-5">
+      <div class="d-flex flex-column gap-4 h-100">
+        
+        <!-- Panel 1: Métricas de la Red Global -->
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-3 p-md-4">
+            <h5 class="card-title mb-3 d-flex align-items-center gap-2">
+              <span>📊</span>
+              <span>Salud de la Red de Sucursales</span>
+            </h5>
+            
+            <div class="row g-2 mb-3">
+              <div class="col-4">
+                <div class="p-3 bg-light rounded text-center border">
+                  <small class="text-muted d-block text-truncate">Total Sedes</small>
+                  <strong class="fs-4 text-dark">{{ sucursales.length }}</strong>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="p-3 bg-light rounded text-center border">
+                  <small class="text-muted d-block text-truncate">Catálogo</small>
+                  <strong class="fs-4 text-primary">{{ totalArticulosRed }} <small class="fs-6 fw-normal">SKUs</small></strong>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="p-3 bg-light rounded text-center border">
+                  <small class="text-muted d-block text-truncate">Con Alerta</small>
+                  <strong class="fs-4" [ngClass]="sedesConAlerta > 0 ? 'text-warning' : 'text-success'">
+                    {{ sedesConAlerta }}
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-info py-2 px-3 mb-0 small text-dark d-flex align-items-center gap-2 border-0 bg-info-subtle">
+              <span class="fs-5">ℹ️</span>
+              <span>Al crear una nueva sucursal, el sistema inicializa automáticamente el catálogo con existencia 0 para todos los productos existentes.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Visor de Inventario por Sede Seleccionada -->
+        <div class="card shadow-sm border-0 flex-grow-1">
+          <div class="card-body p-3 p-md-4 d-flex flex-column">
+            
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h5 class="card-title mb-1 d-flex align-items-center gap-2">
+                  <span>🏢</span>
+                  <span>{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : 'Seleccioná una sede' }}</span>
+                </h5>
+                <p class="text-muted small mb-0">
+                  {{ sucursalSeleccionada ? sucursalSeleccionada.direccion : 'Hacé click en "👁️ Stock" para auditar existencias.' }}
+                </p>
+              </div>
+              @if (sucursalSeleccionada) {
+                <span class="badge bg-secondary">
+                  {{ inventarioSucursal.length }} ítems
+                </span>
+              }
+            </div>
+
+            @if (sucursalSeleccionada) {
+              <!-- Buscador de inventario interno y filtro inteligente -->
+              <div class="d-flex flex-column gap-2 mb-3">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white">🔍</span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Filtrar artículos de esta sede..."
+                    [(ngModel)]="busquedaInventario"
+                    (input)="onBusquedaInventario()"
+                  />
+                  @if (busquedaInventario) {
+                    <button class="btn btn-outline-secondary" type="button" (click)="limpiarBusquedaInventario()">✕</button>
+                  }
+                </div>
+                <div class="form-check form-switch ps-4 small">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="switchSoloConStock"
+                    [(ngModel)]="soloConStock"
+                    (change)="onToggleSoloConStock()"
+                  />
+                  <label class="form-check-label text-muted" for="switchSoloConStock">
+                    Ocultar artículos sin existencias (stock = 0)
+                  </label>
+                </div>
+              </div>
+
+              <!-- Listado de Stock en Sede con transicion limpia -->
+              <div class="lista-inventario-wrapper position-relative flex-grow-1">
+                <div class="lista-inventario-scroll overflow-auto pe-1 h-100">
+                  @for (item of inventarioSucursal; track item.id_stock) {
+                    <div class="d-flex justify-content-between align-items-center p-2 mb-2 rounded border bg-light">
+                      <div class="me-2 text-truncate">
+                        <strong class="d-block text-dark text-truncate small">{{ item.nombre_producto }}</strong>
+                        <small class="text-muted" style="font-size: 0.75rem;">
+                          Mínimo: {{ item.stock_min }} unid.
+                        </small>
+                      </div>
+                      <div class="text-end flex-shrink-0">
+                        <span class="fw-bold fs-6" [ngClass]="item.cantidad_stock <= item.stock_min ? 'text-danger' : 'text-dark'">
+                          {{ item.cantidad_stock }}
+                        </span>
+                        <span class="small text-muted"> unid.</span>
+                        @if (item.cantidad_stock <= item.stock_min) {
+                          <span class="badge bg-warning text-dark ms-1" style="font-size: 0.65rem;">Bajo</span>
+                        }
+                      </div>
+                    </div>
+                  } @empty {
+                    <div class="text-center py-5 text-muted small">
+                      No se encontraron artículos en esta sede con el filtro aplicado.
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Enlace a configuración de stock -->
+              <div class="mt-3 pt-2 border-top text-end">
+                <a routerLink="/dashboard/stock" class="small text-decoration-none">
+                  Ir a Gestión General de Stock y Umbrales →
+                </a>
+              </div>
+
+            } @else {
+              <div class="text-center py-5 text-muted my-auto">
+                <p class="mb-0">Seleccioná una sucursal del listado para inspeccionar sus artículos en tiempo real.</p>
+              </div>
+            }
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  }
+
+  <!-- Modal Confirmación Eliminación -->
+  <div
+    class="modal fade"
+    id="modalEliminarSucursal"
+    tabindex="-1"
+    aria-labelledby="modalEliminarLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación de Sede</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-2">¿Estás seguro de que deseás eliminar la sucursal <strong>{{ nombreEliminar }}</strong>?</p>
+          <div class="alert alert-warning py-2 px-3 mb-0 small text-dark border-0">
+            ⚠️ <strong>Protección de Integridad:</strong> Si la sucursal cuenta con existencias físicas de stock mayores a 0 o registros históricos de movimientos, la eliminación será denegada por seguridad.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-bs-dismiss="modal"
+            (click)="confirmarEliminacion()"
+          >
+            Sí, eliminar sede
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

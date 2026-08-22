@@ -1,7 +1,7 @@
 <form [formGroup]="productoForm" (ngSubmit)="guardar()" class="p-4 border rounded shadow-sm bg-white">
 
-  <h3 class="mb-4 alta">Alta de Productos</h3>
-  <p>Ingresa los datos del nuevo producto para agregar al inventario:</p>
+  <h3 class="mb-2 alta">{{ esEdicion ? 'Editar Producto' : 'Alta de Productos' }}</h3>
+  <p class="text-muted mb-4">{{ esEdicion ? 'Modifica los datos del producto seleccionado:' : 'Ingresa los datos del nuevo producto para agregar al inventario:' }}</p>
 
   <div class="form-grid-responsive fila-form row">
     <div class="col-md-7 mb-3">
@@ -29,8 +29,8 @@
   </div>
 
   <div class="fila-form row">
-    <div class="col-md-6 mb-3">
-      <label for="precioVenta" class="form-label">Precio de Venta (Requerido)</label>
+    <div class="col-md-4 mb-3">
+      <label for="precioVenta" class="form-label">Precio de Venta <span class="text-danger">*</span></label>
       <div class="input-group">
         <span class="input-group-text">$</span>
         <input type="number" id="precioVenta" formControlName="precio_venta" class="form-control" placeholder="0.00">
@@ -43,8 +43,29 @@
       }
     </div>
 
-    <div class="col-md-6 mb-3">
-      <label for="categoria" class="form-label">Categoría</label>
+    <div class="col-md-4 mb-3">
+      <label for="stockMinGlobal" class="form-label">Stock Mínimo Global <span class="text-danger">*</span></label>
+      <input type="number" id="stockMinGlobal" formControlName="stock_min_global" class="form-control" placeholder="0" min="0">
+      <small class="text-muted" style="font-size: 0.75rem;">Umbral inicial por defecto para sucursales</small>
+      @if (erroresBackend?.stock_min_global) {
+      <small class="text-danger d-block mt-1">{{ erroresBackend.stock_min_global[0] }}</small>
+      }
+      @if (productoForm.get('stock_min_global')?.invalid && productoForm.get('stock_min_global')?.touched) {
+        <small class="text-danger d-block mt-1">Debe ingresar un valor mayor o igual a 0</small>
+      }
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <label for="categoria" class="form-label mb-0">Categoría <span class="text-danger">*</span></label>
+        <button
+          type="button"
+          class="btn btn-link btn-sm p-0 text-decoration-none text-success fw-semibold"
+          (click)="abrirModalCategoria()"
+        >
+          + Nueva Categoría
+        </button>
+      </div>
       <select id="categoria" formControlName="id_cat" class="form-select">
         <option value="">Seleccione una opción...</option>
         @for (cat of categorias; track cat.id_cat) {
@@ -70,8 +91,72 @@
     </div>
   </div>
 
-  <div class="d-flex justify-content-end mt-4">
-    <button type="submit" class="btn btn-primary px-4">Guardar</button>
+  <div class="d-flex justify-content-end gap-2 mt-4">
+    <button type="button" class="btn btn-secondary px-4" (click)="cancelar()">Cancelar</button>
+    <button type="submit" class="btn btn-success px-4" [disabled]="cargando">
+      {{ esEdicion ? 'Actualizar Producto' : 'Guardar Producto' }}
+    </button>
   </div>
 
 </form>
+
+<!-- Modal Rápido: Alta de Nueva Categoría -->
+@if (mostrarModalCategoria) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-success-subtle">
+        <h5 class="modal-title text-success-emphasis">
+          ➕ Nueva Categoría
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarModalCategoria()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <p class="text-muted small mb-3">
+          Ingresá el nombre de la nueva categoría para crearla y seleccionarla automáticamente:
+        </p>
+        <div class="mb-3">
+          <label for="modalNombreCategoria" class="form-label fw-semibold">Nombre de la Categoría</label>
+          <input
+            type="text"
+            id="modalNombreCategoria"
+            class="form-control"
+            placeholder="Ej: Pinturas, Iluminación, Aberturas..."
+            [(ngModel)]="nombreNuevaCategoria"
+            [ngModelOptions]="{standalone: true}"
+            [disabled]="guardandoCategoria"
+            (keyup.enter)="guardarNuevaCategoria()"
+            autofocus
+          />
+          @if (errorModalCategoria) {
+            <small class="text-danger d-block mt-2">
+              ⚠️ {{ errorModalCategoria }}
+            </small>
+          }
+        </div>
+      </div>
+      <div class="modal-footer bg-light">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cerrarModalCategoria()"
+          [disabled]="guardandoCategoria"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="guardarNuevaCategoria()"
+          [disabled]="guardandoCategoria || !nombreNuevaCategoria.trim()"
+        >
+          @if (guardandoCategoria) {
+            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+          }
+          Guardar y Seleccionar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}

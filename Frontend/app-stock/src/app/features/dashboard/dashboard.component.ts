@@ -15,5 +15,5 @@ export class DashboardComponent {
   private userAuthService: UserAuthService = inject(UserAuthService);
   protected readonly estaLogeado: boolean = this.userAuthService.isLoggedIn();
   protected readonly esAdmin: boolean = this.userAuthService.isAdmin();
-  protected readonly nombreUsuario: string = localStorage.getItem('nombre_usuario') ?? '';
+  protected readonly nombreUsuario: string = this.userAuthService.getUsername() ?? '';
 }
