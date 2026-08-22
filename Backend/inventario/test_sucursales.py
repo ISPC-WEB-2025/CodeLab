@@ -38,6 +38,18 @@ class SucursalTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
+        from usuarios.models import Usuario
+        self.user, _ = Usuario.objects.get_or_create(
+            email="admin_suc@ejemplo.com",
+            defaults={
+                "nombre": "Admin Suc",
+                "dni": 12345672,
+                "fecha_nacimiento": "1990-01-01",
+                "is_staff": True,
+                "is_superuser": True,
+            },
+        )
+        self.client.force_authenticate(user=self.user)
         self.categoria = Categoria.objects.create(nombre="Herramientas")
         self.producto = Producto.objects.create(
             nombre="Taladro Percutor",
@@ -65,6 +77,7 @@ class SucursalTests(TestCase):
     def test_metricas_sucursal_en_serializer(self):
         """Verificar el cálculo de total_articulos, articulos_con_stock, articulos_sin_stock y articulos_alerta."""
         suc = Sucursal.objects.create(nombre="Sede Norte", direccion="Ruta 9 Km 10")
+        StockSucursal.objects.filter(id_suc=suc).update(stock_min=0, cantidad_stock=0)
         stock = StockSucursal.objects.get(id_suc=suc, id_art=self.producto)
         stock.cantidad_stock = 5
         stock.stock_min = 10  # En alerta (5 <= 10)
