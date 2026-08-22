@@ -23,6 +23,12 @@ Adoptar el principio arquitectónico **"seguro por defecto, público por excepci
 3. Incorporar una suite de pruebas automatizadas en backend (`Backend/inventario/test_auth_enforcement.py`) para validar formalmente el rechazo con `HTTP 401 Unauthorized` ante peticiones anónimas a todos los endpoints de negocio, y el acceso concedido (`HTTP 200/201`) con credenciales válidas.
 4. Incorporar pruebas unitarias en frontend (`Frontend/app-stock/src/app/core/interceptors/auth.interceptor.spec.ts`) para verificar que un error 401 durante el refresco de token ejecute `authService.logout()` una única vez y corte la cadena sin generar loops de reintento.
 
+## Alternativas Consideradas
+
+- **Permisos explícitos `permission_classes = [IsAuthenticated]` caso por caso en cada ViewSet / APIView**:
+  - *Descartada*: Modelo de seguridad "opt-in" propenso a fallas humanas. Si un desarrollador olvida declarar `permission_classes` en un nuevo ViewSet, DRF lo expone públicamente bajo `AllowAny` por omisión.
+  - *Ventaja del enfoque elegido*: "Seguro por defecto" garantiza que cualquier nuevo endpoint o ViewSet que se añada a la aplicación nace protegido por JWT automáticamente.
+
 ## Consecuencias
 
 Positivas:
@@ -32,7 +38,13 @@ Positivas:
 
 Negativas / Trade-offs:
 - Clientes externos o scripts de prueba que operaban sin token deberán autenticarse previamente en `/api/usuarios/login/` para consumir la API.
-- La exclusión de endpoints públicos en `authInterceptor` (`Frontend/app-stock/src/app/core/interceptors/auth.interceptor.ts:L13-L16`) usa `String.prototype.includes()` (coincidencia por substring) y no coincidencia exacta. **Riesgo/Consideración**: Cualquier endpoint futuro cuya URL contenga alguno de esos paths como substring quedaría excluido de la inyección de `Bearer <token>` de forma no intencional.
+- La exclusión de endpoints públicos en `authInterceptor` (`Frontend/app-stock/src/app/core/interceptors/auth.interceptor.ts:L13-L16`) usa `String.prototype.includes()` (coincidencia por substring) y no coincidencia exacta. **Riesgo/Consideración aceptada**: Cualquier endpoint futuro cuya URL contenga alguno de esos paths como substring quedaría excluido de la inyección de `Bearer <token>` de forma no intencional.
+
+## Verificación de Pendientes de Auditoría
+
+1. **Exclusión de endpoints en Frontend**: Documentado el uso de `String.includes` como riesgo aceptado (`auth.interceptor.ts:L13-L16`).
+2. **Circuito de corte ante doble 401 en refresh**: Verificado formalmente mediante prueba unitaria en `Frontend/app-stock/src/app/core/interceptors/auth.interceptor.spec.ts:L66-L91`, confirmando que un error 401 en `/token/refresh/` dispara `authService.logout()` exactamente 1 sola vez y corta la cadena de observables sin reintentos infinitos.
+3. **Rechazo 401 en peticiones anónimas**: Verificado en backend mediante `Backend/inventario/test_auth_enforcement.py:L1-L168` cubriendo productos, categorías, sucursales, proveedores, stock, movimientos y catálogo de vendedor.
 
 ## Notas sobre Datos Existentes
 
@@ -42,9 +54,7 @@ Negativas / Trade-offs:
 
 - **Rama**: `feature/enforcement-autenticacion-api`
 - **Componentes modificados**:
-  - `Backend/config/settings.py`
-  - `Backend/usuarios/views.py`
+  - `Backend/config/settings.py` (`REST_FRAMEWORK:L129-L138`)
+  - `Backend/usuarios/views.py` (`LoginUsuarioView:L37-L40`)
   - `Backend/inventario/test_auth_enforcement.py`
   - `Frontend/app-stock/src/app/core/interceptors/auth.interceptor.spec.ts`
-  - `Docs/ADR/0004-enforcement-global-autenticacion.md`
-  - `Docs/ADR/README.md`
